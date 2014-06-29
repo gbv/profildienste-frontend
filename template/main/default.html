@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>GBV-Profildienste</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="shortcut icon" type="image/x-icon" href="http://profildienste.gbv.de/profildienst.ico">
+        <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <link href="/static/css/login.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <script src="//code.jquery.com/jquery.js"></script> 
+        <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-pd">
+                    <span class="sr-only">Ausklappen/Einklappen</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Profildienst</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-pd">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="http://www.gbv.de/wikis/cls/Profildienste" class="btn btn-link help-btn"><i class="fa fa-question-circle"></i> Hilfe</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+        {$content}
+        </div>
+        <hr>
+        <p class="text-right text-muted footer"><small><a href="/">GBV-Profildienst</a> Version {$version}</small></p>
+    </body>
+</html>

@@ -1,0 +1,22 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-header">
+			{if="$icon"}
+				<h1>
+				<i class="fa {$icon}"></i> {$title}
+				<button type="button" class="btn btn-primary btn-lg pull-right" id="{$btn_id}"><i class="fa {$btn_icon}"></i> {$btn_title}</button>
+				<br>
+				<small>{$count} Datensätze in dieser Ansicht</small>
+				</h1>
+			{else}
+				<h1>{$title}
+				<button type="button" class="btn btn-primary btn-lg pull-right" id="{$btn_id}"><i class="fa {$btn-icon}"></i> {$btn_title}</button>
+				<br>
+				<small>{$count} Datensätze in dieser Ansicht</small>
+				</h1>
+			{/if}
+		</div>
+	</div>
+</div>
+{$list}
+</div>

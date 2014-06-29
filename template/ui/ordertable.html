@@ -1,0 +1,22 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<thead>
+					<tr><th>Titel</th><th>Lieferant</th><th>Budget</th><th>Selektionscode</th><th>SSG-Nr.</th><th>GVK-Treffer</th><th>Kommentar</th></tr>
+				</thead>
+				<tbody>
+				{loop="$titles"}
+				<tr><td>{$value.titel}</td><td>{$value.lieft}</td><td>{$value.budget}</td><td>{$value.selcode}</td><td>{$value.ssgnr}</td><td>{$value.gvkt}</td><td>{$value.comment}</td></tr>
+				{/loop}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6 col-md-offset-3 btns-order">
+		<button type="button" class="btn btn-default btn-order btn-lg" rel="/show/cart"><i class="fa fa-times icon-large"></i> Abbrechen</button> 
+		<button type="button" class="btn btn-primary btn-order btn-lg" rel="/show/order"><i class="fa fa-shopping-cart"></i> Bestellen</button>
+	</div>
+</div>

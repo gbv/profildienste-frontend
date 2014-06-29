@@ -1,0 +1,12 @@
+{if="$mak && $ilns && $ppn"}
+	<span class="text-muted">GVK-Treffer: </span>{$mak} 
+	<span class="text-muted">(ILNs: </span>{$ilns}<span class="text-muted">, PPN: </span>{$ppn}<span class="text-muted">)</span>
+	<br>
+{else}
+	{if="$mak && $ppn"}
+		<span class="text-muted">GVK-Treffer: </span>{$mak} <span class="text-muted">(PPN: </span>{$ppn}<span class="text-muted">)</span>
+		<br>
+	{else}
+		<span class="text-muted">GVK-Treffer: </span>{$mak}<br>
+	{/if}
+{/if}

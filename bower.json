@@ -1,0 +1,14 @@
+{
+  "name": "GBV Online Profildienste",
+  "version": "0.0.4",
+  "homepage": "http://online-profildienst.gbv.de",
+  "authors": [
+    "Luca Keidel <keidel@gbv.de>"
+  ],
+  "description": "GBV Online Profildienste",
+  "dependencies": {
+    "bootstrap": "latest",
+    "jquery": "latest",
+    "fontawesome": "latest"
+  }
+}

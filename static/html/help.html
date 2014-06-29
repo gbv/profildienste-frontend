@@ -1,0 +1,57 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h1 class="modal-title">Hilfe</h1>
+    </div>
+    <div class="modal-body">
+      <h2>Hilfe zur Suchfunktion</h2>
+      <p> Die Suchfunktion befindet sich in dem Feld in der oberen Menuleiste. Um mit der Suche zu
+      beginnen, geben sie eine Suchanfrage ein.</p>
+
+      <h2>Aufbau einer Suchanfrage</h2>
+      <p>Eine Suchanfrage besteht aus folgendem Aufbau:</p>
+      <br>
+      <code>Schlüssel Suchbegriffe</code>
+      <br>
+
+      <h2>Mögliche Suchschlüssel</h2>
+      <p> Die Suchschlüssel orentieren sich an den im GVK und in der WinIBW verwendeten Suchschlüsseln.
+      Es stehen folgende Schlüssel zur Auswahl:</p>
+      <table class="table table-striped">
+        <thead>
+        <tr><th>Schlüssel</th><th>Suche</th><th>Beispiel</th></tr>
+        </thead>
+        <tbody>
+        <tr><td><code>tit</code></td><td>Suche in Titeln und Untertiteln</td><td><code>tit Asien</code></td></tr>
+        <tr><td><code>per</code></td><td>Suche nach Personen (Vorname und/oder Nachname)</td><td><code>per Wagner</code></td></tr>
+        <tr><td><code>dbn</code></td><td>Suche nach der DNB-Nummer</td><td><code>per 1000476324</code></td></tr>
+        <tr><td><code>isb</code></td><td>Suche nach der ISBN (10- oder 13-stellig)</td><td><code>isb 9783706837156</code></td></tr>
+        <tr><td><code>sgr</code></td><td>Suche nach der DNB-Sachgruppe</td><td><code>sgr 330</code></td></tr>
+        <tr><td><code>erj</code></td><td>Suche nach Erscheiungsjahr</td><td><code>erj 2013</code></td></tr>
+        <tr><td><code>wvn</code></td><td>Suche anhand der Wochenlieferungsnummer</td><td><code>wvn 10A22</code></td></tr>
+        <tr><td><code>mak</code></td><td>Suche nach Materialcode</td><td><code>mak Aaxa</code></td></tr>
+        </tbody>
+      </table>
+      <br>
+      <h2>Unschärfe</h2>
+      <p> Alle Suchen werden unscharf ausgeführt. Dies bedeutet, dass Ihnen alle Treffer angezeigt werden, die Ihren Suchenbegriff zwar enthalten, aber nicht nur auschließlich. Beispielsweise könnte eine Suche nach <code>tit Asien</code> sowohl zu den Treffern:
+      <ul>
+        <li>Das neue <b>Asien</b></li>
+      </ul>
+      als auch
+      <ul>
+        <li>Schulordnung für die Gymn<b>asien</b></li>
+      </ul> führen.</p>
+      <br>
+      <h2>Weiteres</h2>
+      <ul>
+        <li>Es ist nicht möglich, Suchanfragen zu kombinieren.</li>
+        <li> Eine All-Suche ist nicht möglich.</li>
+      </ul>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+    </div>
+  </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->

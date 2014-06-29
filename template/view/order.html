@@ -1,0 +1,35 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-header">
+				<h1>
+				<i class="fa {$icon}"></i> {$title}
+				<br>
+				<small>{$count} Datensätze in dieser Ansicht</small>
+				</h1>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		{if="$success"}
+			<p><i class="fa fa-check"></i> Ihre Bestellung wurde erfolgreich weitergeleitet!</p>
+		{else}
+			<p><i class="fa fa-times"></i> Leider trat ein Fehler auf, Ihre Bestellung konnte nicht verarbeitet werden.</p>
+		{/if}
+		<br>
+		Bestellt wurden:
+		<br>
+		<br>
+		<ul class="nav nav-pills nav-stacked orders">
+			{loop="$titles"}
+				<li><a href="#"><i class="fa fa-caret-right orders-caret"></i>{$value}</a></li>
+			{/loop}
+		</ul>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6 col-md-offset-3 btns-order">
+		<button type="button" class="btn btn-primary btn-order btn-lg" rel="/show"><i class="fa fa-chevron-sign-right"></i> Weiter zur Gesamtübersicht</button>
+	</div>
+</div>
+		
