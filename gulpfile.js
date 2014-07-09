@@ -8,7 +8,7 @@ var path = require('path');
 var prefix = require('gulp-autoprefixer');
 
 gulp.task('less', function() {
-    return gulp.src(['less/main.less'])
+    return gulp.src(['less/show.less', 'less/login.less'])
             .pipe(less({
                 paths: [ path.join(__dirname, 'bower_components', 'bootstrap', 'less') ]
             }))

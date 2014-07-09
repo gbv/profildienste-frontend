@@ -6,9 +6,9 @@
 			</button>
 		{/if}
 		{if="$has_cover"}
-			<img src="{$cover_md}#" class="cover cover-lg" rel="{$cover_lg}">
+			<img src="{$cover_md}" class="cover cover-lg" rel="{$cover_lg}">
 		{else}
-			<img src="/static/img/no-cover.png#" class="cover">
+			<img src="{$cover_md}" class="cover">
 		{/if}
 	</div>
 	<div class="col-lg-7 col-md-7 col-sm-7 title-info">
@@ -18,6 +18,12 @@
 		<br>
 		<br>
 		<span class="text-muted">von</span> {$verfasser} <span class="text-muted">(</span> {$verlag} <span class="text-muted">)</span>
+		<br>
+		<span class="text-muted">Umfang: </span> {$umfang} 
+		{if="!is_null($format)"}
+			<span class="text-muted">(</span>{$format}<span class="text-muted">)</span>
+		{/if}
+		<br>
 		<br>
 		<span class="text-muted">ISBN: </span> {$isbn} <br>
 		<br>

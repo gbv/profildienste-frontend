@@ -216,6 +216,8 @@ class Output{
 		$this -> rain -> assign( 'dnb_nummer', $t -> get('dnb_nummer'));
 		$this -> rain -> assign( 'wv_dnb', $t -> get('wv_dnb'));
 		$this -> rain -> assign( 'sachgruppe', $t->get('sachgruppe'));
+		$this -> rain -> assign( 'umfang', $t->get('umfang'));
+		$this -> rain -> assign( 'format', $t->get('format'));
 		
 		// Bestimmung der ISBN
 		if($t->get('isbn13') !== NULL){
@@ -244,6 +246,7 @@ class Output{
 		// Cover
 		if(is_null($t -> getDirectly('XX02')) || !$t -> getDirectly('XX02')){
 			$has_cover = false;
+			$this -> rain -> assign( 'cover_md', \Config\Config::$no_cover_path);
 		}else{
 			$has_cover = true;
 			$cover = $t -> getDirectly('XX02');

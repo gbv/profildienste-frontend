@@ -48,7 +48,7 @@ class Title{
 		'ort'	=> array('033A','p'),
 		'verlag'	=> array('033A','n'),
 		'umfang'	=> array('034D','a'),
-		'format'	=> array('033I','a'),
+		'format'	=> array('mult' => true, 'values' => array(array('033I','a'), array('034I','a'))),
 		'illustrations_angabe'	=> array('034M','a'),
 		'fortlaufendes_sammelwerk_titel'	=> array('036E/00','a'),
 		'zaehlung_hauptreihe'	=> array('036E/00','l'),

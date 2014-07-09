@@ -3,3 +3,4 @@ vendor/
 css/
 node_modules/
 export/
+npm-debug.log
