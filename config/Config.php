@@ -23,7 +23,7 @@ class Config {
 	Main Config
 	----------------------------------------------*/
 
-	public static $no_cover_path = 'assets/img/no-cover.png';
+	public static $no_cover_path = '/assets/img/no-cover.png';
 
 	// Path to the export directory
 	public static $export_dir='export';

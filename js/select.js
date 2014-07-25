@@ -1,6 +1,6 @@
-(function(){
+var list = [];
 
-	var list = [];
+(function(){
 
 	var ICON_CHECKED = 'fa-check-square-o';
 	var ICON_UNCHECKED = 'fa-square-o';

@@ -207,6 +207,15 @@ $app -> group('/pageloader', $authenticate($app) , function () use ($app){
         }
     });
 
+    $app -> get('/rejected/page/:num', function($num = 0) use ($app){
+        $m = new \Content\Rejected(validateNum($num));
+
+        $tit = $m -> getOutput() -> titleOutput();
+        foreach($tit as $t){
+            echo $t;
+        }
+    });
+
 
 });
 
