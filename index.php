@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 
-define('VERSION', '0.4');
+define('VERSION', '0.4.1');
 define('MAINTENANCE', false);
 
 $app = new \Slim\Slim(array(
@@ -380,17 +380,24 @@ $app -> get('/search/:query', function ($query) use ($app){
 });
 
 $app->notFound(function () use ($app) {
-        $view = $app -> view();
-        $app->view()->setData('version', VERSION);
-        $content = $view -> render('error');
 
-        $view -> setData(array('content' => $content));
+	if(MAINTENANCE){
+		$app->view()->setData('version', VERSION);
+		echo $app -> view() ->render('maintenance');
+		$app -> stop();
+	}
 
-        if(isset($_SESSION['id'])){
-    		echo $view ->render('main/pd');
-        }else{
-        	echo $view ->render('main/default');
-        }
+    $view = $app -> view();
+    $app->view()->setData('version', VERSION);
+    $content = $view -> render('error');
+
+    $view -> setData(array('content' => $content));
+
+    if(isset($_SESSION['id'])){
+		echo $view ->render('main/pd');
+    }else{
+    	echo $view ->render('main/default');
+    }
 });
 
 $app->run(); 

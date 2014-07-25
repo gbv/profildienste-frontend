@@ -1,23 +1,9 @@
-.pd-header{
-	border-width:0px 0px 1px 0px;
-}
+@import "colors.less";
 
 .pd-brand{
 	display:inline-block;
-	border-right:1px solid #de5900 !important;
+	border-right:1px solid @secondary !important;
 	margin-right:5px !important;
-}
-
-h1, h2, h3, h4, h5, h6{
-	color:#ff6600;
-}
-
-hr{
-	border-color:#ff6600;
-}
-
-.footer{
-	margin-right:10px;
 }
 
 .shop-options{
@@ -26,7 +12,7 @@ hr{
 
 .shop-options .badge{
 	color:#fff;
-	background-color: #de5900;
+	background-color: @secondary;
 }
 
 .dropdown .badge{
@@ -36,11 +22,7 @@ hr{
 }
 
 .shop-options li{
-	border-left:1px solid #de5900;
-}
-
-.navbar-default .navbar-brand:hover{
-	color:#333333;
+	border-left:1px solid @secondary;
 }
 
 .shop-options .dropdown-menu li{
@@ -72,12 +54,12 @@ hr{
 }
 
 .title-box h3{
-	color:#de5900;
+	color:@secondary;
 }
 
 .price{
 	float:right;
-	color:#de5900;
+	color:@secondary;
 	font-size:16px;
 	max-height:100px;
 	min-height:50px;
@@ -133,29 +115,19 @@ hr{
   background-image: none;
 }
 
-h1{
-	font-size:26px;
-}
-h2{
-	font-size:20px;
-}
-h3{
-	font-size:16px;
-}
-
 .search-lbl{
 	background-color:transparent;
-	border:1px solid #de5900;
+	border:1px solid @secondary;
 	color:#fff;
 }
 
 #search-field{
-	border:1px solid #de5900;
+	border:1px solid @secondary;
 	margin-right:5px;
 }
 
 .sep-right{
-	border-right:1px solid #de5900;	
+	border-right:1px solid @secondary;	
 }
 
 .navbar-inverse .navbar-nav > li > a,
@@ -197,7 +169,7 @@ h3{
 	color:#333;
 }
 .orders-caret{
-	color:#ff6600;
+	color:@primary;
 	margin-right:10px;
 }
 
@@ -225,7 +197,7 @@ h3{
 
 .cover{
 	display:inline-block;
-	border:1px solid #ff6600;
+	border:1px solid @primary;
 	margin-top:8px;
 }
 
@@ -238,12 +210,12 @@ h3{
 }
 
 #btn-sel-all-bar{
-	color:#ff6600;
+	color:@primary;
 }
 
 #estprice, #price_known, #price_est{
 	font-weight:bold;
-	color:#ff6600;
+	color:@primary;
 }
 
 #price-inf{
@@ -253,4 +225,12 @@ h3{
 #loader{
 	display:none;
 	text-align:center;
+}
+
+.selected{
+	background-color: @selected;
+}
+
+.btn-selected{
+	color: @secondary;
 }
