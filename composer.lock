@@ -1,9 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
     ],
-    "hash": "4789699064ed8664511263d0f8e553f5",
+    "hash": "6f87dc950899bcf020c651f0fee34f58",
     "packages": [
         {
             "name": "rain/raintpl",
@@ -53,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeguy/Slim-Extras.git",
-                "reference": "59300d25d62f2f299b4065ed99eb71ca91f8a434"
+                "reference": "a35bc4d15a7efc5e938d8f5fea6b8382912892d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeguy/Slim-Extras/zipball/59300d25d62f2f299b4065ed99eb71ca91f8a434",
-                "reference": "59300d25d62f2f299b4065ed99eb71ca91f8a434",
+                "url": "https://api.github.com/repos/codeguy/Slim-Extras/zipball/a35bc4d15a7efc5e938d8f5fea6b8382912892d5",
+                "reference": "a35bc4d15a7efc5e938d8f5fea6b8382912892d5",
                 "shasum": ""
             },
             "require": {
@@ -78,14 +79,13 @@
             ],
             "authors": [
                 {
-                    "name": "Andrew Smith",
-                    "email": "a.smith@silentworks.co.uk",
-                    "homepage": "http://www.silentworks.co.uk/"
-                },
-                {
                     "name": "Josh Lockhart",
                     "email": "info@joshlockhart.com",
                     "homepage": "http://www.joshlockhart.com/"
+                },
+                {
+                    "name": "Andrew Smith",
+                    "email": "a.smith@silentworks.co.uk"
                 }
             ],
             "description": "Extras package for the Slim Framework",
@@ -95,7 +95,7 @@
                 "middleware",
                 "templating"
             ],
-            "time": "2013-08-01 12:08:36"
+            "time": "2014-07-17 08:27:10"
         },
         {
             "name": "slim/slim",
@@ -103,12 +103,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeguy/Slim.git",
-                "reference": "3a2ac723f17b5d81607287ff28575d38b9fbc70e"
+                "reference": "4906b77a07c7bd6ff1a99aea903e940a2d4fa106"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeguy/Slim/zipball/3a2ac723f17b5d81607287ff28575d38b9fbc70e",
-                "reference": "3a2ac723f17b5d81607287ff28575d38b9fbc70e",
+                "url": "https://api.github.com/repos/codeguy/Slim/zipball/4906b77a07c7bd6ff1a99aea903e940a2d4fa106",
+                "reference": "4906b77a07c7bd6ff1a99aea903e940a2d4fa106",
                 "shasum": ""
             },
             "require": {
@@ -141,7 +141,7 @@
                 "rest",
                 "router"
             ],
-            "time": "2014-02-16 18:18:25"
+            "time": "2014-04-05 18:33:59"
         }
     ],
     "packages-dev": [
@@ -156,6 +156,7 @@
         "slim/slim": 20,
         "slim/extras": 20
     },
+    "prefer-stable": false,
     "platform": [
 
     ],
