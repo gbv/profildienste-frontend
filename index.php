@@ -292,7 +292,7 @@ $app->group('/show', $authenticate($app) ,function () use ($app) {
 		$view = $app->view(); 
 
 		$view->setData(array(
-			'title' => 'Gesamtübersicht Neuerscheiungen',
+			'title' => 'Gesamtübersicht Neuerscheinungen',
 			'count' =>  $m -> getCount(),
 			'icon' => NULL,
 			'list' => $m -> getOutput() -> output()
