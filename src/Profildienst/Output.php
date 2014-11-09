@@ -185,6 +185,9 @@ class Output{
 	private function output_title($t){
 
 		$n=$t->getDirectly('_id');
+
+		$btn_1  = '';
+		$btn_2 = '';
 	
 		if(!$t -> is_Done() && !$t -> is_Rejected()){
 			
