@@ -5,6 +5,14 @@ require 'vendor/autoload.php';
 define('VERSION', '0.4.2');
 define('MAINTENANCE', false);
 
+/**
+ * Prüfen, ob eine Konfigurationsdatei vorhanden ist
+ */
+if(!class_exists('\Config\Config')){
+	echo 'Diese Instanz wurde noch nicht konfiguriert und kann noch nicht verwendet werden.';
+	exit(0);
+}
+
 $app = new \Slim\Slim(array(
 	'view' => new \Slim\Extras\Views\Rain(\Config\Config::$rain_config)
 	));
@@ -400,8 +408,7 @@ $app->notFound(function () use ($app) {
     }
 });
 
-$app->run(); 
-
+$app -> run();
 
 /*
 	WEITERE FUNKTIONEN
