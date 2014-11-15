@@ -22,8 +22,8 @@ class Rejected implements Content{
 
 	}
 
-	public function getOutput(){
-		return $this -> output;
+	public function getTitles(){
+		return $this -> titlelist -> getResult();
 	}
 
 	public function getCount(){
