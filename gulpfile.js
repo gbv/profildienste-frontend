@@ -9,6 +9,25 @@ var gulp = require('gulp'),
     notify = require('gulp-notify'),
     del = require('del');
 
+var vendor_css = [
+  'bower_components/fontawesome/css/font-awesome.css'
+];
+
+gulp.task('vendorcss', function() {
+  return gulp.src(vendor_css)
+    .pipe(concat('vendor.css'))
+    .pipe(gulp.dest('css/'))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(minifycss())
+    .pipe(gulp.dest('css/'))
+    .pipe(notify({ message: 'Vendor CSS compiled!'}));
+});
+
+gulp.task('fa-font', function() {
+  return gulp.src('bower_components/fontawesome/fonts/**.*') 
+    .pipe(gulp.dest('fonts')); 
+});
+
 gulp.task('less', function() {
   return gulp.src('src/less/*.less')
     .pipe(less({
@@ -24,15 +43,15 @@ gulp.task('less', function() {
 });
 
 var vendor = [
-  'bower_components/angular/angular.js',
-  'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-  'bower_components/angular-route/angular-route.js',
-  'bower_components/jquery/dist/jquery.js',
-  'bower_components/bootstrap/dist/js/bootstrap.js'
+  'bower_components/angular/angular.min.js',
+  'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+  'bower_components/jquery/dist/jquery.min.js',
+  'bower_components/bootstrap/dist/js/bootstrap.min.js',
+  'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
 ];
 
 gulp.task('js', function() {
-  return gulp.src(vendor.concat(['src/js/**/*.js']))
+  return gulp.src('src/js/**/*.js')
     .pipe(concat('main.js'))
     .pipe(gulp.dest('js/'))
     .pipe(rename({suffix: '.min'}))
@@ -41,12 +60,22 @@ gulp.task('js', function() {
     .pipe(notify({ message: 'JavaScript compiled!'}));
 });
 
+gulp.task('vendorjs', function() {
+  return gulp.src(vendor)
+    .pipe(concat('vendor.js'))
+    .pipe(gulp.dest('js/'))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(uglify())
+    .pipe(gulp.dest('js/'))
+    .pipe(notify({ message: 'Vendor JS compiled!'}));
+});
+
 gulp.task('clean', function(callback) {
     del(['css/', 'js/'], callback);
 });
 
 gulp.task('build', ['clean'] ,function(){
-  gulp.start('less', 'js');
+  gulp.start('less', 'js', 'vendorjs' ,'vendorcss', 'fa-font');
 });
 
 gulp.task('default', ['clean'], function() {
