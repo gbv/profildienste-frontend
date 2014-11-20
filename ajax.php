@@ -11,27 +11,23 @@ $app->add(new \Slim\Middleware\SessionCookie(array('secret' => 'ProfildienstGBV'
 $authenticate = function ($app) {
     return function () use ($app) {
         if (!isset($_SESSION['id'])) {
-            $app->redirect('/login');
+            $app->redirect('/');
         }
     };
 };
 
+$app->response->headers->set('Content-Type', 'application/javascript');
+
 $app->group('/ajax', $authenticate($app) ,function () use ($app) { 
 
     $app->post('/confirm', function () use ($app){
-
         $m = new \AJAX\ConfirmOrder();
-
-        echo json_encode($m -> getResponse());
-
+        printResponse($m -> getResponse());
     });
 
     $app->post('/delete', function () use ($app){
-
         $m = new \AJAX\Delete();
-
-        echo json_encode($m -> getResponse());
-
+        printResponse($m -> getResponse());
     });
 
     $app->post('/watchlist-manage', function () use ($app){
@@ -41,9 +37,7 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
         $content = $app->request()->post('content');
 
         $m = new \AJAX\WatchlistManager($id, $type, $content);
-
-        echo json_encode($m -> getResponse());
-
+        printResponse($m -> getResponse());
     });
 
     $app->post('/watchlist-rm', function () use ($app){
@@ -53,9 +47,7 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
         $wl = $app->request()->post('wl');
 
         $m = new \AJAX\RemoveWatchlist($id, $rm, $wl);
-
-        echo json_encode($m -> getResponse());
-
+        printResponse($m -> getResponse());
     });
 
     $app->post('/watchlist', function () use ($app){
@@ -65,9 +57,7 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
         $wl = $app->request()->post('wl');
 
         $m = new \AJAX\Watchlist($id, $rm, $wl);
-
-        echo json_encode($m -> getResponse());
-
+        printResponse($m -> getResponse());
     });
 
     $app->post('/reject', function () use ($app){
@@ -75,9 +65,7 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
         $id = $app->request()->post('id');
 
         $m = new \AJAX\Reject($id);
-
-        echo json_encode($m -> getResponse());
-
+        printResponse($m -> getResponse());
     });
 
 
@@ -86,9 +74,7 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
         $id = $app->request()->post('id');
 
         $m = new \AJAX\RemoveReject($id);
-
-        echo json_encode($m -> getResponse());
-
+        printResponse($m -> getResponse());
     });
 
     $app->post('/info', function () use ($app){
@@ -96,9 +82,7 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
         $id = $app->request()->post('id');
 
         $m = new \AJAX\Info($id);
-
-        echo json_encode($m -> getResponse());
-
+        printResponse($m -> getResponse());
     });
 
     $app->post('/change-setting', function () use ($app){
@@ -107,9 +91,7 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
         $value = $app->request()->post('value');
         
         $m = new \AJAX\ChangeSetting($type, $value);
-
-        echo json_encode($m -> getResponse());
-
+        printResponse($m -> getResponse());
     });
 
 
@@ -119,9 +101,7 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
         $rm = $app->request()->post('rm');
 
         $m = new \AJAX\RemoveCart($id, $rm);
-
-        echo json_encode($m -> getResponse());
-
+        printResponse($m -> getResponse());
     });
 
 
@@ -137,86 +117,47 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
         
         $m = new \AJAX\Cart($id, $rm, $lft, $bdg, $selcode, $ssgnr, $comment);
 
-        echo json_encode($m -> getResponse());
-
+        printResponse($m -> getResponse());
     });
-
 });
 
 $app -> group('/pageloader', $authenticate($app) , function () use ($app){
 
     $app -> get('/overview/page/:num', function($num = 0) use ($app){
         $m = new \Content\Main(validateNum($num));
-
-        $tit = $m -> getOutput() -> titleOutput();
-        foreach($tit as $t){
-            echo $t;
-        }
+        printTitles($m -> getTitles());
     });
 
     $app -> get('/cart/page/:num', function($num = 0) use ($app){
         $m = new \Content\Cart(validateNum($num));
-
-        $tit = $m -> getOutput() -> titleOutput();
-        foreach($tit as $t){
-            echo $t;
-        }
+        printTitles($m -> getTitles());
     });
 
     $app -> get('/watchlist/:id/page/:num', function($id = NULL, $num = 0) use ($app){
         $m = new \Content\Watchlist(validateNum($num), $id);
-
-        $tit = $m -> getOutput() -> titleOutput();
-        foreach($tit as $t){
-            echo $t;
-        }
+        printTitles($m -> getTitles());
     });
 
     $app -> get('/search/:query/page/:num', function($query, $num = 0) use ($app){
-
         $m = new \Special\Search($query, $num);
-
-        $view = $app->view(); 
-
-        if(!is_null($m -> getOutput())){
-
-            $tit = $m -> getOutput() -> titleOutput();
-            foreach($tit as $t){
-                echo $t;
-            }
-        }
-        
+        printTitles($m -> getTitles());
     });
 
 
     $app -> get('/pending/page/:num', function($num = 0) use ($app){
         $m = new \Content\Pending(validateNum($num));
-
-        $tit = $m -> getOutput() -> titleOutput();
-        foreach($tit as $t){
-            echo $t;
-        }
+        printTitles($m -> getTitles());
     });
 
     $app -> get('/done/page/:num', function($num = 0) use ($app){
         $m = new \Content\Done(validateNum($num));
-
-        $tit = $m -> getOutput() -> titleOutput();
-        foreach($tit as $t){
-            echo $t;
-        }
+        printTitles($m -> getTitles());
     });
 
     $app -> get('/rejected/page/:num', function($num = 0) use ($app){
         $m = new \Content\Rejected(validateNum($num));
-
-        $tit = $m -> getOutput() -> titleOutput();
-        foreach($tit as $t){
-            echo $t;
-        }
+        printTitles($m -> getTitles());
     });
-
-
 });
 
 $app->notFound(function () use ($app) {
@@ -238,6 +179,49 @@ function validateNum($num){
         return $num;
     }else{
         return 0;
+    }
+}
+
+function convertTitle(\Profildienst\Title $t){
+    $r = array(
+        'id' => $t->getDirectly('_id'),
+        'hasCover' => $t->hasCover(),
+        'cover' => $t->getMediumCover(),
+        'titel' => $t -> get('titel'),
+        'untertitel' => $t -> get('untertitel'),
+        'verfasser' => $t -> get('verfasser'),
+        'ersch_termin' => $t -> get('voraus_ersch_termin'),
+        'verlag' => $t -> get('verlag'),
+        'umfang' => $t->get('umfang'),
+        'format' => $t->get('format'),
+        'status' => array(
+            'controls' => true,
+            'rejected' => false,
+            'done' => false
+        ) 
+    );
+
+    return $r;
+}
+
+function printTitles($titles){
+    $titles_out = array();
+    foreach($titles as $t){
+        $titles_out[] = convertTitle($t);
+    }
+
+    printResponse(array('data' => $titles_out));
+}
+
+function printResponse($resp){
+    global $app;
+
+    $callback = $app->request()->get('callback');
+
+    if(!is_null($callback) && trim($callback) !== ''){
+        echo $callback.'('.json_encode($resp).');';
+    }else{
+        echo json_encode($resp);
     }
 }
 

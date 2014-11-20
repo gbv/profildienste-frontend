@@ -16,6 +16,8 @@ class Title{
 	private $done=false;
 	private $rj=false;
 
+	private $cover;
+
 	private $lookup = array(
 		'ersterfassung'	=> array('001A','0'),
 		'letze_aenderung_datum'	=> array('001B','0'),
@@ -64,6 +66,12 @@ class Title{
 
 	public function __construct($json) {
 		$this -> j = $json;
+
+		if(is_null($json['XX02']) || !$json['XX02']){
+			$this->cover = NULL;
+		}else{
+			$this->cover = $json['XX02'];
+		}
 	} 
 
 	public function get($v){
@@ -223,6 +231,26 @@ class Title{
 
 	public function getComment(){
 		return $this -> comment;
+	}
+
+	public function hasCover(){
+		return $this->cover != null;
+	}
+
+	public function getMediumCover(){
+		if(!is_null($this->cover)){
+			return $this->cover['md'];
+		}else{
+			return NULL;
+		}
+	}
+
+	public function getLargeCover(){
+		if(!is_null($this->cover)){
+			return $this->cover['lg'];
+		}else{
+			return NULL;
+		}
 	}
 }
 

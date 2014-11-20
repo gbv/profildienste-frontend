@@ -4,3 +4,6 @@ css/
 node_modules/
 export/
 npm-debug.log
+composer.lock
+js/
+fonts/

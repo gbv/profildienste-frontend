@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 
-define('VERSION', '0.4.2');
+define('VERSION', '0.4.3');
 define('MAINTENANCE', false);
 
 /**
