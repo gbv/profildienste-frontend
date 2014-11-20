@@ -1,96 +1,40 @@
 <?php
 
-namespace AJAX;
+namespace Content;
 
-class Cart implements AJAX{
-	
-	private $err;
-	private $resp;
+class Cart implements Content{
 
-	public function __construct($id, $rm, $lft, $bdg, $selcode, $ssgnr, $comment){
+	private $output;
+	private $titlelist;
 
-		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL , 'btn' => NULL, 'rm' => false,'errormsg' => '', 'price' => NULL, 'known' => NULL, 'est' => NULL);
+	public function __construct($num){
 
-		if($id == '' || $rm == '' || $lft == '' || $bdg == '' || $selcode == '' || $ssgnr == ''){
-			$this -> error('Unvollständige Daten');
-			return;
+		$cart=\Profildienst\DB::getUserData('cart');
+		$ct=array();
+
+		foreach ($cart as $c){
+			array_push($ct, $c['id']);
 		}
 
-		$this -> resp['id'] = $id;
-		$this -> resp['rm'] = $rm;
+		$query = array('$and' => array(array('XX01' => $_SESSION["id"]), array('_id' => array('$in' => $ct))));
 
-		$c = \Profildienst\DB::getUserData('cart');
+		$t = \Profildienst\DB::getTitleList($query, $num);
 
-		if($c === NULL){
-			$this -> error('Kein Warenkorb für diesen Nutzer gefunden');
-			return;
-		}
+		$titles = $t -> getResult();
 
-		$ni=array('id' => $id, 'budget' => $bdg, 'lieft' => $lft, 'selcode' => $selcode, 'ssgnr' => $ssgnr, 'comment' => $comment);
+		$this -> output = new \Profildienst\Output($titles, !($num == 0) , $t -> more() , $num , '/pageloader/cart/page/' , true, false, false, false);
+		$this -> titlelist = $t;
 
-		if ($this -> in_cart($ni, $c)){
-			$this -> error('Dieser Titel befindet sich bereits im Warenkorb!');
-			return;
-		}else{
-
-			$p = \Profildienst\DB::getUserData('price');
-
-			
-			$tit = \Profildienst\DB::getTitleByID($id);
-
-			$pr = $tit -> getEURPrice();
-
-
-			if(is_null($pr)){
-				// Preis ist nicht bekannt
-				$p['est'] = $p['est']+1;
-
-				$mean = \Profildienst\DB::get(array('_id' => 'mean'), 'data', array(), true);
-				$pr = $mean['value'];
-
-			}else{
-				// Preis ist bekannt
-				$p['known'] = $p['known']+1;
-			}
-
-			$p['price'] = $p['price'] + $pr;
-
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('price' => $p)),'users');
-
-			$this -> resp['price'] = number_format($p['price'], 2, '.', '');
-			$this -> resp['est'] = $p['est'];
-			$this -> resp['known'] = $p['known'];
-
-
-			$ui = new \Profildienst\UI();
-
-			array_push($c,$ni);
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('cart' => $c)),'users');
-
-			$this -> resp['content']=sizeof($c);
-			$this -> resp['btn']= $ui -> ct_button(true,$rm,$id);
-			$this -> resp['success']=true;
-		}
 	}
 
-	private function in_cart($item, $cart){
-		foreach($cart as $c){
-			if ($c['id'] == $item['id']){
-				return true;
-			}
-		}
-		return false;
+	public function getOutput(){
+		return $this -> output;
 	}
 
-	private function error($msg){
-		$this -> resp['success']=false;
-		$this -> resp['errormsg']=$msg;
+	public function getCount(){
+		return $this -> titlelist -> getCount();
 	}
-
-	public function getResponse(){
-		return $this -> resp;
-	}
-	
 }
+
 
 ?>

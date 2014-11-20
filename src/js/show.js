@@ -1,4 +1,5 @@
-$('body').on('click', '.add-inf', function(){
+$(document).ready(function (){
+	$('body').on('click', '.add-inf', function(){
 	var id=$(this).attr('rel');
 
 	if($('#inf-'+id).is(':visible')) {
@@ -414,6 +415,8 @@ $('#cart-btn').popover({
 	},
 	trigger: 'hover',
 	delay: 100
+});
+
 });
 
 $.scr_req_pending = false;

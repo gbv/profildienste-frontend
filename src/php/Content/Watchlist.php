@@ -30,8 +30,8 @@ class Watchlist implements Content{
 		$this -> name = $watchlists[$id]['name'];
 	}
 
-	public function getTitles(){
-		return is_null($this -> output)? NULL : $this -> titlelist -> getResult();;
+	public function getOutput(){
+		return is_null($this -> output)? NULL : $this -> output;
 	}
 
 	public function getCount(){

@@ -9,6 +9,7 @@
   "dependencies": {
     "bootstrap": "~3.1.1",
     "jquery": "latest",
+    "jquery-ui": "latest",
     "fontawesome": "latest",
     "angular": "latest",
     "angular-bootstrap": "latest",
