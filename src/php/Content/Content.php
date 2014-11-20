@@ -4,7 +4,7 @@ namespace Content;
 
 interface Content{
 
-	public function getTitles();
+	public function getOutput();
 
 	public function getCount();
 
