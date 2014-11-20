@@ -17,13 +17,13 @@ class Rejected implements Content{
 
 		$titles = $t -> getResult();
 
-		$this -> output = new \Profildienst\Output($titles, !($num == 0) , $t -> more() , $num , '/pageloader/rejected/page/' , true, false, false, false, false);
+		$this -> output = new \Profildienst\Output($titles, !($num == 0) , $t -> more() , $num , '/show/rejected/page/%d' , true, false, false, false, false);
 		$this -> titlelist = $t;
 
 	}
 
-	public function getTitles(){
-		return $this -> titlelist -> getResult();
+	public function getOutput(){
+		return $this -> output;
 	}
 
 	public function getCount(){

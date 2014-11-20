@@ -41,8 +41,8 @@ class Main implements Content{
 
 	}
 
-	public function getTitles(){
-		return $this -> titlelist -> getResult();
+	public function getOutput(){
+		return $this -> output;
 	}
 
 	public function getCount(){
