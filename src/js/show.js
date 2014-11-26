@@ -318,9 +318,9 @@ $('body').on('click', '.cover-lg', function (){
 
 $('.search-lbl').click(function (){
 	$('#modalHelp').modal({
-		'keyboard': true,
-		'remote': '/static/html/help.html'
+		'keyboard': true
 	});
+	$('#modalHelp').find('.modal-content').load('/assets/html/help.html');
 });
 
 $('#search-field').keypress(function (e) {

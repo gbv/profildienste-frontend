@@ -1,144 +1,165 @@
+<!-- -->
 <div class="row title-box" id="row-{$id}">
-	<div class="col-lg-2 col-md-2 col-sm-2 cover-box">
-		{if="$xt_controls"}
-			<button type="button" class="btn btn-link pull-left xt-control xt-list" rel="{$id}">
-				<i class="fa fa-square-o fa-2x"></i>
-			</button>
-		{/if}
-		{if="$has_cover"}
-			<img src="{$cover_md}" class="cover cover-lg" rel="{$cover_lg}">
-		{else}
-			<img src="{$cover_md}" class="cover">
-		{/if}
-	</div>
-	<div class="col-lg-7 col-md-7 col-sm-7 title-info">
-		<h2>{$titel}</h2>
-		<br>
-		<h3>{$untertitel}</h3>
-		<br>
-		<br>
-		<span class="text-muted">von</span> {$verfasser} <span class="text-muted">(</span> {$verlag} <span class="text-muted">)</span>
-		<br>
-		<span class="text-muted">Umfang: </span> {$umfang} 
-		{if="!is_null($format)"}
-			<span class="text-muted">(</span>{$format}<span class="text-muted">)</span>
-		{/if}
-		<br>
-		<br>
-		<span class="text-muted">ISBN: </span> {$isbn} <br>
-		<br>
-		<span class="text-muted">erscheint: </span> {$ersch_termin} <br>
-		<br>
-		{$gvkt}
-		<br>
-		<br>
-		{if="$inputs"}
-			<span class="text-muted">Lieferant: </span>
-			{if="$lft === NULL"}
-				<input type="text" pattern=".{7,}" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" maxlength="7" id="lft-{$id}" rel="{$def_lft}" placeholder="{$def_lft}">
-			{else}
-				{$lft}
-			{/if}
-			<span class="text-muted">Budget: </span>
-			{if="$bdg === NULL"}
-			<select class="form-control lft input-sm" id="bdg-{$id}">
+  <!-- Linke Seite -->
+  <div class="col-md-2">
+    <div class="row">
+      <!-- Selektor -->
+      <div class="col-md-4">
+        {if="$xt_controls"}
+            <button type="button" class="btn btn-link pull-left xt-control xt-list" rel="{$id}">
+                <i class="fa fa-square-o fa-2x"></i>
+            </button>
+        {/if}
+      </div>
+      <!-- Cover -->
+      <div class="col-md-8">
+        {if="$has_cover"}
+            <img src="{$cover_md}" class="cover cover-lg" rel="{$cover_lg}">
+        {else}
+            <img src="{$cover_md}" class="cover">
+        {/if}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-7">
+    <!-- Start Mitte -->
+    <h2>{$titel}</h2>
+            <br>
+            <h3>{$untertitel}</h3>
+            <br>
+            <br>
+            <span class="text-muted">von</span> {$verfasser} <span class="text-muted">(</span> {$verlag} <span class="text-muted">)</span>
+            <br>
+            <span class="text-muted">Umfang: </span> {$umfang} 
+            {if="!is_null($format)"}
+                <span class="text-muted">(</span>{$format}<span class="text-muted">)</span>
+            {/if}
+            <br>
+            <br>
+            <span class="text-muted">ISBN: </span> {$isbn} <br>
+            <br>
+            <span class="text-muted">erscheint: </span> {$ersch_termin} <br>
+            <br>
+            {$gvkt}
+            <br>
+            <br>
+            {if="$inputs"}
+                <span class="text-muted">Lieferant: </span>
+                {if="$lft === NULL"}
+                    <input type="text" pattern=".{7,}" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" maxlength="7" id="lft-{$id}" rel="{$def_lft}" placeholder="{$def_lft}">
+                {else}
+                    {$lft}
+                {/if}
+                <span class="text-muted">Budget: </span>
+                {if="$bdg === NULL"}
+                <select class="form-control lft input-sm" id="bdg-{$id}">
 
-			{loop="$bdgs"}
-				{if="$value.0 == $def_bdg"}
-					<option selected value="{$value.0}">{$value.c}</option>
-				{else}
-					<option value="{$value.0}">{$value.c}</option>
-				{/if}
-			{/loop}
-			</select>
-			{else}
-				{$bdg}
-			{/if}
-			<span class="text-muted">Selektionscode: </span>
-			{if="$selcode===NULL"}
-				<input type="text" pattern=".{20,}" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20" maxlength="20" id="selcode-{$id}" rel="{$def_selcode}" placeholder="Selektionscode">
-			{else}
-				{$selcode}
-			{/if}
-			<span class="text-muted">SSGs-Nr.: </span>
-			{if="$ssgnr===NULL"}
-				<input type="text" pattern=".{3,}" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" maxlength="3" id="ssgnr-{$id}" rel="{$def_ssgnr}" placeholder="SSG">
-			{else}
-				{$ssgnr}
-			{/if}
-		{/if}
-		<div id="bib-inf-{$id}" class="inf">
-			<br>
-			<span class="text-muted">Erscheinungsjahr: </span> {$ersch_jahr} <br><br>
-			<span class="text-muted">Gattung: </span> {$gattung} <br><br>
-			<span class="text-muted">DNB-Nummer: </span> {$dnb_nummer} <br>
-			<span class="text-muted">WV: </span> {$wv_dnb} <br><br>
-			<span class="text-muted">DNB Sachgruppe: </span> {$sachgruppe} <br><br>
-			<span class="text-muted">Zugeordnete Fachreferenten: </span> {$refs} <br><br>
-		</div>
-		{if="$allow_cmt"}
-			<div id="cmt-{$id}" class="inf">
-				<br>
-				<span class="text-muted">Kommentar: </span><br>
-				<textarea class="form-control cmt-field" rows="3" id="cmt-field-{$id}" rel="{$id}" placeholder="Freitext-Kommentar"></textarea>
-			</div>
-		{else}
-			{if="$inputs"}
-				<br>
-				<br>
-				<span class="text-muted">Kommentar: </span> {$comment}
-			{/if}
-		{/if}
-		<br>
-		<br>
-		<button type="button" class="btn btn-primary btn-sm add-bib-inf" id="bib-inf-btn-{$id}" rel="{$id}">
-			<i class="fa fa-plus-square-o"></i> Zusätzliche Informationen
-		</button>
-		{if="$allow_cmt"}
-			<button type="button" class="btn btn-primary btn-sm cmt-btn" id="cmt-btn-{$id}" rel="{$id}"><i class="fa fa-comment"></i> Kommentieren</button>
-		{/if}
-		 {$btn_opac} 
+                {loop="$bdgs"}
+                    {if="$value.0 == $def_bdg"}
+                        <option selected value="{$value.0}">{$value.c}</option>
+                    {else}
+                        <option value="{$value.0}">{$value.c}</option>
+                    {/if}
+                {/loop}
+                </select>
+                {else}
+                    {$bdg}
+                {/if}
+                <span class="text-muted">Selektionscode: </span>
+                {if="$selcode===NULL"}
+                    <input type="text" pattern=".{20,}" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20" maxlength="20" id="selcode-{$id}" rel="{$def_selcode}" placeholder="Selektionscode">
+                {else}
+                    {$selcode}
+                {/if}
+                <span class="text-muted">SSGs-Nr.: </span>
+                {if="$ssgnr===NULL"}
+                    <input type="text" pattern=".{3,}" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" maxlength="3" id="ssgnr-{$id}" rel="{$def_ssgnr}" placeholder="SSG">
+                {else}
+                    {$ssgnr}
+                {/if}
+            {/if}
+            <div id="bib-inf-{$id}" class="inf">
+                <br>
+                <span class="text-muted">Erscheinungsjahr: </span> {$ersch_jahr} <br><br>
+                <span class="text-muted">Gattung: </span> {$gattung} <br><br>
+                <span class="text-muted">DNB-Nummer: </span> {$dnb_nummer} <br>
+                <span class="text-muted">WV: </span> {$wv_dnb} <br><br>
+                <span class="text-muted">DNB Sachgruppe: </span> {$sachgruppe} <br><br>
+                <span class="text-muted">Zugeordnete Fachreferenten: </span> {$refs} <br><br>
+            </div>
+            {if="$allow_cmt"}
+                <div id="cmt-{$id}" class="inf">
+                    <br>
+                    <span class="text-muted">Kommentar: </span><br>
+                    <textarea class="form-control cmt-field" rows="3" id="cmt-field-{$id}" rel="{$id}" placeholder="Freitext-Kommentar"></textarea>
+                </div>
+            {else}
+                {if="$inputs"}
+                    <br>
+                    <br>
+                    <span class="text-muted">Kommentar: </span> {$comment}
+                {/if}
+            {/if}
+            <br>
+            <br>
+            <button type="button" class="btn btn-primary btn-sm add-bib-inf" id="bib-inf-btn-{$id}" rel="{$id}">
+                <i class="fa fa-plus-square-o"></i> Zusätzliche Informationen
+            </button>
+            {if="$allow_cmt"}
+                <button type="button" class="btn btn-primary btn-sm cmt-btn" id="cmt-btn-{$id}" rel="{$id}"><i class="fa fa-comment"></i> Kommentieren</button>
+            {/if}
+             {$btn_opac} 
 
-		{if="$add_inf !== NULL"}
-			<button type="button" class="btn btn-primary btn-sm add-inf" id="inf-btn-{$id}" rel="{$id}">
-				<i class="fa fa-plus-square-o"></i> Verlagsmeldung
-			</button>
-			<br>
-			<br>
-			<div class="well well-lg inf" id="inf-{$id}"></div>
-		{/if}
-	</div>
-	<div class="col-lg-3 col-md-3 col-sm-2">
-		{if="$price !== NULL"}
-			<span class="price">{$price}</span>
-		{/if}
-	</div>
-	<div class="col-lg-3 price-com col-md-3 col-sm-2">
-		{if="$price_com !== NULL"}
-			<span class="text-muted">{$price_com}</span>
-			<br>
-			<br>
-		{/if}
-	</div>
-	<div class="col-lg-3 cart-btn">
-		{if="$isRejected || $isDone"}
-			<br><br><br>
-		{else}
-			{$btn_1}
-		{/if}
-	</div>
-	<div class="col-lg-3 wl-btn">
-		{if="$isDone"}
-		<span class="text-muted">Sie haben diesen Titel bereits bestellt.</span>
-		{else}
-			{$btn_2}
-		{/if}
-	</div>
-		{if="$xt_controls"}
-			<div class="col-lg-3">
-				<button type="button" class="btn btn-link pull-right xt-control xt-remove" rel='{"id": "{$id}"}'>
-					<i class="fa fa-minus-circle fa-lg"></i> Ablehnen
-				</button>							
-			</div>
-		{/if}
+            {if="$add_inf !== NULL"}
+                <button type="button" class="btn btn-primary btn-sm add-inf" id="inf-btn-{$id}" rel="{$id}">
+                    <i class="fa fa-plus-square-o"></i> Verlagsmeldung
+                </button>
+                <br>
+                <br>
+                <div class="well well-lg inf" id="inf-{$id}"></div>
+            {/if}
+    <!-- End Mitte -->
+  </div>
+  <div class="col-md-3">
+    <!-- Preisinformationen -->
+    <div class="row" class="title-price">
+      <div class="col-md-12">
+        {if="$price !== NULL"}
+            <span class="price">{$price}</span>
+        {/if}
+        {if="$price_com !== NULL"}
+          <br>
+          <span class="text-muted">{$price_com}</span>
+        {/if}
+      </div>
+    </div>
+    <!-- Button 1 -->
+    <div class="row" class="title-button">
+      <div class="col-md-12">
+        {if="!($isRejected) && !($isDone)"}
+            {$btn_1}
+        {/if}
+      </div>
+    </div>
+    <!-- Button 2 -->
+    <div class="row" class="title-button">
+      <div class="col-md-12">
+        {if="$isDone"}
+        <span class="text-muted">Sie haben diesen Titel bereits bestellt.</span>
+        {else}
+            {$btn_2}
+        {/if}
+      </div>
+    </div>
+    <!-- Ablehnen Button -->
+    <div class="row" class="title-button">
+      <div class="col-md-12">
+        {if="$xt_controls"}
+                <button type="button" class="btn btn-link pull-right xt-control xt-remove" rel='{"id": "{$id}"}'>
+                    <i class="fa fa-minus-circle fa-lg"></i> Ablehnen
+                </button>
+        {/if}
+      </div>
+    </div>
+  </div>
 </div>

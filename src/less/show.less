@@ -118,7 +118,7 @@
 .search-lbl{
 	background-color:transparent;
 	border:1px solid @secondary;
-	color:@navbar-link-col;
+	color:@navbar-link-col !important;
 }
 
 #search-field{
@@ -148,8 +148,8 @@
 }
 
 .lft{
-	width:80px;
-	display:inline-block;
+	width:80px !important;
+	display:inline-block !important;
 }
 
 #btn-cont{
@@ -199,6 +199,7 @@
 	display:inline-block;
 	border:1px solid @primary;
 	margin-top:8px;
+	margin-left:-12px;
 }
 
 .navbar-collapse .collapse{
@@ -233,4 +234,8 @@
 
 .btn-selected{
 	color: @secondary;
+}
+
+.title-price, .title-button{
+	min-height:50px;
 }
