@@ -1,6 +1,6 @@
 var list = [];
 
-(function(){
+$(document).ready(function(){
 
 	var ICON_CHECKED = 'fa-check-square-o';
 	var ICON_UNCHECKED = 'fa-square-o';
@@ -103,4 +103,4 @@ var list = [];
 		title : 'Alle auswählen'
 	});
 
-})();
+});
