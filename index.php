@@ -396,7 +396,22 @@ $app->notFound(function () use ($app) {
 	}
 
     $view = $app -> view();
+    $app->view()->setData(mainData());
     $app->view()->setData('version', VERSION);
+
+    $user = null;
+	if (isset($_SESSION['user'])) {
+		$user = $_SESSION['user'];
+	}
+
+	$name = null;
+	if (isset($_SESSION['name'])) {
+		$name = $_SESSION['name'];
+	}
+
+	$app->view()->setData('user', $user);
+	$app->view()->setData('name', $name);
+
     $content = $view -> render('error');
 
     $view -> setData(array('content' => $content));
