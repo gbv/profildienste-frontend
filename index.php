@@ -395,8 +395,7 @@ $app->notFound(function () use ($app) {
 		$app -> stop();
 	}
 
-    $view = $app -> view();
-    $app->view()->setData(mainData());
+    $view = $app -> view(); 
     $app->view()->setData('version', VERSION);
 
     $user = null;
@@ -411,6 +410,10 @@ $app->notFound(function () use ($app) {
 
 	$app->view()->setData('user', $user);
 	$app->view()->setData('name', $name);
+
+	if(isset($_SESSION['id'])){
+		$app->view()->setData(mainData());
+	}
 
     $content = $view -> render('error');
 
