@@ -2,8 +2,7 @@
 
 require 'vendor/autoload.php';
 
-define('VERSION', '0.4.3');
-define('MAINTENANCE', false);
+define('VERSION', '0.4.4');
 
 /**
  * Prüfen, ob eine Konfigurationsdatei vorhanden ist
@@ -41,7 +40,7 @@ $authenticate = function ($app) {
 
 $app->hook('slim.before.dispatch', function() use ($app) {
 
-	if(MAINTENANCE){
+	if(\Config\Config::$maintenance_mode){
 		$app->view()->setData('version', VERSION);
 		echo $app -> view() ->render('maintenance');
 		$app -> stop();
@@ -389,7 +388,7 @@ $app -> get('/search/:query', function ($query) use ($app){
 
 $app->notFound(function () use ($app) {
 
-	if(MAINTENANCE){
+	if(\Config\Config::$maintenance_mode){
 		$app->view()->setData('version', VERSION);
 		echo $app -> view() ->render('maintenance');
 		$app -> stop();
