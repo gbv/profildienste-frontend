@@ -16,16 +16,16 @@ var vendor_css = [
 gulp.task('vendorcss', function() {
   return gulp.src(vendor_css)
     .pipe(concat('vendor.css'))
-    .pipe(gulp.dest('css/'))
+    .pipe(gulp.dest('dist/css/'))
     .pipe(rename({suffix: '.min'}))
     .pipe(minifycss())
-    .pipe(gulp.dest('css/'))
+    .pipe(gulp.dest('dist/css/'))
     .pipe(notify({ message: 'Vendor CSS compiled!'}));
 });
 
 gulp.task('fa-font', function() {
   return gulp.src('bower_components/fontawesome/fonts/**.*') 
-    .pipe(gulp.dest('fonts')); 
+    .pipe(gulp.dest('dist/fonts')); 
 });
 
 gulp.task('less', function() {
@@ -35,10 +35,10 @@ gulp.task('less', function() {
     }))
     .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
     .pipe(concat('main.css'))
-    .pipe(gulp.dest('css/'))
+    .pipe(gulp.dest('dist/css/'))
     .pipe(rename({suffix: '.min'}))
     .pipe(minifycss())
-    .pipe(gulp.dest('css/'))
+    .pipe(gulp.dest('dist/css/'))
     .pipe(notify({ message: 'LESS compiled!'}));
 });
 
@@ -54,20 +54,20 @@ var vendor = [
 gulp.task('js', function() {
   return gulp.src('src/js/**/*.js')
     .pipe(concat('main.js'))
-    .pipe(gulp.dest('js/'))
+    .pipe(gulp.dest('dist/js/'))
     .pipe(rename({suffix: '.min'}))
     .pipe(uglify())
-    .pipe(gulp.dest('js/'))
+    .pipe(gulp.dest('dist/js/'))
     .pipe(notify({ message: 'JavaScript compiled!'}));
 });
 
 gulp.task('vendorjs', function() {
   return gulp.src(vendor)
     .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('js/'))
+    .pipe(gulp.dest('dist/js/'))
     .pipe(rename({suffix: '.min'}))
     .pipe(uglify())
-    .pipe(gulp.dest('js/'))
+    .pipe(gulp.dest('dist/js/'))
     .pipe(notify({ message: 'Vendor JS compiled!'}));
 });
 
