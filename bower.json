@@ -12,7 +12,6 @@
     "jquery-ui": "latest",
     "fontawesome": "latest",
     "angular": "latest",
-    "angular-bootstrap": "latest",
-    "ngInfiniteScroll": "latest"
+    "ngInfiniteScroll": "~1.0.0"
   }
 }
