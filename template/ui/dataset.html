@@ -1,92 +1,95 @@
 <!-- -->
-<div class="row title-box" id="row-{$id}">
+<div class="row title-box" id="row">
   <!-- Linke Seite -->
   <div class="col-md-2">
     <div class="row">
       <!-- Selektor -->
       <div class="col-md-4">
-        {if="$xt_controls"}
-            <button type="button" class="btn btn-link pull-left xt-control xt-list" rel="{$id}">
-                <i class="fa fa-square-o fa-2x"></i>
-            </button>
-        {/if}
+        <button type="button" class="btn btn-link pull-left xt-control xt-list" ng-show="config.itemsRejectable">
+          <i class="fa fa-square-o fa-2x" ng-hide="item.status.selected"></i>
+          <i class="fa fa-check-square-o fa-2x" ng-show="item.status.selected"></i>
+        </button>
       </div>
       <!-- Cover -->
       <div class="col-md-8">
-        {if="$has_cover"}
-            <img src="{$cover_md}" class="cover cover-lg" rel="{$cover_lg}">
-        {else}
-            <img src="{$cover_md}" class="cover">
-        {/if}
+        <img ng-show="item.hasCover" ng-src="{{item.cover_md}}" class="cover cover-lg" rel="{{item.cover_lg}}">
+        <img ng-hide="item.hasCover" ng-src="{{item.cover_md}}" class="cover">
       </div>
     </div>
   </div>
   <div class="col-md-7">
     <!-- Start Mitte -->
-    <h2>{$titel}</h2>
-            <br>
-            <h3>{$untertitel}</h3>
-            <br>
-            <br>
-            <span class="text-muted">von</span> {$verfasser} <span class="text-muted">(</span> {$verlag} <span class="text-muted">)</span>
-            <br>
-            <span class="text-muted">Umfang: </span> {$umfang} 
-            {if="!is_null($format)"}
-                <span class="text-muted">(</span>{$format}<span class="text-muted">)</span>
-            {/if}
-            <br>
-            <br>
-            <span class="text-muted">ISBN: </span> {$isbn} <br>
-            <br>
-            <span class="text-muted">erscheint: </span> {$ersch_termin} <br>
-            <br>
-            {$gvkt}
-            <br>
-            <br>
-            {if="$inputs"}
-                <span class="text-muted">Lieferant: </span>
-                {if="$lft === NULL"}
-                    <input type="text" pattern=".{7,}" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" maxlength="7" id="lft-{$id}" rel="{$def_lft}" placeholder="{$def_lft}">
-                {else}
-                    {$lft}
-                {/if}
-                <span class="text-muted">Budget: </span>
-                {if="$bdg === NULL"}
-                <select class="form-control lft input-sm" id="bdg-{$id}">
+    <h2>{{item.titel}}</h2>
+    <br>
+    <h3>{{item.untertitel}}</h3>
+    <br>
+    <br>
+    <span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span> {{item.verlag}} <span class="text-muted">)</span>
+    <br>
+    <span class="text-muted">Umfang: </span> {{item.umfang}} 
+    <span ng-show="item.format | notEmpty">
+      <span class="text-muted">(</span>{{item.format}}<span class="text-muted">)</span>
+    </span>
+    <br>
+    <br>
+    <span class="text-muted">ISBN: </span> {{item.isbn}} <br>
+    <br>
+    <span class="text-muted">erscheint: </span> {{item.ersch_termin}} <br>
+    <br>
 
-                {loop="$bdgs"}
-                    {if="$value.0 == $def_bdg"}
-                        <option selected value="{$value.0}">{$value.c}</option>
-                    {else}
-                        <option value="{$value.0}">{$value.c}</option>
-                    {/if}
-                {/loop}
-                </select>
-                {else}
-                    {$bdg}
-                {/if}
-                <span class="text-muted">Selektionscode: </span>
-                {if="$selcode===NULL"}
-                    <input type="text" pattern=".{20,}" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20" maxlength="20" id="selcode-{$id}" rel="{$def_selcode}" placeholder="Selektionscode">
-                {else}
-                    {$selcode}
-                {/if}
-                <span class="text-muted">SSGs-Nr.: </span>
-                {if="$ssgnr===NULL"}
-                    <input type="text" pattern=".{3,}" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" maxlength="3" id="ssgnr-{$id}" rel="{$def_ssgnr}" placeholder="SSG">
-                {else}
-                    {$ssgnr}
-                {/if}
-            {/if}
-            <div id="bib-inf-{$id}" class="inf">
-                <br>
-                <span class="text-muted">Erscheinungsjahr: </span> {$ersch_jahr} <br><br>
-                <span class="text-muted">Gattung: </span> {$gattung} <br><br>
-                <span class="text-muted">DNB-Nummer: </span> {$dnb_nummer} <br>
-                <span class="text-muted">WV: </span> {$wv_dnb} <br><br>
-                <span class="text-muted">DNB Sachgruppe: </span> {$sachgruppe} <br><br>
-                <span class="text-muted">Zugeordnete Fachreferenten: </span> {$refs} <br><br>
-            </div>
+    <span class="text-muted">GVK-Treffer: </span>{{item.mak}}
+    <span ng-show="item.ilns | notEmpty">
+      <span class="text-muted">(ILNs: </span>{{item.ilns}}
+      <span ng-show="item.ppn">
+        <span class="text-muted">, PPN: </span> {{item.ppn}}
+      </span>
+      <span class="text-muted">)</span>
+    </span>
+
+    <br>
+    <br>
+    
+    <div ng-show="config.showInputs">
+
+      <!-- Lieferant -->
+      <span class="text-muted">Lieferant: </span>
+        <input type="text" pattern=".{7,}" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" maxlength="7" placeholder="{{user.def_lft}}" ng-model="item.lft" ng-show="ItemCtrl.showInpField()">
+      <span ng-hide="ItemCtrl.showInpField()">{{item.lft}}</span>
+
+      <!-- Budget -->
+      <span class="text-muted">Budget:</span>
+      <select ng-show="ItemCtrl.showInpField()" class="form-control lft input-sm" id="bdg-{$id}">
+        <option ng-repeat="budget in user.budgets" ng-selected="{{budget.key == user.def_bdg}}" value="budget.key">{{budget.value}}</option>
+      </select>
+      <span ng-hide="ItemCtrl.showInpField()">{{item.bdg}}</span>
+
+      <!-- Selektionscode -->
+      <span class="text-muted">Selektionscode: </span>
+      <input type="text" pattern=".{20,}" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20" maxlength="20" ng-model="item.selcode" ng-show="ItemCtrl.showInpField()" placeholder="Selektionscode">
+      <span ng-hide="ItemCtrl.showInpField()">{{item.selcode}}</span>
+
+      <!-- SSG Nummer -->
+      <span class="text-muted">SSGs-Nr.: </span>
+      <input type="text" pattern=".{3,}" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" maxlength="3" ng-model="item.ssgnr" ng-show="ItemCtrl.showInpField()" placeholder="SSG">
+      <span ng-hide="ItemCtrl.showInpField()">{{item.ssgnr}}</span>
+
+    </div> <!-- end of inputs -->
+
+    <div class="inf">
+        <br>
+        <span class="text-muted">Erscheinungsjahr: </span> {{item.ersch_jahr}} <br><br>
+        <span class="text-muted">Gattung: </span> {{item.gattung}} <br><br>
+        <span class="text-muted">DNB-Nummer: </span> {{item.dnbnum}} <br>
+        <span class="text-muted">WV: </span> {{item.wvdnb}} <br><br>
+        <span class="text-muted">DNB Sachgruppe: </span> {{item.sachgruppe}} <br><br>
+        <span class="text-muted">Zugeordnete Fachreferenten: </span>
+        <span ng-repeat="person in item.zugeordnet">
+          {{person}}{{$last ? '' : ', '}}
+        </span>
+        <br>
+        <br>
+    </div>
+
             {if="$allow_cmt"}
                 <div id="cmt-{$id}" class="inf">
                     <br>
@@ -124,13 +127,8 @@
     <!-- Preisinformationen -->
     <div class="row" class="title-price">
       <div class="col-md-12">
-        {if="$price !== NULL"}
-            <span class="price">{$price}</span>
-        {/if}
-        {if="$price_com !== NULL"}
-          <br>
-          <span class="text-muted pull-right">{$price_com}</span>
-        {/if}
+        <span class="price" ng-show="item.preis | notEmpty">{{item.preis}}</span>
+        <span class="text-muted" ng-show="item.preis_kom | notEmpty">{{item.preis_kom}}</span>
       </div>
     </div>
     <!-- Button 1 -->
@@ -154,11 +152,9 @@
     <!-- Ablehnen Button -->
     <div class="row" class="title-button">
       <div class="col-md-12">
-        {if="$xt_controls"}
-                <button type="button" class="btn btn-link pull-right xt-control xt-remove" rel='{"id": "{$id}"}'>
-                    <i class="fa fa-minus-circle fa-lg"></i> Ablehnen
-                </button>
-        {/if}
+        <button type="button" class="btn btn-link pull-right xt-control xt-remove" ng-show="config.itemsRejectable">
+          <i class="fa fa-minus-circle fa-lg"></i> Ablehnen
+        </button>
       </div>
     </div>
   </div>

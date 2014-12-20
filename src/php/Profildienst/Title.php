@@ -17,6 +17,8 @@ class Title{
 	private $rj=false;
 
 	private $cover;
+	private $mak;
+	private $ilns;
 
 	private $lookup = array(
 		'ersterfassung'	=> array('001A','0'),
@@ -72,6 +74,15 @@ class Title{
 		}else{
 			$this->cover = $json['XX02'];
 		}
+
+		if(preg_match('/^(.*?),\sIlns=(.*)/', $this->get('gvkt_mak'), $m)){
+			$this->mak=$m[1];
+			$this->ilns=$m[2];
+		}else{
+			$this->mak=$this->get('gvkt_mak');
+			$this->ilns=NULL;
+		}
+
 	} 
 
 	public function get($v){
@@ -251,6 +262,23 @@ class Title{
 		}else{
 			return NULL;
 		}
+	}
+
+	public function getAssigned(){
+		$refs = array();
+		foreach($this->getDirectly('XX00') as $r){
+			$k = isset($r['e']) ? $r['e'] : NULL;
+			$refs[] = $k;
+		}
+		return $refs;
+	}
+
+	public function getILNS(){
+		return $this->ilns;
+	}
+
+	public function getMAK(){
+		return $this->mak;
 	}
 }
 

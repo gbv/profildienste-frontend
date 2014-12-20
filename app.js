@@ -11,7 +11,7 @@ pdApp.factory('Entries', function($http) {
   };
 
   Entries.prototype.loadMore = function() {
-    
+
     if (this.loading){
       return;
     }
@@ -36,7 +36,20 @@ pdApp.controller('MainController', function($scope, Entries) {
 
   $scope.title = 'Test';
 
+  $scope.config = {
+    itemsRejectable: true,
+    allowComments: true,
+    showInputs: true
+  };
+
 });
+
+pdApp.filter('notEmpty', function(){
+  return function(val){
+    return val !== undefined && val !== null;
+  };
+});
+
 
 
 /*

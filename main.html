@@ -89,10 +89,7 @@
         </div>
         <!-- list -->
         <div infinite-scroll='entries.loadMore()' infinite-scroll-disabled='entries.loading' infinite-scroll-distance='1'>
-          <ul>
-          <li ng-repeat="item in entries.items">{{item.titel}}</li>
-          </ul>
-        </div>
+          <div ng-repeat="item in entries.items" ng-include="'/template/ui/dataset.html'"></div>
         <!-- End of list -->
       </div>
     </div>
