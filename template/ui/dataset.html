@@ -75,7 +75,7 @@
 
     </div> <!-- end of inputs -->
 
-    <div collapse="addInfCollapsed">
+    <div collapse="bibInfCollapsed">
         <br>
         <span class="text-muted">Erscheinungsjahr: </span> {{item.ersch_jahr}} <br><br>
         <span class="text-muted">Gattung: </span> {{item.gattung}} <br><br>
@@ -108,9 +108,9 @@
      <br>
 
      <!-- Buttons -->
-     <button type="button" ng-click="addInfCollapsed = !addInfCollapsed" class="btn btn-primary btn-sm add-bib-inf">
-       <i class="fa fa-plus-square-o" ng-show="addInfCollapsed"></i>
-       <i class="fa fa-minus-square-o" ng-hide="addInfCollapsed"></i>
+     <button type="button" ng-click="bibInfCollapsed = !bibInfCollapsed" class="btn btn-primary btn-sm add-bib-inf">
+       <i class="fa fa-plus-square-o" ng-show="bibInfCollapsed"></i>
+       <i class="fa fa-minus-square-o" ng-hide="bibInfCollapsed"></i>
        Zusätzliche Informationen
      </button>
 
@@ -122,14 +122,16 @@
        <i class="fa fa-external-link"></i> OPAC Suche
      </button>
 
-     <button type="button" class="btn btn-primary btn-sm add-inf" ng-show="item.addInfURL | notEmpty">
-       <i class="fa fa-plus-square-o"></i> Verlagsmeldung
+     <button type="button" class="btn btn-primary btn-sm add-inf" ng-show="item.addInfURL | notEmpty" ng-click="ItemCtrl.getAddInf()">
+       <i class="fa fa-plus-square-o" ng-show="addInfCollapsed"></i>
+       <i class="fa fa-minus-square-o" ng-hide="addInfCollapsed"></i>
+       Verlagsmeldung
      </button>
 
      <br>
      <br>
 
-                <div class="well well-lg inf" id="inf-{$id}"></div>
+     <div class="well well-lg" ng-bind-html="addInf" collapse="addInfCollapsed" ng-show="addInf | notEmpty"></div>
     <!-- End Mitte -->
   </div>
   <div class="col-md-3">

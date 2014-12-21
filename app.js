@@ -55,8 +55,9 @@ pdApp.filter('notEmpty', function(){
 
 
 
-pdApp.controller('ItemController', function($scope){
+pdApp.controller('ItemController', function($scope, $http, $sce){
 
+  $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
   $scope.CommentCollapsed = true;
 
@@ -85,6 +86,32 @@ pdApp.controller('ItemController', function($scope){
 
   this.openOPAC = function(){
     window.open('/opac/'+$scope.item.titel+' '+$scope.item.verfasser, '_blank');
+  };
+
+  this.getAddInf = function(){
+
+    if($scope.addInf !== undefined){
+      $scope.addInfCollapsed = !$scope.addInfCollapsed;
+      return;
+    }
+
+    $http({
+      method: 'POST',
+      url: '/ajax/info',
+      data: $.param({id: $scope.item.id}),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function(json){
+      if(!json.success){
+        alert('Fehler: '+json.errormsg);
+      }else{
+            if (json.type == 'html'){
+              $scope.addInf = $sce.trustAsHtml(json.content);
+              $scope.addInfCollapsed = false;
+            }else{ 
+              window.open(json.content, '_blank');
+            }
+          }
+    }.bind(this));
   };
 
 

@@ -212,6 +212,8 @@ function convertTitle(\Profildienst\Title $t){
     'sachgruppe' => $t -> get('sachgruppe'),
     'zugeordnet' => $t -> getAssigned(),
 
+    'addInfURL' => $t->get('addr_erg_ang_url'),
+
 
     'status' => array(
       'rejected' => $t -> isRejected(),
