@@ -72,7 +72,7 @@ class DB{
 		  $id = $t -> getDirectly('_id');
 		  $r[$id]=$t;
 		}
-		return new TitleList($r,$cnt,$next);
+		return ($next ? new TitleList($r) : NULL);
 	}
 
 	public static function getTitle($query){

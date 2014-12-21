@@ -4,7 +4,6 @@ namespace Content;
 
 class Main implements Content{
 
-	private $output;
 	private $titlelist;
 
 	public function __construct($num){
@@ -32,17 +31,11 @@ class Main implements Content{
 		$query = array('$and' => array(array('XX01' => $_SESSION['id']), array('_id' => array('$nin' => $ct)), array('_id' => array('$nin' => $dn)), array('_id' => array('$nin' => $rj)),array('_id' => array('$nin' => $pn)) ));
 
 
-		$t = \Profildienst\DB::getTitleList($query, $num);
-
-		$titles = $t -> getResult();
-
-		$this -> output = new \Profildienst\Output($titles, !($num == 0) , $t -> more() , $num , '/pageloader/overview/page/' , true, false);
-		$this -> titlelist = $t;
-
+		$this -> titlelist = \Profildienst\DB::getTitleList($query, $num);
 	}
 
 	public function getTitles(){
-		return $this -> titlelist -> getResult();
+		return $this->titlelist;
 	}
 
 	public function getCount(){

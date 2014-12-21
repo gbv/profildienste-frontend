@@ -168,11 +168,11 @@ class Title{
 		$this -> in_watchlist = true;
 	}
 
-	public function is_inCart(){
+	public function isInCart(){
 		return $this -> in_cart;
 	}
 
-	public function is_inWatchlist(){
+	public function isInWatchlist(){
 		return $this -> in_watchlist;
 	}
 
@@ -208,7 +208,7 @@ class Title{
 		$this -> done = true;
 	}
 
-	public function is_Done(){
+	public function isDone(){
 		return $this -> done;
 	}
 
@@ -216,7 +216,7 @@ class Title{
 		$this -> rj = true;
 	}
 
-	public function is_Rejected(){
+	public function isRejected(){
 		return $this -> rj;
 	}
 
