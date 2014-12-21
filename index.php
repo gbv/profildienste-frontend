@@ -134,6 +134,24 @@ $app->get('/', function () use ($app){
 	echo $view->render('main/default');
 });
 
+$app->get('/opac/:query', $authenticate($app) ,function ($query) use ($app){
+	$isil = \Profildienst\DB::getUserData('isil');
+
+	if(is_null($isil)){
+		$app->notFound();
+	}
+
+	$opac_url=\Config\Config::$bibliotheken[$isil]['opac'];
+
+	if(is_null($opac_url)){
+		$app->notFound();
+	}
+
+	$url = preg_replace('/%SEARCH_TERM%/', urlencode($query), $opac_url);
+	$app->redirect($url);
+	
+});
+
 /**
  * Login-Seite für die entsprechend übergebene ISIL
  */
