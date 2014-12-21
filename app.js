@@ -1,4 +1,4 @@
-var pdApp = angular.module('Profildienst', ['infinite-scroll']);
+var pdApp = angular.module('Profildienst', ['infinite-scroll', 'ui.bootstrap']);
 
 // Load the entries
 pdApp.factory('Entries', function($http) {
@@ -54,7 +54,7 @@ pdApp.filter('notEmpty', function(){
 
 
 
-/*
+
 pdApp.controller('ItemController', function($scope){
 
   $scope.addInfCollapsed = true;
@@ -81,7 +81,11 @@ pdApp.controller('ItemController', function($scope){
     }else{
       $scope.item.status.selected = true;
     }
-  }
+  };
+
+  this.openOPAC = function(){
+    window.open('/opac/'+$scope.item.titel+' '+$scope.item.verfasser, '_blank');
+  };
 
 
   this.showNoTopBtn = function(){
@@ -103,6 +107,7 @@ pdApp.controller('ItemController', function($scope){
 
 });
 
+/*
 // Load user related data
 pdApp.factory('Userdata', function($http) {
   var promise;

@@ -214,9 +214,9 @@ function convertTitle(\Profildienst\Title $t){
 
 
     'status' => array(
-      'controls' => true,
-      'rejected' => false,
-      'done' => false
+      'rejected' => $t -> isRejected(),
+      'done' => $t -> isRejected(),
+      'selected' => false
       ) 
     );
 
@@ -236,11 +236,13 @@ function convertTitle(\Profildienst\Title $t){
 
 function printTitles($titles){
   $titles_out = array();
-  foreach($titles as $t){
-    $titles_out[] = convertTitle($t);
+  if(!is_null($titles)){
+    foreach($titles->getTitles() as $t){
+      $titles_out[] = convertTitle($t);
+    }
   }
 
-  printResponse(array('data' => $titles_out));
+  printResponse(array('more' => ($titles !== NULL), 'data' => $titles_out));
 }
 
 function printResponse($resp){
