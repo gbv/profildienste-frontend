@@ -24,7 +24,9 @@ pdApp.factory('Entries', function($http) {
       }
       this.page++;
       this.loading = false;
-    }.bind(this));
+    }.bind(this)).error(function(data, status, headers, config) {
+      alert('error');
+    });
   };
 
   return Entries;
