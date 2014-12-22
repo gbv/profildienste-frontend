@@ -33,12 +33,6 @@ pdApp.factory('Entries', function($http) {
   return Entries;
 });
 
-pdApp.service('Data', function(){
-  this.sayHello = function(){
-    alert('Hallo');
-  }
-});
-
 pdApp.controller('MainController', function($scope, Entries) {
 
   $scope.entries = new Entries('overview');
@@ -62,22 +56,23 @@ pdApp.filter('notEmpty', function(){
 
 
 
-pdApp.controller('ItemController', function($scope, $http, $sce, Data){
+pdApp.controller('ItemController', function($scope, $http, $sce, DataService, $rootScope){
 
   $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
   $scope.CommentCollapsed = true;
 
-  this.addToCart = function(){
-    //alert('Mein Controller item: '+$scope.item.id);
-    /*if($scope.item.options.rm_ct){
-      alert('Ich sollte ausgeblendet werden');
-    }else{
-      alert('Ich darf bleiben');
-    }*/
+  DataService.getWatchlists().then(function (data){
+    $scope.watchlists = data.watchlists;
+  });
 
-    //$scope.item.status.cart = true;
-    Data.sayHello();
+  DataService.getOrderDetails().then(function (data){
+    $scope.budgets = data.budgets;
+    $scope.def_lft = data.def_lft;
+  });
+
+  this.addToCart = function(){
+    DataService.addToCart($scope.item.id);
   };
 
   this.addToWL = function(wl){
@@ -142,31 +137,121 @@ pdApp.controller('ItemController', function($scope, $http, $sce, Data){
 
 });
 
-pdApp.controller('MenuController', function($scope, UserData){
+pdApp.controller('MenuController', function($scope, $rootScope, DataService){
 
-  UserData.getData().then(function(d){
-    $scope.user = d.data.data;
+  DataService.getWatchlists().then(function(data){
+    $scope.watchlists = data.watchlists;
   });
 
+  DataService.getName().then(function(data){
+    $scope.name = data.name;
+  })
+
+  DataService.getCart().then(function(data){
+    $scope.cart = data.cart;
+  })
+
+  $rootScope.$on('cartChange', function(e, cart){
+    $scope.cart = cart;
+  });
+
+  $rootScope.$on('watchlistChange', function(e, watchlists){
+    $scope.watchlists = watchlists;
+  });
 });
 
 
-pdApp.factory('UserData', function($http) {
-  var promise;
-  var userData = {
-    getData: function(){
-      if (!promise){
-        promise = $http.jsonp('/ajax/user?callback=JSON_CALLBACK').success(function(data) {
-          return data.data;
-        });
-      }
+pdApp.service('DataService', function($http, $rootScope, $q) {
 
-      return promise;
+  var defName = $q.defer();
+  var defCart = $q.defer();
+  var defWatchlists = $q.defer();
+  var defOrderDetails = $q.defer();
+
+
+  var promise = $http.jsonp('/user/?callback=JSON_CALLBACK').success(function(data) {
+
+    defName.resolve({
+      name: data.data.name
+    });
+
+    defCart.resolve({
+      cart: data.data.cart
+    });
+
+    defWatchlists.resolve({
+      watchlists: data.data.watchlists
+    });
+
+    defOrderDetails.resolve({
+      budgets: data.data.budgets,
+      def_lft: data.data.def_lft
+    });
+
+    return data.data;
+  }).error(function(data){
+    //error handling here
+  });
+
+  promise.then(function (d){
+    this.data = d.data.data;
+  }.bind(this));
+
+  this.getWatchlists = function(){
+    if(this.data === undefined){
+      return defWatchlists.promise;
+    }else{
+      var d = $q.defer();
+      d.resolve({
+        watchlists: this.data.watchlists
+      });
+      return d.promise;
     }
+  }
 
+  this.getName = function(){
+    return defName.promise;
+  }
 
-  };
+  this.getCart = function(){
+    if(this.data === undefined){
+      return defCart.promise;
+    }else{
+      var d = $q.defer();
+      d.resolve({
+        cart: this.data.cart
+      });
+      return d.promise;
+    }
+    
+  }
 
-  return userData;
+  this.getOrderDetails = function(){
+    if(this.data === undefined){
+      return defOrderDetails.promise;
+    }else{
+      var d = $q.defer();
+      d.resolve({
+        budgets: this.data.budgets,
+        def_lft: this.data.def_lft
+      });
+      return d.promise;
+    }
+    
+  }
+
+  this.addToCart = function(id){
+    this.data.cart++;
+    $rootScope.$broadcast('cartChange', this.data.cart);
+  }
+
+  /*
+  this.addToWatchlist = function(id, wl){
+    //alert('DataService '+id);
+    // Anfrage
+    this.data.cart++;
+    $rootScope.$broadcast('cartChange', this.data.cart);
+  } */
+
 });
 

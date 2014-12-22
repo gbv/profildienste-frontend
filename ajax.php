@@ -15,14 +15,12 @@ $authenticate = function ($app) {
     }
   };
 };
+//$app->response->headers->set('Content-Type', 'application/javascript');
+$app -> group('/user', $authenticate($app), function() use ($app){
 
-$app->response->headers->set('Content-Type', 'application/javascript');
-
-$app->group('/ajax', $authenticate($app) ,function () use ($app) {
-
-  $app->get('/user', function () use ($app){
+  $app->get('/', function () use ($app){
   
-    $data=\Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array('cart' => 1, 'watchlist' => 1, 'price' => 1, '_id' => 0), true);
+    $data = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
 
     $cart=sizeof($data['cart']);
     $watchlists=$data['watchlist'];
@@ -40,14 +38,40 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
 
     $price = number_format($price, 2, '.', '');
 
+    $defaults = $data['defaults'];
+
+    // budgets
+
+    $default_budget = $defaults['budget'];
+
+    $budgets = array();
+    foreach ($data['budgets'] as $budget) {
+      $budgets[] = array('key' => $budget['0'], 'value' => $budget['c'], 'default' => ($budget['0'] === $default_budget));
+    }
+
     $data = array(
       'name' => $_SESSION['name'],
       'cart' => count($data['cart']),
-      'watchlists' => $wl
+      'watchlists' => $wl,
+      'def_lft' => $defaults['lieft'],
+      'budgets' => $budgets
     );
 
     printResponse(array('data' => $data));
   });
+
+  $app->get('/name', function(){
+
+    $data = array(
+      'name' => $_SESSION['name'],
+    );
+    printResponse(array('data' => $data));
+  });
+
+});
+
+
+$app->group('/ajax', $authenticate($app) ,function () use ($app) {
 
   $app->post('/confirm', function () use ($app){
     $m = new \AJAX\ConfirmOrder();
