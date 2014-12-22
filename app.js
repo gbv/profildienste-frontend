@@ -91,6 +91,13 @@ pdApp.controller('ItemController', function($scope, $http, $sce, DataService, $r
     window.open('/opac/'+$scope.item.titel+' '+$scope.item.verfasser, '_blank');
   };
 
+  this.closeComment = function(){
+    if($scope.item.commentField === undefined ||  $scope.item.commentField === ''){
+      $scope.CommentCollapsed = true;
+    }
+  };
+
+
   this.getAddInf = function(){
 
     if($scope.addInf !== undefined){

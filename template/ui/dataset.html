@@ -91,10 +91,10 @@
     </div>
 
      <!-- Comments -->
-     <div collapse="CommentCollapsed" ng-show="item.status.comments" ng-hide="item.comment | notEmpty">
+     <div collapse="CommentCollapsed" ng-show="config.allowComments" ng-hide="item.comment | notEmpty">
        <br>
        <span class="text-muted">Kommentar: </span><br>
-       <textarea class="form-control cmt-field" rows="3" ng-model="item.comment" placeholder="Freitext-Kommentar"></textarea>
+       <textarea class="form-control cmt-field" rows="3" ng-model="item.commentField" ng-blur="ItemCtrl.closeComment()" placeholder="Freitext-Kommentar"></textarea>
      </div>
 
      <br>
@@ -114,7 +114,7 @@
        Zusätzliche Informationen
      </button>
 
-     <button type="button"  ng-click="CommentCollapsed = false" ng-show="item.status.comments" class="btn btn-primary btn-sm cmt-btn">
+     <button type="button"  ng-click="CommentCollapsed = false" ng-show="config.allowComments" class="btn btn-primary btn-sm cmt-btn">
        <i class="fa fa-comment"></i> Kommentieren
      </button>
 
@@ -192,7 +192,7 @@
           <button type="button" class="btn btn-warning add-watchlist disabled">
             <i class="fa fa-check"></i> In „ {{item.status.watchlist.name}} “
           </button>
-          <button type="button" class="btn btn-default rm-watchlist" rel='$rel' id="wl-btn-rm-$id">
+          <button type="button" class="btn btn-default rm-watchlist">
             <i class="fa fa-times"></i>
           </button>
         </div>
