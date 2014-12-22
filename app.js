@@ -62,6 +62,8 @@ pdApp.controller('ItemController', function($scope, $http, $sce, DataService, $r
   $scope.addInfCollapsed = true;
   $scope.CommentCollapsed = true;
 
+  $scope.item.preis = $sce.trustAsHtml($scope.item.preis);
+
   DataService.getWatchlists().then(function (data){
     $scope.watchlists = data.watchlists;
   });
