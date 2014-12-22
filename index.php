@@ -480,6 +480,8 @@ function mainData(){
 
 	$price = number_format($price, 2, '.', '');
 
+	
+
 	return array('cartcount' => $cart, 'searchval' => '', 'num' => $num, 'wl' => $wl, 'price' => $price, 'known' => $known, 'est' => $est);
 }
 

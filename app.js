@@ -3,11 +3,11 @@ var pdApp = angular.module('Profildienst', ['infinite-scroll', 'ui.bootstrap']);
 // Load the entries
 pdApp.factory('Entries', function($http) {
 
-  var Entries = function(url) {
+  var Entries = function(site) {
     this.items = [];
     this.loading = false;
     this.page = 0;
-    this.url = url;
+    this.site = site;
   };
 
   Entries.prototype.loadMore = function() {
@@ -17,7 +17,8 @@ pdApp.factory('Entries', function($http) {
     }
 
     this.loading = true;
-    $http.jsonp(this.url).success(function(data) {
+    var url = 'pageloader/'+this.site+'/page/'+this.page+'?callback=JSON_CALLBACK';
+    $http.jsonp(url).success(function(data) {
       var items = data.data;
       for (var i = 0; i < items.length; i++) {
         this.items.push(items[i]);
@@ -32,9 +33,15 @@ pdApp.factory('Entries', function($http) {
   return Entries;
 });
 
+pdApp.service('Data', function(){
+  this.sayHello = function(){
+    alert('Hallo');
+  }
+});
+
 pdApp.controller('MainController', function($scope, Entries) {
 
-  $scope.entries = new Entries('pageloader/overview/page/1?callback=JSON_CALLBACK');
+  $scope.entries = new Entries('overview');
 
   $scope.title = 'Test';
 
@@ -55,21 +62,22 @@ pdApp.filter('notEmpty', function(){
 
 
 
-pdApp.controller('ItemController', function($scope, $http, $sce){
+pdApp.controller('ItemController', function($scope, $http, $sce, Data){
 
   $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
   $scope.CommentCollapsed = true;
 
-
   this.addToCart = function(){
-    alert('Mein Controller item: '+$scope.item.id);
-    if($scope.item.options.rm_ct){
+    //alert('Mein Controller item: '+$scope.item.id);
+    /*if($scope.item.options.rm_ct){
       alert('Ich sollte ausgeblendet werden');
     }else{
       alert('Ich darf bleiben');
-    }
-    $scope.item.status.cart = true;
+    }*/
+
+    //$scope.item.status.cart = true;
+    Data.sayHello();
   };
 
   this.addToWL = function(wl){
@@ -134,24 +142,31 @@ pdApp.controller('ItemController', function($scope, $http, $sce){
 
 });
 
-/*
-// Load user related data
-pdApp.factory('Userdata', function($http) {
+pdApp.controller('MenuController', function($scope, UserData){
+
+  UserData.getData().then(function(d){
+    $scope.user = d.data.data;
+  });
+
+});
+
+
+pdApp.factory('UserData', function($http) {
   var promise;
-  var url = 'http://test.dev/dataprovider.php?jsonp=JSON_CALLBACK';
   var userData = {
     getData: function(){
       if (!promise){
-        promise = $http.jsonp(url).success(function(data) {
+        promise = $http.jsonp('/ajax/user?callback=JSON_CALLBACK').success(function(data) {
           return data.data;
         });
       }
 
       return promise;
     }
+
+
   };
 
   return userData;
 });
 
-*/

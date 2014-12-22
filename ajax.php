@@ -18,7 +18,36 @@ $authenticate = function ($app) {
 
 $app->response->headers->set('Content-Type', 'application/javascript');
 
-$app->group('/ajax', $authenticate($app) ,function () use ($app) { 
+$app->group('/ajax', $authenticate($app) ,function () use ($app) {
+
+  $app->get('/user', function () use ($app){
+  
+    $data=\Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array('cart' => 1, 'watchlist' => 1, 'price' => 1, '_id' => 0), true);
+
+    $cart=sizeof($data['cart']);
+    $watchlists=$data['watchlist'];
+    $wl_order=\Profildienst\DB::getUserData('wl_order');
+
+    $wl = array();
+    foreach($wl_order as $index){
+      $watchlists[$index]['count'] = count($watchlists[$wlo]['list']);
+      $wl[] = array('id' => $watchlists[$index]['id'], 'name' => $watchlists[$index]['name'], 'count' => count($watchlists[$index]['list']));
+    }
+
+    $price=$data['price']['price'];
+    $known=$data['price']['known'];
+    $est=$data['price']['est'];
+
+    $price = number_format($price, 2, '.', '');
+
+    $data = array(
+      'name' => $_SESSION['name'],
+      'cart' => count($data['cart']),
+      'watchlists' => $wl
+    );
+
+    printResponse(array('data' => $data));
+  });
 
   $app->post('/confirm', function () use ($app){
     $m = new \AJAX\ConfirmOrder();

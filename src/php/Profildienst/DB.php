@@ -34,7 +34,7 @@ class DB{
 
 	public static function getUserData($v){
 		if (!$c = DB::get(array('_id' => $_SESSION['id']),'users',array($v => 1),true)){
-			die("Kein Benutzer unter der ID gefunden.");
+			die('Kein Benutzer unter der ID gefunden.');
 		}
 		return isset($c[$v]) ? $c[$v] : NULL;
 	}
@@ -85,7 +85,7 @@ class DB{
 	public static function getTitleByID($id){
 		self::init_db();
 		$collection = new \MongoCollection(self::$db, 'titles');
-		$query=array("_id" => "$id");
+		$query=array('_id' => $id);
 		$c = $collection->findOne($query);
 		return $c ? new Title($c) : $c;
 	}
@@ -104,10 +104,10 @@ class DB{
 				$res = $collection->insert($data, self::$opt);
 		}
 		catch (\MongoCursorException $mce) {
-				die("Error: ".$mce);
+				die('Error: '.$mce);
 		}
 		catch (\MongoCursorTimeoutException $mcte) {
-				die("Timeout-Error: ".$mcte);
+				die('Timeout-Error: '.$mcte);
 		}
 	}
 
@@ -134,10 +134,10 @@ class DB{
 				$res = $collection->update($cond, $data ,self::$opt);
 		}
 		catch (\MongoCursorException $mce) {
-				die("Error: ".$mce);
+				die('Error: '.$mce);
 		}
 		catch (\MongoCursorTimeoutException $mcte) {
-				die("Timeout-Error: ".$mcte);
+				die('Timeout-Error: '.$mcte);
 		}
 	}	
 }
