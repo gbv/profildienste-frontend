@@ -16,10 +16,102 @@ $authenticate = function ($app) {
   };
 };
 
-$app -> group('/user', $authenticate($app), function() use ($app){
+$app -> group('/api', $authenticate($app) ,function() use ($app){
 
-  $app->get('/', function () use ($app){
-  
+  /**
+   * Watchlists
+   */
+  $app -> group('/watchlist', function() use ($app){
+
+    $app->post('/remove', function () use ($app){
+
+      $id = $app->request()->post('id');
+      $wl = $app->request()->post('wl');
+
+      $m = new \AJAX\RemoveWatchlist($id, $wl);
+      printResponse($m -> getResponse());
+    });
+
+    $app->post('/add', function () use ($app){
+
+      $id = $app->request()->post('id');
+      $wl = $app->request()->post('wl');
+
+      $m = new \AJAX\Watchlist($id, $wl);
+      printResponse($m -> getResponse());
+    });
+
+    $app->post('/manage', function () use ($app){
+
+      $id = $app->request()->post('id');
+      $type = $app->request()->post('type');
+      $content = $app->request()->post('content');
+
+      $m = new \AJAX\WatchlistManager($id, $type, $content);
+      printResponse($m -> getResponse());
+    });
+
+  });
+
+  /**
+   * Cart
+   */
+  $app -> group('/cart', function() use ($app){
+
+    $app->post('/remove', function () use ($app){
+
+      $id = $app->request()->post('id');
+      $rm = $app->request()->post('rm');
+
+      $m = new \AJAX\RemoveCart($id, $rm);
+      printResponse($m -> getResponse());
+    });
+
+
+    $app->post('/add', function () use ($app){
+
+      $id = $app->request()->post('id');
+      $rm = $app->request()->post('rm');
+      $bdg = $app->request()->post('bdg');
+      $lft = $app->request()->post('lft');
+      $selcode = $app->request()->post('selcode');
+      $ssgnr = $app->request()->post('ssgnr');
+      $comment = $app->request()->post('comment');
+
+      $m = new \AJAX\Cart($id, $rm, $lft, $bdg, $selcode, $ssgnr, $comment);
+
+      printResponse($m -> getResponse());
+    });
+
+  });
+
+  /**
+   * Reject
+   */
+  $app -> group('/reject', function() use ($app){
+
+    $app->post('/remove', function () use ($app){
+      $id = $app->request()->post('id');
+
+      $m = new \AJAX\RemoveReject($id);
+      printResponse($m -> getResponse());
+    });
+
+
+    $app->post('/add', function () use ($app){
+      $id = $app->request()->post('id');
+
+      $m = new \AJAX\Reject($id);
+      printResponse($m -> getResponse());
+    });
+
+  });
+
+  /**
+   * User related information
+   */
+  $app -> get('/user', function() use ($app){
+
     $data = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
 
     $cart=sizeof($data['cart']);
@@ -61,74 +153,25 @@ $app -> group('/user', $authenticate($app), function() use ($app){
     printResponse(array('data' => $data));
   });
 
-  $app->get('/name', function(){
-
-    $data = array(
-      'name' => $_SESSION['name'],
-    );
-    printResponse(array('data' => $data));
-  });
-
-});
-
-
-$app->group('/ajax', $authenticate($app) ,function () use ($app) {
-
+  /**
+   * Confirm Order
+   */
   $app->post('/confirm', function () use ($app){
     $m = new \AJAX\ConfirmOrder();
     printResponse($m -> getResponse());
   });
 
+  /**
+   * Delete titles
+   */
   $app->post('/delete', function () use ($app){
     $m = new \AJAX\Delete();
     printResponse($m -> getResponse());
   });
 
-  $app->post('/watchlist-manage', function () use ($app){
-
-    $id = $app->request()->post('id');
-    $type = $app->request()->post('type');
-    $content = $app->request()->post('content');
-
-    $m = new \AJAX\WatchlistManager($id, $type, $content);
-    printResponse($m -> getResponse());
-  });
-
-  $app->post('/watchlist/remove', function () use ($app){
-
-    $id = $app->request()->post('id');
-    $wl = $app->request()->post('wl');
-
-    $m = new \AJAX\RemoveWatchlist($id, $wl);
-    printResponse($m -> getResponse());
-  });
-
-  $app->post('/watchlist/add', function () use ($app){
-
-    $id = $app->request()->post('id');
-    $wl = $app->request()->post('wl');
-
-    $m = new \AJAX\Watchlist($id, $wl);
-    printResponse($m -> getResponse());
-  });
-
-  $app->post('/reject', function () use ($app){
-
-    $id = $app->request()->post('id');
-
-    $m = new \AJAX\Reject($id);
-    printResponse($m -> getResponse());
-  });
-
-
-  $app->post('/reject-rm', function () use ($app){
-
-    $id = $app->request()->post('id');
-
-    $m = new \AJAX\RemoveReject($id);
-    printResponse($m -> getResponse());
-  });
-
+  /**
+   * Verlagsmeldung
+   */
   $app->post('/info', function () use ($app){
 
     $id = $app->request()->post('id');
@@ -137,7 +180,10 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
     printResponse($m -> getResponse());
   });
 
-  $app->post('/change-setting', function () use ($app){
+  /**
+   * Settings
+   */
+  $app->post('/settings', function () use ($app){
 
     $type = $app->request()->post('type');
     $value = $app->request()->post('value');
@@ -146,69 +192,46 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
     printResponse($m -> getResponse());
   });
 
+  /**
+   * Loader
+   */
+  $app -> group('/get', function () use ($app){
 
-  $app->post('/cart-rm', function () use ($app){
+    $app -> get('/overview/page/:num', function($num = 0) use ($app){
+      $m = new \Content\Main(validateNum($num));
+      printTitles($m -> getTitles());
+    });
 
-    $id = $app->request()->post('id');
-    $rm = $app->request()->post('rm');
+    $app -> get('/cart/page/:num', function($num = 0) use ($app){
+      $m = new \Content\Cart(validateNum($num));
+      printTitles($m -> getTitles());
+    });
 
-    $m = new \AJAX\RemoveCart($id, $rm);
-    printResponse($m -> getResponse());
-  });
+    $app -> get('/watchlist/:id/page/:num', function($id = NULL, $num = 0) use ($app){
+      $m = new \Content\Watchlist(validateNum($num), $id);
+      printTitles($m -> getTitles());
+    });
 
-
-  $app->post('/cart', function () use ($app){
-
-    $id = $app->request()->post('id');
-    $rm = $app->request()->post('rm');
-    $bdg = $app->request()->post('bdg');
-    $lft = $app->request()->post('lft');
-    $selcode = $app->request()->post('selcode');
-    $ssgnr = $app->request()->post('ssgnr');
-    $comment = $app->request()->post('comment');
-
-    $m = new \AJAX\Cart($id, $rm, $lft, $bdg, $selcode, $ssgnr, $comment);
-
-    printResponse($m -> getResponse());
-  });
-});
-
-$app -> group('/pageloader', $authenticate($app) , function () use ($app){
-
-  $app -> get('/overview/page/:num', function($num = 0) use ($app){
-    $m = new \Content\Main(validateNum($num));
-    printTitles($m -> getTitles());
-  });
-
-  $app -> get('/cart/page/:num', function($num = 0) use ($app){
-    $m = new \Content\Cart(validateNum($num));
-    printTitles($m -> getTitles());
-  });
-
-  $app -> get('/watchlist/:id/page/:num', function($id = NULL, $num = 0) use ($app){
-    $m = new \Content\Watchlist(validateNum($num), $id);
-    printTitles($m -> getTitles());
-  });
-
-  $app -> get('/search/:query/page/:num', function($query, $num = 0) use ($app){
-    $m = new \Special\Search($query, $num);
-    printTitles($m -> getTitles());
-  });
+    $app -> get('/search/:query/page/:num', function($query, $num = 0) use ($app){
+      $m = new \Special\Search($query, $num);
+      printTitles($m -> getTitles());
+    });
 
 
-  $app -> get('/pending/page/:num', function($num = 0) use ($app){
-    $m = new \Content\Pending(validateNum($num));
-    printTitles($m -> getTitles());
-  });
+    $app -> get('/pending/page/:num', function($num = 0) use ($app){
+      $m = new \Content\Pending(validateNum($num));
+      printTitles($m -> getTitles());
+    });
 
-  $app -> get('/done/page/:num', function($num = 0) use ($app){
-    $m = new \Content\Done(validateNum($num));
-    printTitles($m -> getTitles());
-  });
+    $app -> get('/done/page/:num', function($num = 0) use ($app){
+      $m = new \Content\Done(validateNum($num));
+      printTitles($m -> getTitles());
+    });
 
-  $app -> get('/rejected/page/:num', function($num = 0) use ($app){
-    $m = new \Content\Rejected(validateNum($num));
-    printTitles($m -> getTitles());
+    $app -> get('/rejected/page/:num', function($num = 0) use ($app){
+      $m = new \Content\Rejected(validateNum($num));
+      printTitles($m -> getTitles());
+    });
   });
 });
 
