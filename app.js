@@ -56,7 +56,7 @@ pdApp.filter('notEmpty', function(){
 
 
 
-pdApp.controller('ItemController', function($scope, $http, $sce, DataService, $modal){
+pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
 
   $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
@@ -109,23 +109,17 @@ pdApp.controller('ItemController', function($scope, $http, $sce, DataService, $m
       return;
     }
 
-    $http({
-      method: 'POST',
-      url: '/ajax/info',
-      data: $.param({id: $scope.item.id}),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
-        alert('Fehler: '+json.errormsg);
-      }else{
-            if (json.type == 'html'){
-              $scope.addInf = $sce.trustAsHtml(json.content);
-              $scope.addInfCollapsed = false;
-            }else{ 
-              window.open(json.content, '_blank');
-            }
-          }
-    }.bind(this));
+    DataService.getAddInf($scope.item).then(function(data){
+        if (data.type === 'html'){
+          $scope.addInf = $sce.trustAsHtml(data.content);
+          $scope.addInfCollapsed = false;
+        }else{ 
+          window.open(data.content, '_blank');
+        }
+    },
+    function(reason){
+      alert('Fehler: '+reason);
+    });
   };
 
   this.showCover = function(){
@@ -281,6 +275,29 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
   this.addToCart = function(id){
     this.data.cart++;
     $rootScope.$broadcast('cartChange', this.data.cart);
+  }
+
+  this.getAddInf = function(item){
+
+    var def = $q.defer();
+
+    $http({
+      method: 'POST',
+      url: '/ajax/info',
+      data: $.param({id: item.id}),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function(json){
+      if(!json.success){
+        def.reject(json.errormsg);
+      }else{
+        def.resolve({
+          type: json.type,
+          content: json.content
+        });
+      }
+    });
+
+    return def.promise;
   }
 
   /*
