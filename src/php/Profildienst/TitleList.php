@@ -34,6 +34,7 @@ class TitleList{
 				if(isset($this -> titles[$wl])){
 					$this -> titles[$wl] -> inWatchlist();
 					$this -> titles[$wl] -> setWlID($watchlist['id']);
+					$this -> titles[$wl] -> setWlName($watchlist['name']);
 				}
 			}
 		}

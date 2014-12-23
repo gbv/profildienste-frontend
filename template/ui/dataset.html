@@ -175,7 +175,7 @@
           </button>
         </div>
 
-        <div class="btn-group pull-right" dropdown ng-hide="item.status.watchlist | notEmpty">
+        <div class="btn-group pull-right" dropdown ng-hide="item.status.watchlist.watched">
           <button type="button" class="btn btn-warning" ng-click="ItemCtrl.addToWL(def_wl)"><i class="fa fa-star fa-lg"></i> Merkliste</button>
           <button type="button" class="btn btn-warning dropdown-toggle" dropdown-toggle>
             <span class="caret"></span>
@@ -187,11 +187,11 @@
           </ul>
         </div>
 
-        <div class="btn-group pull-right" ng-show="item.status.watchlist | notEmpty">
+        <div class="btn-group pull-right" ng-show="item.status.watchlist.watched">
           <button type="button" class="btn btn-warning add-watchlist disabled">
             <i class="fa fa-check"></i> In „ {{item.status.watchlist.name}} “
           </button>
-          <button type="button" class="btn btn-default rm-watchlist">
+          <button type="button" class="btn btn-default rm-watchlist" ng-click="ItemCtrl.removeFromWL()">
             <i class="fa fa-times"></i>
           </button>
         </div>

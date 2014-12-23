@@ -7,29 +7,29 @@ class RemoveWatchlist implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($id, $rm, $wl_id){
+	public function __construct($id, $wl_id){
 
-		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL , 'btn' => NULL, 'rm' => false, 'wl' => NULL , 'errormsg' => '');
+		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL , 'wl' => NULL , 'errormsg' => '');
 
-		if($id == '' || $rm == '' || $wl_id == ''){
+		if($id == '' || $wl_id == ''){
 			$this -> error('Unvollständige Daten');
 			return;
 		}
 
 		$this -> resp['id'] = $id;
-		$this -> resp['rm'] = filter_var($rm, FILTER_VALIDATE_BOOLEAN);
 		$this -> resp['wl'] = $wl_id;
-
 
 		$watchlists = \Profildienst\DB::getUserData('watchlist');
 		if($watchlists === NULL){
 			$this -> error('Es konnten keine Merklisten für einen Benutzer mit dieser ID gefunden werden.');
+			return;
 		}
 
 		$wl=$watchlists[$wl_id]['list'];
 
 		if($wl === NULL){
 			$this -> error('Keine Merkliste mit dieser ID gefunden.');
+			return;
 		}
 
 		if (!in_array($id, $wl)){
@@ -49,7 +49,6 @@ class RemoveWatchlist implements AJAX{
 
 			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('watchlist' => $watchlists)),'users');
 			$this -> resp['content']=count($g);
-			$this -> resp['btn']=$ui -> wl_button(false, $watchlists[$wl_id]['name'], $rm, $id, $wl_id);
 			$this -> resp['success']=true;
 		}
 

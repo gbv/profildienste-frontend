@@ -94,23 +94,21 @@ $app->group('/ajax', $authenticate($app) ,function () use ($app) {
     printResponse($m -> getResponse());
   });
 
-  $app->post('/watchlist-rm', function () use ($app){
+  $app->post('/watchlist/remove', function () use ($app){
 
     $id = $app->request()->post('id');
-    $rm = $app->request()->post('rm');
     $wl = $app->request()->post('wl');
 
-    $m = new \AJAX\RemoveWatchlist($id, $rm, $wl);
+    $m = new \AJAX\RemoveWatchlist($id, $wl);
     printResponse($m -> getResponse());
   });
 
-  $app->post('/watchlist', function () use ($app){
+  $app->post('/watchlist/add', function () use ($app){
 
     $id = $app->request()->post('id');
-    $rm = $app->request()->post('rm');
     $wl = $app->request()->post('wl');
 
-    $m = new \AJAX\Watchlist($id, $rm, $wl);
+    $m = new \AJAX\Watchlist($id, $wl);
     printResponse($m -> getResponse());
   });
 
@@ -272,7 +270,8 @@ function convertTitle(\Profildienst\Title $t){
     'status' => array(
       'rejected' => $t -> isRejected(),
       'done' => $t -> isRejected(),
-      'selected' => false
+      'selected' => false,
+      'watchlist' => array('watched' => $t -> isInWatchlist(), 'id' => $t -> getWlID(), 'name' => $t -> getWlName())
       ) 
     );
 

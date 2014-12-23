@@ -5,14 +5,18 @@ namespace Profildienst;
 class Title{
 
 	private $j;
+
 	private $in_watchlist=false;
 	private $wl_id=NULL;
+	private $wl_name;
+
 	private $in_cart=false;	
 	private $lft=NULL;
 	private $bdg=NULL;
 	private $ssgnr=NULL;
 	private $selcode=NULL;
 	private $comment=NULL;
+
 	private $done=false;
 	private $rj=false;
 
@@ -182,6 +186,14 @@ class Title{
 
 	public function setWlID($v){
 		$this -> wl_id = $v;
+	}
+
+	public function getWlName(){
+		return $this -> wl_name;
+	}
+
+	public function setWlName($name){
+		$this -> wl_name = $name;
 	}
 
 	public function setLft($v){
