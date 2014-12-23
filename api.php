@@ -144,6 +144,7 @@ $app -> group('/api', $authenticate($app) ,function() use ($app){
     $data = array(
       'name' => $_SESSION['name'],
       'cart' => count($data['cart']),
+      'price' => $data['price'],
       'watchlists' => $wl,
       'def_wl' => $data['wl_default'],
       'def_lft' => $defaults['lieft'],

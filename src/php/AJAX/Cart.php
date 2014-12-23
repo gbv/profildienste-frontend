@@ -7,9 +7,9 @@ class Cart implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($id, $rm, $lft, $bdg, $selcode, $ssgnr, $comment){
+	public function __construct($id, $lft, $bdg, $selcode, $ssgnr, $comment){
 
-		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL , 'btn' => NULL, 'rm' => false,'errormsg' => '', 'price' => NULL, 'known' => NULL, 'est' => NULL);
+		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL,'errormsg' => '', 'price' => NULL, 'known' => NULL, 'est' => NULL);
 
 		if($id == '' || $rm == '' || $lft == '' || $bdg == '' || $selcode == '' || $ssgnr == ''){
 			$this -> error('Unvollständige Daten');

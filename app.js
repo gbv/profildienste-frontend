@@ -17,7 +17,7 @@ pdApp.factory('Entries', function($http, $modal) {
     }
 
     this.loading = true;
-    var url = 'pageloader/'+this.site+'/page/'+this.page+'?callback=JSON_CALLBACK';
+    var url = '/api/get/'+this.site+'/page/'+this.page+'?callback=JSON_CALLBACK';
     $http.jsonp(url).success(function(data) {
       var items = data.data;
       for (var i = 0; i < items.length; i++) {
@@ -211,10 +211,12 @@ pdApp.controller('MenuController', function($scope, $rootScope, DataService){
 
   DataService.getCart().then(function(data){
     $scope.cart = data.cart;
+    $scope.price = data.price
   })
 
-  $rootScope.$on('cartChange', function(e, cart){
+  $rootScope.$on('cartChange', function(e, cart, price){
     $scope.cart = cart;
+    $scope.price = price;
   });
 
   $rootScope.$on('watchlistChange', function(e, watchlists){
@@ -231,14 +233,15 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
   var defOrderDetails = $q.defer();
 
 
-  var promise = $http.jsonp('/user/?callback=JSON_CALLBACK').success(function(data) {
+  var promise = $http.jsonp('/api/user?callback=JSON_CALLBACK').success(function(data) {
 
     defName.resolve({
       name: data.data.name
     });
 
     defCart.resolve({
-      cart: data.data.cart
+      cart: data.data.cart,
+      price: data.data.price
     });
 
     defWatchlists.resolve({
@@ -283,7 +286,8 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
     }else{
       var d = $q.defer();
       d.resolve({
-        cart: this.data.cart
+        cart: this.data.cart,
+        price: this.data.price
       });
       return d.promise;
     }
@@ -305,6 +309,11 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
   }
 
   this.addToCart = function(item){
+
+    if(this.data === undefined){
+      return;
+    }
+
     this.data.cart++;
     alert("Lieferant: "+item.lft+"\n Budget:"+item.budget+"\n Sel:"+item.selcode+"\n SSG:"+item.ssgnr+"\n Comment:"+item.commentField);
     //$rootScope.$broadcast('cartChange', this.data.cart);
@@ -316,7 +325,7 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
 
     $http({
       method: 'POST',
-      url: '/ajax/info',
+      url: '/api/info',
       data: $.param({id: item.id}),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(json){
@@ -336,11 +345,15 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
 
   this.addToWatchlist = function(item, wl){
 
+    if(this.data === undefined){
+      return;
+    }
+
     var def = $q.defer();
 
     $http({
       method: 'POST',
-      url: '/ajax/watchlist/add',
+      url: '/api/watchlist/add',
       data: $.param({id: item.id, wl: wl}),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(json){
@@ -372,11 +385,15 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
 
   this.removeFromWatchlist = function(item){
 
+    if(this.data === undefined){
+      return;
+    }
+
     var def = $q.defer();
 
     $http({
       method: 'POST',
-      url: '/ajax/watchlist/remove',
+      url: '/api/watchlist/remove',
       data: $.param({id: item.id, wl: item.status.watchlist.id}),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(json){

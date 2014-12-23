@@ -12,6 +12,21 @@
     <script src="/dist/js/vendor.min.js"></script>
     <!-- <script src="/dist/js/main.min.js"></script> -->
     <script src="app.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#cart-btn').popover({
+                animation: true,
+                placement: 'bottom',
+                title: 'Preisangaben',
+                html: true,
+                content: function() {
+                    return $('#price-inf').html();
+                },
+                trigger: 'hover',
+                delay: 100
+            });
+        });
+    </script>
 
     <div class="navbar navbar-default navbar-fixed-top" ng-controller="MenuController">
         <div class="container">
@@ -72,6 +87,15 @@
                 </ul>
             </div>
         </div>
+        <!-- price -->
+        <div id='price-inf'>
+            <span class='text-muted'>Schätzpreis:</span><br>
+            <span id='estprice'>EUR {{price.price}}</span><br><br>
+            <span class='text-muted'>Details:</span><br>
+            <span id='price_known'>{{price.known}}</span> bekannt<br>
+            <span id='price_est'>{{price.est}}</span> geschätzt
+        </div>
+        <!-- /price -->
     </div>
     <div class="container">
       <!-- main partial -->
@@ -95,18 +119,6 @@
     </div>
     <hr>
     <p class="text-right text-muted footer"><small><a href="/">GBV-Profildienst</a> Version XX</small></p>
-    
-    
-
-    <!-- price -->
-    <div id='price-inf'>
-    <span class='text-muted'>Schätzpreis:</span><br>
-    <span id='estprice'>EUR {$price}</span><br><br>
-    <span class='text-muted'>Details:</span><br>
-    <span id='price_known'>{$known}</span> bekannt<br>
-    <span id='price_est'>{$est}</span> geschätzt
-    </div>
-    <!-- /price -->
 
     <!-- Modal -->
     <div class="modal" id="modalHelp" tabindex="-1" role="dialog" aria-hidden="true">
