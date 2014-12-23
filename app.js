@@ -1,7 +1,7 @@
 var pdApp = angular.module('Profildienst', ['infinite-scroll', 'ui.bootstrap']);
 
 // Load the entries
-pdApp.factory('Entries', function($http) {
+pdApp.factory('Entries', function($http, $modal) {
 
   var Entries = function(site) {
     this.items = [];
@@ -26,12 +26,27 @@ pdApp.factory('Entries', function($http) {
       this.page++;
       this.loading = false;
     }.bind(this)).error(function(data, status, headers, config) {
-      alert('error');
+
+      $modal.open({
+        templateUrl: 'errorModal.html',
+        controller: 'ErrorModalCtrl',
+        keyboard: false
+      });
+
     });
   };
 
   return Entries;
 });
+
+pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance) {
+
+  $scope.redirect = function () {
+    window.location.href = '/';
+  };
+
+});
+
 
 pdApp.controller('MainController', function($scope, Entries) {
 
@@ -72,11 +87,12 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
 
   DataService.getOrderDetails().then(function (data){
     $scope.budgets = data.budgets;
-    $scope.def_lft = data.def_lft;
+    $scope.item.budget = data.budgets[0].key;
+    $scope.item.lft = data.def_lft;
   });
 
   this.addToCart = function(){
-    DataService.addToCart($scope.item.id);
+    DataService.addToCart($scope.item);
   };
 
   this.addToWL = function(wl){
@@ -140,15 +156,15 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
 
   this.showCover = function(){
 
-    var modalInstance = $modal.open({
-        templateUrl: 'coverModal.html',
-        controller: 'CoverModalCtrl',
-        resolve: {
-          cover: function(){
-            return $scope.item.cover_lg;
-          }
+    $modal.open({
+      templateUrl: 'coverModal.html',
+      controller: 'CoverModalCtrl',
+      resolve: {
+        cover: function(){
+          return $scope.item.cover_lg;
         }
-      });
+      }
+    });
 
   }
 
@@ -288,9 +304,10 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
     
   }
 
-  this.addToCart = function(id){
+  this.addToCart = function(item){
     this.data.cart++;
-    $rootScope.$broadcast('cartChange', this.data.cart);
+    alert("Lieferant: "+item.lft+"\n Budget:"+item.budget+"\n Sel:"+item.selcode+"\n SSG:"+item.ssgnr+"\n Comment:"+item.commentField);
+    //$rootScope.$broadcast('cartChange', this.data.cart);
   }
 
   this.getAddInf = function(item){

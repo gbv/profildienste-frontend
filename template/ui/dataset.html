@@ -53,13 +53,13 @@
 
       <!-- Lieferant -->
       <span class="text-muted">Lieferant: </span>
-        <input type="text" pattern=".{7,}" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" maxlength="7" placeholder="{{def_lft}}" ng-model="item.lft" ng-show="ItemCtrl.showInpField()">
+        <input type="text" pattern=".{7,}" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" maxlength="7" ng-model="item.lft" ng-show="ItemCtrl.showInpField()">
       <span ng-hide="ItemCtrl.showInpField()">{{item.lft}}</span>
 
       <!-- Budget -->
       <span class="text-muted">Budget:</span>
-      <select ng-show="ItemCtrl.showInpField()" class="form-control lft input-sm">
-        <option ng-repeat="budget in budgets" ng-selected="budget.default" value="budget.key">{{budget.value}}</option>
+      <select ng-show="ItemCtrl.showInpField()" ng-model="item.budget" class="form-control lft input-sm">
+        <option ng-repeat="budget in budgets" ng-selected="budget.default" value="{{budget.key}}">{{budget.value}}</option>
       </select>
       <span ng-hide="ItemCtrl.showInpField()">{{item.bdg}}</span>
 
