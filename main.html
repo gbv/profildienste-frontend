@@ -28,7 +28,7 @@
         });
     </script>
 
-    <div class="navbar navbar-default navbar-fixed-top" ng-controller="MenuController">
+    <div class="navbar navbar-default navbar-fixed-top" ng-controller="MenuController as MenuCtrl">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -70,7 +70,7 @@
                 <form class="navbar-form">
                     <div class="form-group" style="display:inline;">
                         <div class="input-group">
-                            <span class="input-group-addon search-lbl"><i class="fa fa-search"></i></span>
+                            <span class="input-group-addon search-lbl" ng-click="MenuCtrl.openHelp()"><i class="fa fa-search"></i></span>
                             <input type="text" class="form-control" id="search-field" placeholder="Suche (Für Hilfe auf das Icon links klicken)" value="{$searchval}" autofocus>
                         </div>
                     </div>
@@ -119,15 +119,7 @@
     </div>
     <hr>
     <p class="text-right text-muted footer"><small><a href="/">GBV-Profildienst</a> Version XX</small></p>
-
-    <!-- Modal -->
-    <div class="modal" id="modalHelp" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
+    
     <script type="text/ng-template" id="coverModal.html">
             <div class="modal-header">
                 <h4 class="modal-title">Cover-Ansicht</h4>

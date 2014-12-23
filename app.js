@@ -208,7 +208,7 @@ pdApp.controller('CoverModalCtrl', function ($scope, $modalInstance, cover) {
 
 });
 
-pdApp.controller('MenuController', function($scope, $rootScope, DataService){
+pdApp.controller('MenuController', function($scope, $rootScope, DataService, $modal){
 
   DataService.getWatchlists().then(function(data){
     $scope.watchlists = data.watchlists;
@@ -232,6 +232,22 @@ pdApp.controller('MenuController', function($scope, $rootScope, DataService){
   $rootScope.$on('watchlistChange', function(e, watchlists){
     $scope.watchlists = watchlists;
   });
+
+  this.openHelp = function(){
+
+    $modal.open({
+      templateUrl: '/assets/html/help.html',
+      controller: 'HelpController'
+    });
+  }
+});
+
+pdApp.controller('HelpController', function ($scope, $modalInstance) {
+
+  $scope.cancel = function () {
+    $modalInstance.close();
+  };
+
 });
 
 
