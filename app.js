@@ -56,7 +56,7 @@ pdApp.filter('notEmpty', function(){
 
 
 
-pdApp.controller('ItemController', function($scope, $http, $sce, DataService, $rootScope){
+pdApp.controller('ItemController', function($scope, $http, $sce, DataService, $modal){
 
   $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
@@ -66,6 +66,8 @@ pdApp.controller('ItemController', function($scope, $http, $sce, DataService, $r
 
   DataService.getWatchlists().then(function (data){
     $scope.watchlists = data.watchlists;
+    $scope.def_wl = data.def_wl;
+
   });
 
   DataService.getOrderDetails().then(function (data){
@@ -126,6 +128,20 @@ pdApp.controller('ItemController', function($scope, $http, $sce, DataService, $r
     }.bind(this));
   };
 
+  this.showCover = function(){
+
+    var modalInstance = $modal.open({
+        templateUrl: 'coverModal.html',
+        controller: 'CoverModalCtrl',
+        resolve: {
+          cover: function(){
+            return $scope.item.cover_lg;
+          }
+        }
+      });
+
+  }
+
 
   this.showNoTopBtn = function(){
     return $scope.item.status.done || $scope.item.status.rejected;
@@ -146,10 +162,21 @@ pdApp.controller('ItemController', function($scope, $http, $sce, DataService, $r
 
 });
 
+pdApp.controller('CoverModalCtrl', function ($scope, $modalInstance, cover) {
+
+  $scope.cover = cover;
+
+  $scope.close = function () {
+    $modalInstance.close();
+  };
+
+});
+
 pdApp.controller('MenuController', function($scope, $rootScope, DataService){
 
   DataService.getWatchlists().then(function(data){
     $scope.watchlists = data.watchlists;
+    $scope.def_wl = data.def_wl;
   });
 
   DataService.getName().then(function(data){
@@ -189,7 +216,8 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
     });
 
     defWatchlists.resolve({
-      watchlists: data.data.watchlists
+      watchlists: data.data.watchlists,
+      def_wl: data.data.def_wl
     });
 
     defOrderDetails.resolve({
@@ -212,7 +240,8 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
     }else{
       var d = $q.defer();
       d.resolve({
-        watchlists: this.data.watchlists
+        watchlists: this.data.watchlists,
+        def_wl: this.data.def_wl
       });
       return d.promise;
     }

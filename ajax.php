@@ -15,7 +15,7 @@ $authenticate = function ($app) {
     }
   };
 };
-//$app->response->headers->set('Content-Type', 'application/javascript');
+
 $app -> group('/user', $authenticate($app), function() use ($app){
 
   $app->get('/', function () use ($app){
@@ -53,6 +53,7 @@ $app -> group('/user', $authenticate($app), function() use ($app){
       'name' => $_SESSION['name'],
       'cart' => count($data['cart']),
       'watchlists' => $wl,
+      'def_wl' => $data['wl_default'],
       'def_lft' => $defaults['lieft'],
       'budgets' => $budgets
     );
@@ -303,6 +304,7 @@ function printTitles($titles){
 function printResponse($resp){
   global $app;
 
+  $app->response->headers->set('Content-Type', 'application/javascript');
   $callback = $app->request()->get('callback');
 
   if(!is_null($callback) && trim($callback) !== ''){

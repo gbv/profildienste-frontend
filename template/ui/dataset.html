@@ -12,7 +12,7 @@
       </div>
       <!-- Cover -->
       <div class="col-md-8">
-        <img ng-show="item.hasCover" ng-src="{{item.cover_md}}" class="cover cover-lg" rel="{{item.cover_lg}}">
+        <img ng-show="item.hasCover" ng-src="{{item.cover_md}}" class="cover cover-lg" ng-click="ItemCtrl.showCover()">
         <img ng-hide="item.hasCover" ng-src="{{item.cover_md}}" class="cover">
       </div>
     </div>
@@ -175,10 +175,9 @@
           </button>
         </div>
 
-        <div class="btn-group pull-right" ng-hide="item.status.watchlist | notEmpty">
-          <button type="button" class="btn btn-warning add-watchlist" ng-click="ItemCtrl.addToWL(user.def_wl)">
-            <i class="fa fa-star fa-lg"></i> Merkliste</button>
-          <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+        <div class="btn-group pull-right" dropdown ng-hide="item.status.watchlist | notEmpty">
+          <button type="button" class="btn btn-warning" ng-click="ItemCtrl.addToWL(def_wl)"><i class="fa fa-star fa-lg"></i> Merkliste</button>
+          <button type="button" class="btn btn-warning dropdown-toggle" dropdown-toggle>
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu pull-right">
