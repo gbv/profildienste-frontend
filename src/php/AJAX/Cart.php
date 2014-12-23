@@ -9,15 +9,34 @@ class Cart implements AJAX{
 
 	public function __construct($id, $lft, $bdg, $selcode, $ssgnr, $comment){
 
-		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL,'errormsg' => '', 'price' => NULL, 'known' => NULL, 'est' => NULL);
+		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL,'errormsg' => '', 'price' => array(), 'order' => array());
 
-		if($id == '' || $rm == '' || $lft == '' || $bdg == '' || $selcode == '' || $ssgnr == ''){
+		if($id == '' || $lft == '' || $bdg == ''){
 			$this -> error('Unvollständige Daten');
 			return;
 		}
 
+		$defaults = \Profildienst\DB::getUserData('defaults');
+
+
+		if($selcode == ''){
+			$selcode = $defaults['selcode']; 
+		}
+
+		if($ssgnr == ''){
+			$ssgnr = $defaults['ssgnr']; 
+		}
+
 		$this -> resp['id'] = $id;
 		$this -> resp['rm'] = $rm;
+
+		$this -> resp['order'] = array(
+			'lft' =>  $lft,
+			'budget' => $bdg,
+			'ssgnr' => $ssgnr,
+			'selcode' => $selcode,
+			'comment' => $comment
+		);
 
 		$c = \Profildienst\DB::getUserData('cart');
 
@@ -57,9 +76,8 @@ class Cart implements AJAX{
 
 			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('price' => $p)),'users');
 
-			$this -> resp['price'] = number_format($p['price'], 2, '.', '');
-			$this -> resp['est'] = $p['est'];
-			$this -> resp['known'] = $p['known'];
+			$p['price'] = number_format($p['price'], 2, '.', '');
+			$this -> resp['price'] = $p;
 
 
 			$ui = new \Profildienst\UI();
@@ -68,7 +86,6 @@ class Cart implements AJAX{
 			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('cart' => $c)),'users');
 
 			$this -> resp['content']=sizeof($c);
-			$this -> resp['btn']= $ui -> ct_button(true,$rm,$id);
 			$this -> resp['success']=true;
 		}
 	}

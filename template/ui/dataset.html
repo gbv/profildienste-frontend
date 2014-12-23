@@ -1,11 +1,11 @@
 <!-- -->
-<div class="row title-box" ng-class="{selected: item.status.selected}" id="row" ng-controller="ItemController as ItemCtrl">
+<div class="row title-box" ng-class="{selected: item.status.selected}" ng-controller="ItemController as ItemCtrl">
   <!-- Linke Seite -->
   <div class="col-md-2">
     <div class="row">
       <!-- Selektor -->
       <div class="col-md-4">
-        <button type="button" class="btn btn-link pull-left xt-control xt-list" ng-show="config.itemsRejectable" ng-click="ItemCtrl.toggleSelect()">
+        <button type="button" class="btn btn-link pull-left xt-control xt-list" ng-hide="item.status.cart" ng-click="ItemCtrl.toggleSelect()">
           <i class="fa fa-square-o fa-2x" ng-hide="item.status.selected"></i>
           <i class="fa fa-check-square-o fa-2x" ng-show="item.status.selected"></i>
         </button>
@@ -49,8 +49,7 @@
     <br>
     <br>
     
-    <div ng-show="config.showInputs">
-
+    <form class="form-inline">
       <!-- Lieferant -->
       <span class="text-muted">Lieferant: </span>
         <input type="text" pattern=".{7,}" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" maxlength="7" ng-model="item.lft" ng-show="ItemCtrl.showInpField()">
@@ -61,7 +60,7 @@
       <select ng-show="ItemCtrl.showInpField()" ng-model="item.budget" class="form-control lft input-sm">
         <option ng-repeat="budget in budgets" ng-selected="budget.default" value="{{budget.key}}">{{budget.value}}</option>
       </select>
-      <span ng-hide="ItemCtrl.showInpField()">{{item.bdg}}</span>
+      <span ng-hide="ItemCtrl.showInpField()">{{item.budget}}</span>
 
       <!-- Selektionscode -->
       <span class="text-muted">Selektionscode: </span>
@@ -73,7 +72,7 @@
       <input type="text" pattern=".{3,}" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" maxlength="3" ng-model="item.ssgnr" ng-show="ItemCtrl.showInpField()" placeholder="SSG">
       <span ng-hide="ItemCtrl.showInpField()">{{item.ssgnr}}</span>
 
-    </div> <!-- end of inputs -->
+    </form>
 
     <div collapse="bibInfCollapsed">
         <br>
@@ -91,7 +90,7 @@
     </div>
 
      <!-- Comments -->
-     <div collapse="CommentCollapsed" ng-show="config.allowComments" ng-hide="item.comment | notEmpty">
+     <div collapse="CommentCollapsed" ng-show="config.allowComments" ng-hide="item.status.cart">
        <br>
        <span class="text-muted">Kommentar: </span><br>
        <textarea class="form-control cmt-field" rows="3" ng-model="item.commentField" ng-blur="ItemCtrl.closeComment()" placeholder="Freitext-Kommentar"></textarea>
@@ -114,7 +113,7 @@
        Zusätzliche Informationen
      </button>
 
-     <button type="button"  ng-click="CommentCollapsed = false" ng-show="config.allowComments" class="btn btn-primary btn-sm cmt-btn">
+     <button type="button"  ng-click="CommentCollapsed = false" ng-hide="item.status.cart" class="btn btn-primary btn-sm cmt-btn">
        <i class="fa fa-comment"></i> Kommentieren
      </button>
 
@@ -201,7 +200,7 @@
     <!-- Ablehnen Button -->
     <div class="row" class="title-button">
       <div class="col-md-12">
-        <button type="button" class="btn btn-link pull-right xt-control xt-remove" ng-show="config.itemsRejectable">
+        <button type="button" class="btn btn-link pull-right xt-control xt-remove" ng-hide="item.status.cart">
           <i class="fa fa-minus-circle fa-lg"></i> Ablehnen
         </button>
       </div>

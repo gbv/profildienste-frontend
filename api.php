@@ -71,14 +71,13 @@ $app -> group('/api', $authenticate($app) ,function() use ($app){
     $app->post('/add', function () use ($app){
 
       $id = $app->request()->post('id');
-      $rm = $app->request()->post('rm');
       $bdg = $app->request()->post('bdg');
       $lft = $app->request()->post('lft');
       $selcode = $app->request()->post('selcode');
       $ssgnr = $app->request()->post('ssgnr');
       $comment = $app->request()->post('comment');
 
-      $m = new \AJAX\Cart($id, $rm, $lft, $bdg, $selcode, $ssgnr, $comment);
+      $m = new \AJAX\Cart($id, $lft, $bdg, $selcode, $ssgnr, $comment);
 
       printResponse($m -> getResponse());
     });
@@ -290,10 +289,16 @@ function convertTitle(\Profildienst\Title $t){
 
     'addInfURL' => $t->get('addr_erg_ang_url'),
 
+    'lft' => $t -> getLft(),
+    'budget' => $t -> getBdg(),
+    'selcode' => $t -> getSelcode(),
+    'ssgnr' => $t -> getSSGNr(),
+    'comment' => $t -> getComment(),
 
     'status' => array(
       'rejected' => $t -> isRejected(),
-      'done' => $t -> isRejected(),
+      'done' => $t -> isDone(),
+      'cart' => $t -> isInCart(),
       'selected' => false,
       'watchlist' => array('watched' => $t -> isInWatchlist(), 'id' => $t -> getWlID(), 'name' => $t -> getWlName())
       ) 

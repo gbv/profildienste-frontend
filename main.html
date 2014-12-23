@@ -90,7 +90,7 @@
         <!-- price -->
         <div id='price-inf'>
             <span class='text-muted'>Schätzpreis:</span><br>
-            <span id='estprice'>EUR {{price.price}}</span><br><br>
+            <span id='estprice'>{{price.price | currency:"EUR "}}</span><br><br>
             <span class='text-muted'>Details:</span><br>
             <span id='price_known'>{{price.known}}</span> bekannt<br>
             <span id='price_est'>{{price.est}}</span> geschätzt

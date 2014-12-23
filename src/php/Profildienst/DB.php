@@ -68,11 +68,11 @@ class DB{
 		$cursor = $cursor->sort(array($sortby[$settings['sortby']] => $o));
 		foreach ($cursor as $doc) {
 		  $t = new Title($doc);
-
 		  $id = $t -> getDirectly('_id');
 		  $r[$id]=$t;
 		}
-		return ($next ? new TitleList($r) : NULL);
+
+		return ((count($r) > 0) ? new TitleList($r) : NULL);
 	}
 
 	public static function getTitle($query){

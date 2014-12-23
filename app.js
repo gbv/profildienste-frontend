@@ -8,11 +8,12 @@ pdApp.factory('Entries', function($http, $modal) {
     this.loading = false;
     this.page = 0;
     this.site = site;
+    this.more = true;
   };
 
   Entries.prototype.loadMore = function() {
 
-    if (this.loading){
+    if (!this.more || this.loading){
       return;
     }
 
@@ -25,6 +26,7 @@ pdApp.factory('Entries', function($http, $modal) {
       }
       this.page++;
       this.loading = false;
+      this.more = data.more;
     }.bind(this)).error(function(data, status, headers, config) {
 
       $modal.open({
@@ -50,7 +52,7 @@ pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance) {
 
 pdApp.controller('MainController', function($scope, Entries) {
 
-  $scope.entries = new Entries('overview');
+  $scope.entries = new Entries('cart');
 
   $scope.title = 'Test';
 
@@ -92,7 +94,17 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
   });
 
   this.addToCart = function(){
-    DataService.addToCart($scope.item);
+    DataService.addToCart($scope.item).then(function(data){
+      $scope.item.status.cart = true;
+      $scope.item.lft = data.order.lft;
+      $scope.item.budget = data.order.budget;
+      $scope.item.selcode = data.order.selcode;
+      $scope.item.ssgnr = data.order.ssgnr;
+      $scope.item.comment = data.order.comment;
+    },
+    function(reason){
+      alert('Fehler: '+reason);
+    });
   };
 
   this.addToWL = function(wl){
@@ -184,8 +196,6 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
   this.showInpField = function(){
     return !$scope.item.status.done && !$scope.item.status.rejected && !$scope.item.status.cart;
   };
-
-
 });
 
 pdApp.controller('CoverModalCtrl', function ($scope, $modalInstance, cover) {
@@ -314,9 +324,35 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
       return;
     }
 
-    this.data.cart++;
-    alert("Lieferant: "+item.lft+"\n Budget:"+item.budget+"\n Sel:"+item.selcode+"\n SSG:"+item.ssgnr+"\n Comment:"+item.commentField);
-    //$rootScope.$broadcast('cartChange', this.data.cart);
+    var def = $q.defer();
+
+    $http({
+      method: 'POST',
+      url: '/api/cart/add',
+      data: $.param({
+        id: item.id, 
+        bdg: item.budget,
+        lft: item.lft,
+        selcode: item.selcode, 
+        ssgnr: item.ssgnr, 
+        comment: item.commentField
+      }),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function(json){
+      if(!json.success){
+        def.reject(json.errormsg);
+      }else{
+
+        def.resolve({
+          order: json.order
+        });
+
+        $rootScope.$broadcast('cartChange', json.content, json.price);
+
+      }
+    }.bind(this));
+
+    return def.promise;
   }
 
   this.getAddInf = function(item){
