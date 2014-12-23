@@ -7,17 +7,16 @@ class RemoveCart implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($id, $rm){
+	public function __construct($id){
 
-		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL , 'btn' => NULL, 'rm' => false,'errormsg' => '');
+		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL ,'errormsg' => '', 'price' => array());
 
-		if($id == '' || $rm == ''){
+		if($id == ''){
 			$this -> error('Unvollständige Daten');
 			return;
 		}
 
 		$this -> resp['id'] = $id;
-		$this -> resp['rm'] = $rm;
 
 		$cart=\Profildienst\DB::getUserData('cart');
 
@@ -51,9 +50,7 @@ class RemoveCart implements AJAX{
 
 			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('price' => $p)),'users');
 
-			$this -> resp['price'] = number_format($p['price'], 2, '.', '');
-			$this -> resp['est'] = $p['est'];
-			$this -> resp['known'] = $p['known'];
+			$this -> resp['price'] = $p;
 
 			$occ = array_search($id, $ct);
 			if ($occ === NULL){
@@ -72,7 +69,6 @@ class RemoveCart implements AJAX{
 			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('cart' => $g)),'users');
 			$this -> resp['content'] = count($g);
 			$this -> resp['success'] = true;
-			$this -> resp['btn'] = $ui -> ct_button(true,$rm,$id);
 		}
 	}
 	

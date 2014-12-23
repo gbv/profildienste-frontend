@@ -127,6 +127,15 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
     });
   }
 
+  this.removeFromCart = function(){
+    DataService.removeFromCart($scope.item).then(function(data){
+      $scope.item.status.cart = false;
+    },
+    function(reason){
+      alert('Fehler: '+reason);
+    });
+  }
+
   this.toggleSelect = function(){
     if($scope.item.status.selected){
       $scope.item.status.selected = false;
@@ -460,6 +469,37 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
             break;
           }
         }
+
+        def.resolve();
+
+      }
+    }.bind(this));
+
+    return def.promise;
+  }
+
+  this.removeFromCart = function(item){
+
+    if(this.data === undefined){
+      return;
+    }
+
+    var def = $q.defer();
+
+    $http({
+      method: 'POST',
+      url: '/api/cart/remove',
+      data: $.param({id: item.id}),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function(json){
+      if(!json.success){
+        def.reject(json.errormsg);
+      }else{
+
+        this.data.cart = json.content;
+        this.data.price = json.price;
+      
+        $rootScope.$broadcast('cartChange', this.data.cart, this.data.price);
 
         def.resolve();
 
