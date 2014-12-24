@@ -7,16 +7,16 @@ class Reject implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($id){
+	public function __construct($ids){
 
-		$this -> resp = array('success' => false, 'id' => NULL ,'errormsg' => '');
+		$this -> resp = array('success' => false, 'id' => array() ,'errormsg' => '');
 
-		if($id == ''){
+		if($ids == ''){
 			$this -> error('Unvollständige Daten');
 			return;
 		}
 
-		$this -> resp['id'] = $id;
+		$this -> resp['id'] = $ids;
 
 		$c = \Profildienst\DB::getUserData("rejected");
 		$cart = \Profildienst\DB::getUserData('cart');
@@ -25,8 +25,6 @@ class Reject implements AJAX{
 		if($c === NULL || $cart === NULL ||  $wls === NULL){
 			$this -> error('Keine entsprechende Liste gefunden');
 		}
-
-		$ids=json_decode($id);
 
 		foreach ($ids as $id){
 

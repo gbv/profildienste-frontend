@@ -169,7 +169,7 @@
         <span class="text-muted" ng-show="item.status.done">Sie haben diesen Titel bereits bestellt.</span>
 
         <div class="btn-group pull-right" ng-show="item.status.rejected">
-          <button type="button" class="btn btn-danger rj-remove">
+          <button type="button" class="btn btn-danger rj-remove" ng-click="ItemCtrl.removeRejected()">
             <i class="fa fa-plus-circle"></i> Wieder aufnehmen
           </button>
         </div>
@@ -200,7 +200,7 @@
     <!-- Ablehnen Button -->
     <div class="row" class="title-button">
       <div class="col-md-12">
-        <button type="button" class="btn btn-link pull-right xt-control xt-remove" ng-hide="item.status.cart">
+        <button type="button" class="btn btn-link pull-right xt-control xt-remove" ng-hide="item.status.cart" ng-click="ItemCtrl.addRejected()">
           <i class="fa fa-minus-circle fa-lg"></i> Ablehnen
         </button>
       </div>

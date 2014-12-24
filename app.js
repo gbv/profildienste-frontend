@@ -52,7 +52,7 @@ pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance) {
 
 pdApp.controller('MainController', function($scope, Entries) {
 
-  $scope.entries = new Entries('cart');
+  $scope.entries = new Entries('overview');
 
   $scope.title = 'Test';
 
@@ -174,6 +174,22 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
       alert('Fehler: '+reason);
     });
   };
+
+  this.addRejected = function(){
+    DataService.addRejected($scope.item).then(function(data){
+      $scope.item.status.rejected = true;
+    }, function(reason){
+      alert('Fehler: '+reason);
+    });
+  }
+
+  this.removeRejected = function(){
+    DataService.removeRejected($scope.item).then(function(data){
+      $scope.item.status.rejected = false;
+    }, function(reason){
+      alert('Fehler: '+reason);
+    });
+  }
 
   this.showCover = function(){
 
@@ -503,6 +519,58 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
 
         def.resolve();
 
+      }
+    }.bind(this));
+
+    return def.promise;
+  }
+
+  this.addRejected = function(item){
+
+    if(this.data === undefined){
+      return;
+    }
+
+    var def = $q.defer();
+
+    $http({
+      method: 'POST',
+      url: '/api/reject/add',
+      data: $.param({
+        id: [item.id]
+      }),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function(json){
+      if(!json.success){
+        def.reject(json.errormsg);
+      }else{
+        def.resolve();
+      }
+    }.bind(this));
+
+    return def.promise;
+  }
+
+  this.removeRejected = function(item){
+
+    if(this.data === undefined){
+      return;
+    }
+
+    var def = $q.defer();
+
+    $http({
+      method: 'POST',
+      url: '/api/reject/remove',
+      data: $.param({
+        id: item.id
+      }),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function(json){
+      if(!json.success){
+        def.reject(json.errormsg);
+      }else{
+        def.resolve();
       }
     }.bind(this));
 
