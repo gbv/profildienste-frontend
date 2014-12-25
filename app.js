@@ -38,7 +38,46 @@ pdApp.factory('Entries', function($http, $modal) {
     });
   };
 
+  Entries.prototype.removeItem = function(item) {
+    for(var i = 0; i < this.items.length; i++){
+      if(this.items[i] === item){
+        this.items.splice(i, 1);
+      }
+    }
+  }
+
   return Entries;
+});
+
+pdApp.service('ConfigService', function($q){
+
+  var config;
+  var entries;
+  var defConfig = $q.defer();
+  var defEntries = $q.defer();
+
+  this.getConfig = function(){
+    return defConfig.promise;
+  };
+
+  this.setConfig = function(c){
+    config = c;
+    defConfig.resolve({
+      config: config
+    });
+  };
+
+  this.getEntries = function(){
+    return defEntries.promise;
+  };
+
+  this.setEntries = function(e){
+    entries = e;
+    defEntries.resolve({
+      entries: entries
+    });
+  };
+
 });
 
 pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance) {
@@ -50,17 +89,20 @@ pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance) {
 });
 
 
-pdApp.controller('MainController', function($scope, Entries) {
+pdApp.controller('MainController', function($scope, Entries, ConfigService) {
 
   $scope.entries = new Entries('overview');
 
   $scope.title = 'Test';
 
-  $scope.config = {
-    itemsRejectable: true,
-    allowComments: true,
-    showInputs: true
+  var config = {
+    hideWatchlist: false,
+    hideCart: true,
+    hideRejected: true 
   };
+
+  ConfigService.setConfig(config);
+  ConfigService.setEntries($scope.entries);
 
 });
 
@@ -73,13 +115,14 @@ pdApp.filter('notEmpty', function(){
 
 
 
-pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
+pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, ConfigService){
 
   $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
   $scope.CommentCollapsed = true;
 
   $scope.item.preis = $sce.trustAsHtml($scope.item.preis);
+
 
   DataService.getWatchlists().then(function (data){
     $scope.watchlists = data.watchlists;
@@ -93,6 +136,14 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
     $scope.item.lft = data.def_lft;
   });
 
+  ConfigService.getConfig().then(function (data){
+    $scope.config = data.config;
+  });
+
+  ConfigService.getEntries().then(function (data){
+    $scope.entries = data.entries;
+  });
+
   this.addToCart = function(){
     DataService.addToCart($scope.item).then(function(data){
       $scope.item.status.cart = true;
@@ -101,6 +152,10 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
       $scope.item.selcode = data.order.selcode;
       $scope.item.ssgnr = data.order.ssgnr;
       $scope.item.comment = data.order.comment;
+
+      if($scope.config.hideCart){
+        $scope.entries.removeItem($scope.item);
+      }
     },
     function(reason){
       alert('Fehler: '+reason);
@@ -112,6 +167,10 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
       $scope.item.status.watchlist.watched = true;
       $scope.item.status.watchlist.name = data.name;
       $scope.item.status.watchlist.id = data.id;
+
+      if($scope.config.hideWatchlist){
+        $scope.entries.removeItem($scope.item);
+      }
     },
     function(reason){
       alert('Fehler: '+reason);
@@ -121,6 +180,10 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
   this.removeFromWL = function(){
     DataService.removeFromWatchlist($scope.item).then(function(data){
       $scope.item.status.watchlist.watched = false;
+
+      if($scope.config.hideWatchlist){
+        $scope.entries.removeItem($scope.item);
+      }
     },
     function(reason){
       alert('Fehler: '+reason);
@@ -130,6 +193,10 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
   this.removeFromCart = function(){
     DataService.removeFromCart($scope.item).then(function(data){
       $scope.item.status.cart = false;
+
+      if($scope.config.hideCart){
+        $scope.entries.removeItem($scope.item);
+      }
     },
     function(reason){
       alert('Fehler: '+reason);
@@ -178,6 +245,10 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
   this.addRejected = function(){
     DataService.addRejected($scope.item).then(function(data){
       $scope.item.status.rejected = true;
+
+      if($scope.config.hideRejected){
+        $scope.entries.removeItem($scope.item);
+      }
     }, function(reason){
       alert('Fehler: '+reason);
     });
@@ -186,6 +257,10 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
   this.removeRejected = function(){
     DataService.removeRejected($scope.item).then(function(data){
       $scope.item.status.rejected = false;
+
+      if($scope.config.hideRejected){
+        $scope.entries.removeItem($scope.item);
+      }
     }, function(reason){
       alert('Fehler: '+reason);
     });
@@ -218,8 +293,24 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal){
     return !$scope.item.status.done && !$scope.item.status.rejected && $scope.item.status.cart;
   };
 
+  this.showOrderFields = function(){
+    return !($scope.item.status.rejected);
+  };
+
   this.showInpField = function(){
-    return !$scope.item.status.done && !$scope.item.status.rejected && !$scope.item.status.cart;
+    return this.showOrderFields() && !$scope.item.status.cart && !$scope.item.status.done;
+  };
+
+  this.showRejectOptions = function(){
+    return !$scope.item.status.rejected && !$scope.item.status.cart && !$scope.item.status.watchlist.watched && !$scope.item.status.done;
+  };
+
+  this.showWatchlistBtn = function(){
+    return !$scope.item.status.done && !$scope.item.status.rejected && !$scope.item.status.watchlist.watched;
+  };
+
+  this.showWatchlistRemBtn = function(){
+    return !$scope.item.status.done && !$scope.item.status.rejected && $scope.item.status.watchlist.watched;
   };
 });
 
