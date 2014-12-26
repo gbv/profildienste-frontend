@@ -49,6 +49,13 @@ pdApp.factory('Entries', function($http, $modal) {
   return Entries;
 });
 
+pdApp.directive('ngOptionbar', function() {
+  return {
+    restrict: 'E',
+    templateUrl: '/template/ui/optionbar.html'
+  };
+});
+
 pdApp.service('ConfigService', function($q){
 
   var config;
@@ -301,7 +308,7 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
     return this.showOrderFields() && !$scope.item.status.cart && !$scope.item.status.done;
   };
 
-  this.showRejectOptions = function(){
+  this.isRejectable = function(){
     return !$scope.item.status.rejected && !$scope.item.status.cart && !$scope.item.status.watchlist.watched && !$scope.item.status.done;
   };
 

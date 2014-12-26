@@ -5,7 +5,7 @@
     <div class="row">
       <!-- Selektor -->
       <div class="col-md-4">
-        <button type="button" class="btn btn-link pull-left xt-control xt-list" ng-show="ItemCtrl.showRejectOptions()" ng-click="ItemCtrl.toggleSelect()">
+        <button type="button" class="btn btn-link pull-left xt-control xt-list" ng-show="ItemCtrl.isRejectable()" ng-click="ItemCtrl.toggleSelect()">
           <i class="fa fa-square-o fa-2x" ng-hide="item.status.selected"></i>
           <i class="fa fa-check-square-o fa-2x" ng-show="item.status.selected"></i>
         </button>
@@ -200,7 +200,7 @@
     <!-- Ablehnen Button -->
     <div class="row" class="title-button">
       <div class="col-md-12">
-        <button type="button" class="btn btn-link pull-right xt-control xt-remove" ng-show="ItemCtrl.showRejectOptions()" ng-click="ItemCtrl.addRejected()">
+        <button type="button" class="btn btn-link pull-right xt-control xt-remove" ng-show="ItemCtrl.isRejectable()" ng-click="ItemCtrl.addRejected()">
           <i class="fa fa-minus-circle fa-lg"></i> Ablehnen
         </button>
       </div>
