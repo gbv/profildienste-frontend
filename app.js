@@ -105,7 +105,8 @@ pdApp.controller('MainController', function($scope, Entries, ConfigService) {
   var config = {
     hideWatchlist: false,
     hideCart: true,
-    hideRejected: true 
+    hideRejected: true,
+    rejectPossible: true
   };
 
   ConfigService.setConfig(config);
@@ -365,11 +366,50 @@ pdApp.controller('MenuController', function($scope, $rootScope, DataService, $mo
   }
 });
 
-pdApp.controller('HelpController', function ($scope, $modalInstance) {
+pdApp.controller('HelpController', function($scope, $modalInstance) {
 
   $scope.cancel = function () {
     $modalInstance.close();
   };
+
+});
+
+pdApp.controller('OptionController', function($scope, DataService, ConfigService, $q) {
+
+  var p =  $q.all([DataService.getSortby(), DataService.getOrder(), DataService.getSelOptions(), ConfigService.getConfig()]);
+
+  p.then(function(data){
+
+    $scope.sortby = data[0].sortby;
+    $scope.order = data[1].order;
+
+    for(var i=0; i < data[0].sortby.length; i++){
+      if(data[0].sortby[i].key === data[2].sort){
+        $scope.selected_sorter = data[0].sortby[i].value;
+        break;
+      }
+    }
+
+    for(var i=0; i < data[1].order.length; i++){
+      if(data[1].order[i].key === data[2].order){
+        $scope.selected_order = data[1].order[i].value;
+        break;
+      }
+    }
+
+    $scope.showSelectAll = data[3].config.rejectPossible;
+
+  }, function(reason){
+    alert('Fehler: '+reason);
+  });
+
+  this.setSorter = function (sorter){
+    alert('Sorter: '+sorter);
+  }
+
+  this.setOrder = function (order){
+    alert('Order: '+order);
+  }
 
 });
 
@@ -380,7 +420,24 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
   var defCart = $q.defer();
   var defWatchlists = $q.defer();
   var defOrderDetails = $q.defer();
+  var defSelOptions = $q.defer();
 
+  var defSort = $q.defer();
+  var defOrder = $q.defer();
+
+  var optPromise = $http.jsonp('/api/settings?callback=JSON_CALLBACK').success(function(data){
+
+    defSort.resolve({
+      sortby: data.data.sortby
+    });
+
+     defOrder.resolve({
+      order: data.data.order
+    });
+
+  }).error(function(reason){
+    // handling here
+  });
 
   var promise = $http.jsonp('/api/user?callback=JSON_CALLBACK').success(function(data) {
 
@@ -403,8 +460,13 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
       def_lft: data.data.def_lft
     });
 
+    defSelOptions.resolve({
+      sort: data.data.settings.sortby,
+      order: data.data.settings.order
+    });
+
     return data.data;
-  }).error(function(data){
+  }).error(function(reason){
     //error handling here
   });
 
@@ -423,6 +485,18 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
       });
       return d.promise;
     }
+  }
+
+  this.getOrder = function(){
+    return defOrder.promise;
+  }
+
+  this.getSortby = function(){
+    return defSort.promise;
+  }
+
+  this.getSelOptions = function(){
+    return defSelOptions.promise;
   }
 
   this.getName = function(){

@@ -133,8 +133,6 @@ $app -> group('/api', $authenticate($app) ,function() use ($app){
 
     // budgets
 
-    $default_budget = $defaults['budget'];
-
     $budgets = array();
     foreach ($data['budgets'] as $budget) {
       $budgets[] = array('key' => $budget['0'], 'value' => $budget['c'], 'default' => ($budget['0'] === $default_budget));
@@ -147,10 +145,31 @@ $app -> group('/api', $authenticate($app) ,function() use ($app){
       'watchlists' => $wl,
       'def_wl' => $data['wl_default'],
       'def_lft' => $defaults['lieft'],
-      'budgets' => $budgets
+      'budgets' => $budgets,
+      'settings' => \Profildienst\DB::getUserData('settings')
     );
 
     printResponse(array('data' => $data));
+  });
+
+  $app -> get('/settings', function() use ($app){
+    $sortby = array();
+    foreach (\Config\Config::$sortby_name as $val => $desc) {
+      $sortby[] = array('key' => $val, 'value' => $desc);
+    }
+
+    $order = array();
+    foreach (\Config\Config::$order_name as $val => $desc) {
+      $order[] = array('key' => $val, 'value' => $desc);
+    }
+
+    $data = array(
+      'sortby' => $sortby,
+      'order' => $order
+    );
+
+    printResponse(array('data' => $data));
+    
   });
 
   /**

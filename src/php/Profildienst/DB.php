@@ -54,7 +54,7 @@ class DB{
 		$sortby=array('erj' => '011@.a' ,'wvn' => '006U.0', 'tit' => '021A.a', 'sgr' => '045G.a', 'dbn' => '006L.0', 'per' => '028A.a');
 
 		if($pages){
-			$lm=$settings['pagesize'];
+			$lm=\Config\Config::$pagesize;
 			$cursor = $cursor->skip($lm*$skip);
 			$cursor = $cursor->limit($lm);
 			if ($collection -> count($query, $lm+1 ,$lm*$skip) == $lm+1){
