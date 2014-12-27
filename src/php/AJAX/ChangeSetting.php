@@ -9,7 +9,7 @@ class ChangeSetting implements AJAX{
 
 	public function __construct($type, $value){
 
-		$this -> resp = array('success' => false, 'errormsg' => '');
+		$this -> resp = array('success' => false, 'errormsg' => '', 'type' => NULL, 'value' => NULL);
 
 		if($type == '' || $value == ''){
 			$this -> error('Unvollständige Daten');
@@ -28,6 +28,8 @@ class ChangeSetting implements AJAX{
 			$settings[$type]=$value;
 			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('settings' => $settings)),'users');
 			$this -> resp['success']=true;
+			$this -> resp['type']=$type;
+			$this -> resp['value']=$value;
 		}
 	}
 
