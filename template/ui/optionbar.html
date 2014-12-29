@@ -3,7 +3,9 @@
     <nav class="navbar navbar-inverse" role="navigation">
       <ul class="nav navbar-nav">
         <li ng-show="showSelectAll">
-          <a href="" id="btn-sel-all-bar" ><i class="fa fa-asterisk"></i></a>
+          <a href="" id="btn-sel-all-bar" tooltip-placement="bottom" tooltip="Alle selektierbaren Titel auswählen" ng-click="OptCtrl.selectAll()">
+            <i class="fa fa-asterisk"></i>
+          </a>
         </li>
         <p class="navbar-text">Sortieren nach: </p>
         <li class="dropdown">

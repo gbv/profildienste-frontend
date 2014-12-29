@@ -44,6 +44,10 @@ pdApp.factory('Entries', function($http, $modal) {
         this.items.splice(i, 1);
       }
     }
+
+    if(this.items.length == 0){
+      this.loadMore();
+    }
   }
 
   Entries.prototype.reset = function() {
@@ -94,6 +98,79 @@ pdApp.service('ConfigService', function($q){
 
 });
 
+pdApp.service('SelectService', function($rootScope, DataService, ConfigService){
+  var selected = [];
+
+  ConfigService.getConfig().then(function(data){
+    this.config = data.config;
+  }.bind(this));
+
+  ConfigService.getEntries().then(function(data){
+    this.entries = data.entries;
+  }.bind(this));
+
+  this.getSelected = function(){
+    return selected;
+  }
+
+  this.selectAll = function(){
+    $rootScope.$broadcast('selectAll');
+  }
+
+  this.deselectAll = function(){
+    var i;
+    for(i=0; i < selected.length; i++){
+      selected[i].status.selected = false;
+    }
+
+    selected = []; 
+
+    if(i > 0){
+      $rootScope.$broadcast('itemDeselected');
+    }
+  }
+
+  this.select = function(item){
+    if(selected.indexOf(item) >= 0){
+      return;
+    }
+    selected.push(item);
+    item.status.selected = true;
+    $rootScope.$broadcast('itemSelected');
+  };
+
+  this.deselect = function(item){
+    var ind = selected.indexOf(item);
+    if(ind < 0){
+      return;
+    }
+
+    selected.splice(ind, 1);
+    item.status.selected = false;
+
+    $rootScope.$broadcast('itemDeselected');
+  };
+
+  this.rejectAll = function(){
+    DataService.addMultRejected(selected).then(function(data){
+
+      for(var i = 0; i < selected.length; i++){
+        selected[i].status.rejected = true;
+
+        if(this.config.hideRejected){
+          this.entries.removeItem(selected[i]);
+        }
+      }
+
+      this.deselectAll();
+
+    }.bind(this), function(reason){
+      alert('Fehler: '+reason);
+    });
+  }.bind(this);
+
+});
+
 pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance) {
 
   $scope.redirect = function () {
@@ -130,7 +207,7 @@ pdApp.filter('notEmpty', function(){
 
 
 
-pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, ConfigService){
+pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, ConfigService, $rootScope, SelectService){
 
   $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
@@ -159,6 +236,12 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
     $scope.entries = data.entries;
   });
 
+  $rootScope.$on('selectAll', function(){
+    if(this.isRejectable() && !$scope.item.status.selected){
+      SelectService.select($scope.item);
+    }
+  }.bind(this));
+
   this.addToCart = function(){
     DataService.addToCart($scope.item).then(function(data){
       $scope.item.status.cart = true;
@@ -168,7 +251,7 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
       $scope.item.ssgnr = data.order.ssgnr;
       $scope.item.comment = data.order.comment;
 
-      $scope.item.status.selected = false;
+      SelectService.deselect($scope.item);
 
       if($scope.config.hideCart){
         $scope.entries.removeItem($scope.item);
@@ -185,7 +268,7 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
       $scope.item.status.watchlist.name = data.name;
       $scope.item.status.watchlist.id = data.id;
 
-      $scope.item.status.selected = false;
+      SelectService.deselect($scope.item);
 
       if($scope.config.hideWatchlist){
         $scope.entries.removeItem($scope.item);
@@ -224,9 +307,9 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
 
   this.toggleSelect = function(){
     if($scope.item.status.selected){
-      $scope.item.status.selected = false;
+      SelectService.deselect($scope.item);
     }else{
-      $scope.item.status.selected = true;
+      SelectService.select($scope.item);
     }
   };
 
@@ -265,7 +348,7 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
     DataService.addRejected($scope.item).then(function(data){
       $scope.item.status.rejected = true;
 
-      $scope.item.status.selected = false;
+      SelectService.deselect($scope.item);
 
       if($scope.config.hideRejected){
         $scope.entries.removeItem($scope.item);
@@ -300,7 +383,6 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
     });
 
   }
-
 
   this.showNoTopBtn = function(){
     return $scope.item.status.done || $scope.item.status.rejected;
@@ -345,7 +427,7 @@ pdApp.controller('CoverModalCtrl', function ($scope, $modalInstance, cover) {
 
 });
 
-pdApp.controller('MenuController', function($scope, $rootScope, DataService, $modal){
+pdApp.controller('MenuController', function($scope, $rootScope, DataService, $modal, SelectService){
 
   DataService.getWatchlists().then(function(data){
     $scope.watchlists = data.watchlists;
@@ -376,7 +458,46 @@ pdApp.controller('MenuController', function($scope, $rootScope, DataService, $mo
       templateUrl: '/assets/html/help.html',
       controller: 'HelpController'
     });
+  };
+
+  $scope.itemsSelected = (SelectService.getSelected().length > 0);
+  $scope.showSelMenu = false;
+
+  $rootScope.$on('itemSelected', function(){
+    $scope.itemsSelected = true;
+    $scope.selNumber = SelectService.getSelected().length;
+
+    if($scope.selNumber == 1){
+      $scope.showSelMenu = true;
+    }
+  });
+
+  $rootScope.$on('itemDeselected', function(){
+
+    $scope.selNumber = SelectService.getSelected().length;
+
+    if($scope.selNumber == 0){
+      $scope.itemsSelected = false;
+      $scope.showSelMenu = false;
+    }
+  });
+
+  this.toggleSelMenu = function(){
+    $scope.showSelMenu = !$scope.showSelMenu;
   }
+
+  this.selectAll = function(){
+    SelectService.selectAll();
+  }
+
+  this.deselectAll = function(){
+    SelectService.deselectAll();
+  }
+
+  this.rejectAll = function(){
+    SelectService.rejectAll();
+  }
+
 });
 
 pdApp.controller('HelpController', function($scope, $modalInstance) {
@@ -387,7 +508,19 @@ pdApp.controller('HelpController', function($scope, $modalInstance) {
 
 });
 
-pdApp.controller('OptionController', function($scope, DataService, ConfigService, $q) {
+pdApp.controller('OptionController', function($scope, DataService, ConfigService, $q, SelectService) {
+
+  this.selectAll = function(){
+    if($scope.entries === undefined){
+      return;
+    }
+
+    if(SelectService.getSelected().length === $scope.entries.items.length){
+      SelectService.deselectAll();
+    }else{
+      SelectService.selectAll();
+    }
+  }
 
   var p =  $q.all([DataService.getSortby(), DataService.getOrder(), DataService.getSelOptions(), ConfigService.getConfig(), ConfigService.getEntries()]);
 
@@ -766,7 +899,6 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
   }
 
 
-
   this.addRejected = function(item){
 
     if(this.data === undefined){
@@ -780,6 +912,45 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
       url: '/api/reject/add',
       data: $.param({
         id: [item.id]
+      }),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function(json){
+      if(!json.success){
+        def.reject(json.errormsg);
+      }else{
+        def.resolve();
+      }
+    }.bind(this));
+
+    return def.promise;
+  }
+
+
+  this.addRejected = function(item){
+    return this.addMultRejected([item]);    
+  }.bind(this);
+
+  this.addMultRejected = function(items){
+
+    if(this.data === undefined){
+      return;
+    }
+    var ids = [];
+    for(var i=0; i < items.length; i++){
+      ids.push(items[i].id);
+    }
+
+    if(ids.length == 0){
+      return;
+    }
+
+    var def = $q.defer();
+
+    $http({
+      method: 'POST',
+      url: '/api/reject/add',
+      data: $.param({
+        id: ids
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(json){
