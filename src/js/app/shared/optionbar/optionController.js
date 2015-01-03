@@ -69,9 +69,7 @@ pdApp.controller('OptionController', function($scope, DataService, ConfigService
   }
 
   this.setOrder = function (order){
-
-    alert('ORDER CALLED');
-
+    
     if(order === $scope.selected_order_key){
       return;
     }

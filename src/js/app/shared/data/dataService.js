@@ -407,6 +407,13 @@ pdApp.service('DataService', function($http, $rootScope, $q) {
           type: json.type,
           value: json.value
         });
+
+        if(type === 'sortby'){
+          this.data.settings.sortby = value;
+        }else if(type === 'order'){
+          this.data.settings.order = value;
+        }
+
       }
     }.bind(this));
 
