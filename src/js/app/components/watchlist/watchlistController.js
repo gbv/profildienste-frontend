@@ -1,6 +1,17 @@
-pdApp.controller('WatchlistController', function($scope, Entries, ConfigService, $routeParams) {
+pdApp.controller('WatchlistController', function($scope, Entries, ConfigService, $routeParams, DataService) {
   
   $scope.entries = new Entries('watchlist', $routeParams.id);
+
+  DataService.getWatchlists().then(function (data){
+
+    for(var i=0; i < data.watchlists.length; i++){
+      if(data.watchlists[i].id == $routeParams.id){
+        $scope.title = data.watchlists[i].name;
+        break;
+      }
+    }
+    
+  });
 
   var config = {
     hideWatchlist: false,

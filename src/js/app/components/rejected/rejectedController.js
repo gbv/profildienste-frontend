@@ -1,14 +1,14 @@
-pdApp.controller('CartController', function($scope, Entries, ConfigService) {
+pdApp.controller('RejectedController', function($scope, Entries, ConfigService) {
 
-  $scope.entries = new Entries('cart');
-
+  $scope.entries = new Entries('rejected');
+  
   var config = {
     hideWatchlist: false,
     hideCart: true,
     hideRejected: true,
     rejectPossible: false
   };
-  
+
   ConfigService.setConfig(config);
   ConfigService.setEntries($scope.entries);
 

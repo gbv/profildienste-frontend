@@ -11,11 +11,19 @@ pdApp.config(['$routeProvider',
       }).
       when('/watchlist/:id', {
         templateUrl: '/dist/html/watchlistView.html',
-        controller: 'CartController'
+        controller: 'WatchlistController'
       }).
-      when('/phones/:phoneId', {
-        templateUrl: 'partials/phone-detail.html',
-        controller: 'PhoneDetailCtrl'
+      when('/rejected', {
+        templateUrl: '/dist/html/rejectedView.html',
+        controller: 'RejectedController'
+      }).
+      when('/pending', {
+        templateUrl: '/dist/html/pendingView.html',
+        controller: 'PendingController'
+      }).
+      when('/done', {
+        templateUrl: '/dist/html/doneView.html',
+        controller: 'DoneController'
       }).
       otherwise({
         redirectTo: '/main'
