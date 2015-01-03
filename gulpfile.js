@@ -7,6 +7,7 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     path = require('path'),
     notify = require('gulp-notify'),
+    copy = require('gulp-copy'),
     del = require('del');
 
 var vendor_css = [
@@ -62,6 +63,13 @@ gulp.task('js', function() {
     .pipe(notify({ message: 'JavaScript compiled!'}));
 });
 
+gulp.task('partials', function() {
+
+  return gulp.src('src/js/**/*.html')
+    .pipe(copy('dist/html', {prefix: 1000}))
+    .pipe(notify({ message: 'Partials copied'}));
+});
+
 gulp.task('vendorjs', function() {
   return gulp.src(vendor)
     .pipe(concat('vendor.js'))
@@ -77,7 +85,7 @@ gulp.task('clean', function(callback) {
 });
 
 gulp.task('build', ['clean'] ,function(){
-  gulp.start('less', 'js', 'vendorjs' ,'vendorcss', 'fa-font');
+  gulp.start('less', 'js', 'partials', 'vendorjs' ,'vendorcss', 'fa-font');
 });
 
 gulp.task('default', ['clean'], function() {
@@ -86,4 +94,6 @@ gulp.task('default', ['clean'], function() {
   gulp.watch('src/less/**/*.less', ['less']);
 
   gulp.watch('src/js/**/*.js', ['js']);
+
+  gulp.watch('src/js/**/*.html', ['partials']);
 });
