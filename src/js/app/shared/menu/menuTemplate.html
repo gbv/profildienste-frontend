@@ -6,7 +6,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand pd-brand" href="/">Profildienst</a>
+      <a class="navbar-brand pd-brand" href="#/">Profildienst</a>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav shop-options" ng-class="{'navbar-right': !showSelMenu, 'navbar-left': showSelMenu}">
@@ -20,7 +20,7 @@
         <li ng-show="showSelMenu"><a href="" ng-click="MenuCtrl.rejectAll()"><i class="fa fa-minus-circle fa-lg"></i> Auswahl ablehnen</a></li>
 
         <li>
-          <a href="/show/cart" ng-hide="showSelMenu">
+          <a href="#/cart" ng-hide="showSelMenu">
             <i class="fa fa-shopping-cart fa-lg"></i> Warenkorb <span class="badge">{{cart}}</span>
           </a>
         </li>
@@ -28,7 +28,7 @@
           <a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-star fa-lg"></i> Merklisten <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li ng-repeat="wl in watchlists">
-              <a href="/show/watchlist/{{wl.id}}">{{wl.name}} <span class="badge">{{wl.count}}</span></a>
+              <a href="#/watchlist/{{wl.id}}">{{wl.name}} <span class="badge">{{wl.count}}</span></a>
             </li>
             <li class="divider"></li>
             <li><a href="/show/manage-watchlists">Merklisten verwalten</a></li>
@@ -45,7 +45,7 @@
           <a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-lg"></i> <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li class="dropdown-header"> {{name}}</li>
-            <li><a href="/show/cart">Warenkorb</a></li>
+            <li><a href="#/cart">Warenkorb</a></li>
             <li><a href="/show/pending">In Bearbeitung</a></li>
             <li><a href="/show/done">Bearbeitet</a></li>
             <li><a href="/show/rejected">Abgelehnt</a></li>

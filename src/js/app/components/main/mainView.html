@@ -1,0 +1,19 @@
+<div ng-controller="MainController">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="page-header">
+          <h1>
+            Gesamtübersicht Neuerscheinungen
+            <br>
+            <small>{{entries.items.length}} Datensätze in dieser Ansicht</small>
+          </h1>
+      </div>
+    </div>
+  </div>
+  <ng-optionbar></ng-optionbar>
+  <!-- List -->
+  <div infinite-scroll='entries.loadMore()' infinite-scroll-disabled='entries.loading' infinite-scroll-distance='1'>
+    <div ng-repeat="item in entries.items" ng-include="'/template/ui/dataset.html'"></div>
+  <!-- End of list -->
+</div>
+</div>

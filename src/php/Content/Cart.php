@@ -4,7 +4,6 @@ namespace Content;
 
 class Cart implements Content{
 
-	private $output;
 	private $titlelist;
 
 	public function __construct($num){

@@ -2,12 +2,13 @@
 pdApp.factory('Entries', function($http, $modal) {
 
   // Entry object
-  var Entries = function(site) {
+  var Entries = function(site, id) {
     this.items = [];
     this.loading = false;
     this.page = 0;
     this.site = site;
     this.more = true;
+    this.id = id;
   };
 
   // loads more entries from the server
@@ -18,7 +19,12 @@ pdApp.factory('Entries', function($http, $modal) {
     }
 
     this.loading = true;
-    var url = '/api/get/'+this.site+'/page/'+this.page+'?callback=JSON_CALLBACK';
+    if(this.id === undefined){
+      var url = '/api/get/'+this.site+'/page/'+this.page+'?callback=JSON_CALLBACK';
+    }else{
+      var url = '/api/get/'+this.site+'/'+this.id+'/page/'+this.page+'?callback=JSON_CALLBACK';
+    }
+    
     $http.jsonp(url).success(function(data) {
       var items = data.data;
       for (var i = 0; i < items.length; i++) {

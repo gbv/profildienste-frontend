@@ -4,7 +4,6 @@ namespace Content;
 
 class Watchlist implements Content{
 
-	private $output;
 	private $titlelist;
 	private $name;
 
@@ -18,24 +17,22 @@ class Watchlist implements Content{
 
 			$list=$watchlists[$id]['list'];
 			$query = array('$and' => array(array('XX01' => $_SESSION['id']), array('_id' => array('$in' => $list))));
-			$t = \Profildienst\DB::getTitleList($query, $num);
-			$titles = $t -> getResult();
+			$this -> titlelist = \Profildienst\DB::getTitleList($query, $num);
+			$this -> name = $watchlists[$id]['name'];
 
 		}else{
 			return NULL;
 		}
 
-		$this -> output = new \Profildienst\Output($titles, !($num == 0) , $t -> more() , $num , '/pageloader/watchlist/'.$id.'/page/' , false, true, false);
-		$this -> titlelist = $t;
-		$this -> name = $watchlists[$id]['name'];
+		
 	}
 
 	public function getTitles(){
-		return is_null($this -> output)? NULL : $this -> titlelist -> getResult();;
+		return $this -> titlelist;
 	}
 
 	public function getCount(){
-		return is_null($this -> titlelist)? 0 : $this -> titlelist -> getCount();
+		return $this -> titlelist -> getCount();
 	}
 
 	public function getName(){
