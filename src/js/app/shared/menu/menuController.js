@@ -69,4 +69,8 @@ pdApp.controller('MenuController', function($scope, $rootScope, DataService, $mo
     SelectService.rejectAll();
   }
 
+  this.loggedIn = function(){
+    return ($rootScope.token !== undefined);
+  }
+
 });

@@ -1,5 +1,20 @@
 <div class="navbar navbar-default navbar-fixed-top" ng-controller="MenuController as MenuCtrl">
-  <div class="container">
+  <div ng-hide="MenuCtrl.loggedIn()">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#/">Profildienst</a>
+    </div>
+    <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://www.gbv.de/wikis/cls/Profildienste" class="btn btn-link help-btn"><i class="fa fa-question-circle"></i> Hilfe</a></li>
+        </ul>
+    </div>
+  </div>
+  <div class="container" ng-show="MenuCtrl.loggedIn()">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="icon-bar"></span>

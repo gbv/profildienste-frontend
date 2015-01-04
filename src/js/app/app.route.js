@@ -29,7 +29,15 @@ pdApp.config(['$routeProvider',
         templateUrl: '/dist/html/manageView.html',
         controller: 'ManageController'
       }).
+      when('/login', {
+        templateUrl: '/dist/html/loginView.html',
+        controller: 'LoginController'
+      }).
+      when('/', {
+        templateUrl: '/dist/html/landingView.html',
+        controller: 'LandingController'
+      }).
       otherwise({
-        redirectTo: '/main'
+        redirectTo: '/'
       });
   }]);

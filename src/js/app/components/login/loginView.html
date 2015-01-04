@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="page-header">
+      <h1>Anmelden <small>{$name}</small></h1>
+    </div>
+  </div>
+  {if="$error"}
+  <div class="col-md-12">
+    <div class="alert alert-danger">{$error}</div>
+  </div>
+  {/if}
+</div>
+<div class="row">
+  <div class="col-md-offset-3 col-md-6">
+    <br>
+    <br>
+    <form role="form" class="form-horizontal" id="login-form" method="POST" action="/login">
+      <div class="form-group" id="login-form-id">
+        <label for="inputILN" class="control-label">Bitte geben Sie Ihre Kennung ein:</label>
+        <input type="text" class="form-control typeahead" id="inputID" placeholder="ID" name="user">
+        <span class="help-block" id="id-helper"><br>Bitte geben Sie eine gültige Kennung ein. Eine gültige Kennung besteht aus vier Ziffern.</span>
+      </div>
+      <div class="form-group" id="login-form-pw">
+        <label for="inputPassword" class="control-label">Bitte geben Sie Ihr Passwort ein:</label>
+        <input type="password" class="form-control login-field" id="inputPassword" placeholder="Passwort" name="pwd">
+        <span class="help-block" id="pw-helper">Bitte geben Sie ein Passwort ein.</span>
+      </div>
+      <div class="form-group">
+        <button type="button" id="login-form-submit" class="btn btn-primary">Anmelden</button>
+      </div>
+      <input type="hidden" name="isil" value="{$isil}">
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <br>
+    <p>Alle teilnehmenden Referenten müssen über eine gültige CBS-Kennung verfügen und es
+      muss ein gültiges <a href="http://www.gbv.de/wikis/cls/Profildienste:Referentenprofile">Referentenprofil</a>
+      eingerichtet sein.</p>
+    <br>
+    <div class="alert alert-info">
+      <b>Hinweis:</b> Bitte speichern sie diese URL als Lesezeichen zur Anmeldung beim Profildienst der <i>{$name}.</i>
+    </div>
+  </div>
+</div>

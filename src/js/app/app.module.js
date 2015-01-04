@@ -6,10 +6,14 @@ pdApp.filter('notEmpty', function(){
   };
 });
 
-pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance) {
+pdApp.constant('version', '1.0');
+
+pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance, $location, $rootScope) {
 
   $scope.redirect = function () {
-    window.location.href = '/';
+  	$location.path('login');
+  	$modalInstance.close();
+  	$rootScope.token = undefined;
   };
 
 });
