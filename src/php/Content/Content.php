@@ -6,7 +6,7 @@ interface Content{
 
 	public function getTitles();
 
-	public function getCount();
+	public function getTotalCount();
 
 }
 

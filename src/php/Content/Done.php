@@ -4,31 +4,34 @@ namespace Content;
 
 class Done implements Content{
 
-	private $titlelist;
+  private $titlelist;
+  private $total;
 
-	public function __construct($num){
+  public function __construct($num){
 
-		$done = \Profildienst\DB::getUserData('done');
+    $done = \Profildienst\DB::getUserData('done');
 
-		$dn=array();
-		foreach ($done as $d){
-			array_push($dn, $d['id']);
-		}
+    $dn=array();
+    foreach ($done as $d){
+      array_push($dn, $d['id']);
+    }
 
 
-		$query = array('$and' => array(array('XX01' => $_SESSION["id"]), array('_id' => array('$in' => $dn))));
+    $query = array('$and' => array(array('XX01' => $_SESSION["id"]), array('_id' => array('$in' => $dn))));
 
-		$this -> titlelist = \Profildienst\DB::getTitleList($query, $num);;
+    $t = \Profildienst\DB::getTitleList($query, $num);
+    $this->titlelist = $t['titlelist'];
+    $this->total = $t['total'];
 
-	}
+  }
 
-	public function getTitles(){
-		return $this -> titlelist;
-	}
+  public function getTitles(){
+    return $this -> titlelist;
+  }
 
-	public function getCount(){
-		return $this -> titlelist -> getCount();
-	}
+  public function getTotalCount(){
+    return $this->total;
+  }
 }
 
 

@@ -4,28 +4,32 @@ namespace Content;
 
 class Cart implements Content{
 
-	private $titlelist;
+  private $titlelist;
+  private $total;
 
-	public function __construct($num){
+  public function __construct($num){
 
-		$cart=\Profildienst\DB::getUserData('cart');
-		$ct=array();
+    $cart=\Profildienst\DB::getUserData('cart');
+    $ct=array();
 
-		foreach ($cart as $c){
-			array_push($ct, $c['id']);
-		}
+    foreach ($cart as $c){
+      array_push($ct, $c['id']);
+    }
 
-		$query = array('$and' => array(array('XX01' => $_SESSION['id']), array('_id' => array('$in' => $ct))));
-		$this->titlelist = \Profildienst\DB::getTitleList($query, $num);
-	}
+    $query = array('$and' => array(array('XX01' => $_SESSION['id']), array('_id' => array('$in' => $ct))));
 
-	public function getTitles(){
-		return $this->titlelist;
-	}
+    $t = \Profildienst\DB::getTitleList($query, $num);
+    $this->titlelist = $t['titlelist'];
+    $this->total = $t['total'];
+  }
 
-	public function getCount(){
-		return $this -> titlelist -> getCount();
-	}
+  public function getTitles(){
+    return $this->titlelist;
+  }
+
+  public function getTotalCount(){
+    return $this->total;
+  }
 }
 
 

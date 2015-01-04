@@ -72,7 +72,13 @@ class DB{
 		  $r[$id]=$t;
 		}
 
-		return ((count($r) > 0) ? new TitleList($r) : NULL);
+		$ret = array('titlelist' => NULL, 'total' => $cnt);
+
+		if(count($r) > 0){
+			$ret['titlelist'] = new TitleList($r);
+		}
+
+		return $ret;
 	}
 
 	public static function getTitle($query){

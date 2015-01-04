@@ -218,38 +218,42 @@ $app -> group('/api', $authenticate($app) ,function() use ($app){
 
     $app -> get('/overview/page/:num', function($num = 0) use ($app){
       $m = new \Content\Main(validateNum($num));
-      printTitles($m -> getTitles());
+      printTitles($m -> getTitles(), $m -> getTotalCount());
     });
 
     $app -> get('/cart/page/:num', function($num = 0) use ($app){
       $m = new \Content\Cart(validateNum($num));
-      printTitles($m -> getTitles());
+      printTitles($m -> getTitles(), $m -> getTotalCount());
     });
 
     $app -> get('/watchlist/:id/page/:num', function($id = NULL, $num = 0) use ($app){
       $m = new \Content\Watchlist(validateNum($num), $id);
-      printTitles($m -> getTitles());
+      if(is_null($m -> getTotalCount())){
+        printTitles($m -> getTitles(), $m -> getTotalCount(), true, 'Es existiert keine Merkliste mit dieser ID.');
+      }else{
+        printTitles($m -> getTitles(), $m -> getTotalCount());
+      }
     });
 
     $app -> get('/search/:query/page/:num', function($query, $num = 0) use ($app){
       $m = new \Special\Search($query, $num);
-      printTitles($m -> getTitles());
+      printTitles($m -> getTitles(), $m -> getTotalCount());
     });
 
 
     $app -> get('/pending/page/:num', function($num = 0) use ($app){
       $m = new \Content\Pending(validateNum($num));
-      printTitles($m -> getTitles());
+      printTitles($m -> getTitles(), $m -> getTotalCount());
     });
 
     $app -> get('/done/page/:num', function($num = 0) use ($app){
       $m = new \Content\Done(validateNum($num));
-      printTitles($m -> getTitles());
+      printTitles($m -> getTitles(), $m -> getTotalCount());
     });
 
     $app -> get('/rejected/page/:num', function($num = 0) use ($app){
       $m = new \Content\Rejected(validateNum($num));
-      printTitles($m -> getTitles());
+      printTitles($m -> getTitles(), $m -> getTotalCount());
     });
   });
 });
@@ -337,15 +341,20 @@ function convertTitle(\Profildienst\Title $t){
   return $r;
 }
 
-function printTitles($titles){
-  $titles_out = array();
-  if(!is_null($titles)){
-    foreach($titles->getTitles() as $t){
-      $titles_out[] = convertTitle($t);
-    }
-  }
+function printTitles($titles, $total, $error = false, $message = NULL){
 
-  printResponse(array('more' => ($titles !== NULL), 'data' => $titles_out));
+  if(!$error){
+    $titles_out = array();
+    if(!is_null($titles)){
+      foreach($titles->getTitles() as $t){
+        $titles_out[] = convertTitle($t);
+      }
+    }
+
+    printResponse(array('more' => ($titles !== NULL), 'total' => $total,'data' => $titles_out));
+  }else{
+    printResponse(array('success' => false,'message' => $message));
+  }
 }
 
 function printResponse($resp){

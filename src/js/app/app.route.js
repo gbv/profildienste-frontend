@@ -25,6 +25,10 @@ pdApp.config(['$routeProvider',
         templateUrl: '/dist/html/doneView.html',
         controller: 'DoneController'
       }).
+      when('/manage', {
+        templateUrl: '/dist/html/manageView.html',
+        controller: 'ManageController'
+      }).
       otherwise({
         redirectTo: '/main'
       });
