@@ -2,11 +2,9 @@
 
 require 'vendor/autoload.php';
 
-$app = new \Slim\Slim(array(
-  'view' => new \Slim\Extras\Views\Rain(\Config\Config::$rain_config)
-  ));
+$app = new \Slim\Slim();
 
-$app->add(new \Slim\Middleware\SessionCookie(array('secret' => 'ProfildienstGBV')));
+//$app->add(new \Slim\Middleware\SessionCookie(array('secret' => 'ProfildienstGBV')));
 
 $authenticate = function ($app) {
   return function () use ($app) {
@@ -259,17 +257,7 @@ $app -> group('/api', $authenticate($app) ,function() use ($app){
 });
 
 $app->notFound(function () use ($app) {
-  $view = $app -> view();
-  $app->view()->setData('version', 'Error');
-  $content = $view -> render('error');
-
-  $view -> setData(array('content' => $content));
-
-  if(isset($_SESSION['id'])){
-    echo $view ->render('main/pd');
-  }else{
-    echo $view ->render('main/default');
-  }
+  printTitles(NULL, NULL, true, 'Not found.');
 });
 
 function validateNum($num){
