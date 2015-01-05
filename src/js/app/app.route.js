@@ -29,7 +29,7 @@ pdApp.config(['$routeProvider',
         templateUrl: '/dist/html/manageView.html',
         controller: 'ManageController'
       }).
-      when('/login', {
+      when('/login/:isil', {
         templateUrl: '/dist/html/loginView.html',
         controller: 'LoginController'
       }).

@@ -22,9 +22,9 @@
   <div class="row">
     <div class="col-md-6">
       <ul class="nav nav-pills nav-stacked pd-sel">
-        {loop="$bib"}
-          <li><a href="/login/{$key}"><i class="fa fa-caret-right pd-sel-caret"></i> {$value.name} <span class="text-muted">({$key})</span></a></li>
-        {/loop}
+        <li ng-repeat="lib in libraries" ng-click="openLogin(lib.isil)">
+          <a href=""><i class="fa fa-caret-right pd-sel-caret"></i> {{lib.name}} <span class="text-muted">({{lib.isil}})</span></a>
+        </li>
       </ul>
     </div>
   </div>

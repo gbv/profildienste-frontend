@@ -14,250 +14,258 @@ $authenticate = function ($app) {
   };
 };
 
-$app -> group('/api', $authenticate($app) ,function() use ($app){
+$app -> get('/libraries', function() use ($app){
 
-  /**
-   * Watchlists
-   */
-  $app -> group('/watchlist', function() use ($app){
+  $data = array();
+  foreach (\Config\Config::$bibliotheken as $isil => $bib) {
+    $data[] = array('isil' => $isil, 'name' => $bib['name']);
+  }
 
-    $app->post('/remove', function () use ($app){
-
-      $id = $app->request()->post('id');
-      $wl = $app->request()->post('wl');
-
-      $m = new \AJAX\RemoveWatchlist($id, $wl);
-      printResponse($m -> getResponse());
-    });
-
-    $app->post('/add', function () use ($app){
-
-      $id = $app->request()->post('id');
-      $wl = $app->request()->post('wl');
-
-      $m = new \AJAX\Watchlist($id, $wl);
-      printResponse($m -> getResponse());
-    });
-
-    $app->post('/manage', function () use ($app){
-
-      $id = $app->request()->post('id');
-      $type = $app->request()->post('type');
-      $content = $app->request()->post('content');
-
-      $m = new \AJAX\WatchlistManager($id, $type, $content);
-      printResponse($m -> getResponse());
-    });
-
-  });
-
-  /**
-   * Cart
-   */
-  $app -> group('/cart', function() use ($app){
-
-    $app->post('/remove', function () use ($app){
-
-      $id = $app->request()->post('id');
-      $rm = $app->request()->post('rm');
-
-      $m = new \AJAX\RemoveCart($id, $rm);
-      printResponse($m -> getResponse());
-    });
+  printResponse(array('data' => $data));
+});
 
 
-    $app->post('/add', function () use ($app){
+/**
+ * Watchlists
+ */
+$app -> group('/watchlist', function() use ($app){
 
-      $id = $app->request()->post('id');
-      $bdg = $app->request()->post('bdg');
-      $lft = $app->request()->post('lft');
-      $selcode = $app->request()->post('selcode');
-      $ssgnr = $app->request()->post('ssgnr');
-      $comment = $app->request()->post('comment');
-
-      $m = new \AJAX\Cart($id, $lft, $bdg, $selcode, $ssgnr, $comment);
-
-      printResponse($m -> getResponse());
-    });
-
-  });
-
-  /**
-   * Reject
-   */
-  $app -> group('/reject', function() use ($app){
-
-    $app->post('/remove', function () use ($app){
-      $id = $app->request()->post('id');
-
-      $m = new \AJAX\RemoveReject($id);
-      printResponse($m -> getResponse());
-    });
-
-
-    $app->post('/add', function () use ($app){
-      $id = $app->request()->post('id');
-
-      $m = new \AJAX\Reject($id);
-      printResponse($m -> getResponse());
-    });
-
-  });
-
-  /**
-   * User related information
-   */
-  $app -> get('/user', function() use ($app){
-
-    $data = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
-
-    $cart=sizeof($data['cart']);
-    $watchlists=$data['watchlist'];
-    $wl_order=\Profildienst\DB::getUserData('wl_order');
-
-    $wl = array();
-    foreach($wl_order as $index){
-      $watchlists[$index]['count'] = count($watchlists[$wlo]['list']);
-      $wl[] = array('id' => $watchlists[$index]['id'], 'name' => $watchlists[$index]['name'], 'count' => count($watchlists[$index]['list']));
-    }
-
-    $price=$data['price']['price'];
-    $known=$data['price']['known'];
-    $est=$data['price']['est'];
-
-    $price = number_format($price, 2, '.', '');
-
-    $defaults = $data['defaults'];
-
-    // budgets
-
-    $budgets = array();
-    foreach ($data['budgets'] as $budget) {
-      $budgets[] = array('key' => $budget['0'], 'value' => $budget['c'], 'default' => ($budget['0'] === $default_budget));
-    }
-
-    $data = array(
-      'name' => $_SESSION['name'],
-      'cart' => count($data['cart']),
-      'price' => $data['price'],
-      'watchlists' => $wl,
-      'def_wl' => $data['wl_default'],
-      'def_lft' => $defaults['lieft'],
-      'budgets' => $budgets,
-      'settings' => \Profildienst\DB::getUserData('settings')
-    );
-
-    printResponse(array('data' => $data));
-  });
-
-  $app -> get('/settings', function() use ($app){
-    $sortby = array();
-    foreach (\Config\Config::$sortby_name as $val => $desc) {
-      $sortby[] = array('key' => $val, 'value' => $desc);
-    }
-
-    $order = array();
-    foreach (\Config\Config::$order_name as $val => $desc) {
-      $order[] = array('key' => $val, 'value' => $desc);
-    }
-
-    $data = array(
-      'sortby' => $sortby,
-      'order' => $order
-    );
-
-    printResponse(array('data' => $data));
-    
-  });
-
-  /**
-   * Confirm Order
-   */
-  $app->post('/confirm', function () use ($app){
-    $m = new \AJAX\ConfirmOrder();
-    printResponse($m -> getResponse());
-  });
-
-  /**
-   * Delete titles
-   */
-  $app->post('/delete', function () use ($app){
-    $m = new \AJAX\Delete();
-    printResponse($m -> getResponse());
-  });
-
-  /**
-   * Verlagsmeldung
-   */
-  $app->post('/info', function () use ($app){
+  $app->post('/remove', function () use ($app){
 
     $id = $app->request()->post('id');
+    $wl = $app->request()->post('wl');
 
-    $m = new \AJAX\Info($id);
+    $m = new \AJAX\RemoveWatchlist($id, $wl);
     printResponse($m -> getResponse());
   });
 
-  /**
-   * Settings
-   */
-  $app->post('/settings', function () use ($app){
+  $app->post('/add', function () use ($app){
 
+    $id = $app->request()->post('id');
+    $wl = $app->request()->post('wl');
+
+    $m = new \AJAX\Watchlist($id, $wl);
+    printResponse($m -> getResponse());
+  });
+
+  $app->post('/manage', function () use ($app){
+
+    $id = $app->request()->post('id');
     $type = $app->request()->post('type');
-    $value = $app->request()->post('value');
+    $content = $app->request()->post('content');
 
-    $m = new \AJAX\ChangeSetting($type, $value);
+    $m = new \AJAX\WatchlistManager($id, $type, $content);
     printResponse($m -> getResponse());
   });
 
-  /**
-   * Loader
-   */
-  $app -> group('/get', function () use ($app){
+});
 
-    $app -> get('/overview/page/:num', function($num = 0) use ($app){
-      $m = new \Content\Main(validateNum($num));
+/**
+ * Cart
+ */
+$app -> group('/cart', function() use ($app){
+
+  $app->post('/remove', function () use ($app){
+
+    $id = $app->request()->post('id');
+    $rm = $app->request()->post('rm');
+
+    $m = new \AJAX\RemoveCart($id, $rm);
+    printResponse($m -> getResponse());
+  });
+
+
+  $app->post('/add', function () use ($app){
+
+    $id = $app->request()->post('id');
+    $bdg = $app->request()->post('bdg');
+    $lft = $app->request()->post('lft');
+    $selcode = $app->request()->post('selcode');
+    $ssgnr = $app->request()->post('ssgnr');
+    $comment = $app->request()->post('comment');
+
+    $m = new \AJAX\Cart($id, $lft, $bdg, $selcode, $ssgnr, $comment);
+
+    printResponse($m -> getResponse());
+  });
+
+});
+
+/**
+ * Reject
+ */
+$app -> group('/reject', function() use ($app){
+
+  $app->post('/remove', function () use ($app){
+    $id = $app->request()->post('id');
+
+    $m = new \AJAX\RemoveReject($id);
+    printResponse($m -> getResponse());
+  });
+
+
+  $app->post('/add', function () use ($app){
+    $id = $app->request()->post('id');
+
+    $m = new \AJAX\Reject($id);
+    printResponse($m -> getResponse());
+  });
+
+});
+
+/**
+ * User related information
+ */
+$app -> get('/user', $authenticate($app)  ,function() use ($app){
+
+  $data = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
+
+  $cart=sizeof($data['cart']);
+  $watchlists=$data['watchlist'];
+  $wl_order=\Profildienst\DB::getUserData('wl_order');
+
+  $wl = array();
+  foreach($wl_order as $index){
+    $watchlists[$index]['count'] = count($watchlists[$wlo]['list']);
+    $wl[] = array('id' => $watchlists[$index]['id'], 'name' => $watchlists[$index]['name'], 'count' => count($watchlists[$index]['list']));
+  }
+
+  $price=$data['price']['price'];
+  $known=$data['price']['known'];
+  $est=$data['price']['est'];
+
+  $price = number_format($price, 2, '.', '');
+
+  $defaults = $data['defaults'];
+
+  // budgets
+
+  $budgets = array();
+  foreach ($data['budgets'] as $budget) {
+    $budgets[] = array('key' => $budget['0'], 'value' => $budget['c'], 'default' => ($budget['0'] === $default_budget));
+  }
+
+  $data = array(
+    'name' => $_SESSION['name'],
+    'cart' => count($data['cart']),
+    'price' => $data['price'],
+    'watchlists' => $wl,
+    'def_wl' => $data['wl_default'],
+    'def_lft' => $defaults['lieft'],
+    'budgets' => $budgets,
+    'settings' => \Profildienst\DB::getUserData('settings')
+  );
+
+  printResponse(array('data' => $data));
+});
+
+$app -> get('/settings', function() use ($app){
+  $sortby = array();
+  foreach (\Config\Config::$sortby_name as $val => $desc) {
+    $sortby[] = array('key' => $val, 'value' => $desc);
+  }
+
+  $order = array();
+  foreach (\Config\Config::$order_name as $val => $desc) {
+    $order[] = array('key' => $val, 'value' => $desc);
+  }
+
+  $data = array(
+    'sortby' => $sortby,
+    'order' => $order
+  );
+
+  printResponse(array('data' => $data));
+  
+});
+
+/**
+ * Confirm Order
+ */
+$app->post('/confirm', function () use ($app){
+  $m = new \AJAX\ConfirmOrder();
+  printResponse($m -> getResponse());
+});
+
+/**
+ * Delete titles
+ */
+$app->post('/delete', function () use ($app){
+  $m = new \AJAX\Delete();
+  printResponse($m -> getResponse());
+});
+
+/**
+ * Verlagsmeldung
+ */
+$app->post('/info', function () use ($app){
+
+  $id = $app->request()->post('id');
+
+  $m = new \AJAX\Info($id);
+  printResponse($m -> getResponse());
+});
+
+/**
+ * Settings
+ */
+$app->post('/settings', function () use ($app){
+
+  $type = $app->request()->post('type');
+  $value = $app->request()->post('value');
+
+  $m = new \AJAX\ChangeSetting($type, $value);
+  printResponse($m -> getResponse());
+});
+
+/**
+ * Loader
+ */
+$app -> group('/get', function () use ($app){
+
+  $app -> get('/overview/page/:num', function($num = 0) use ($app){
+    $m = new \Content\Main(validateNum($num));
+    printTitles($m -> getTitles(), $m -> getTotalCount());
+  });
+
+  $app -> get('/cart/page/:num', function($num = 0) use ($app){
+    $m = new \Content\Cart(validateNum($num));
+    printTitles($m -> getTitles(), $m -> getTotalCount());
+  });
+
+  $app -> get('/watchlist/:id/page/:num', function($id = NULL, $num = 0) use ($app){
+    $m = new \Content\Watchlist(validateNum($num), $id);
+    if(is_null($m -> getTotalCount())){
+      printResponse(NULL, true, 'Es existiert keine Merkliste mit dieser ID.');
+    }else{
       printTitles($m -> getTitles(), $m -> getTotalCount());
-    });
+    }
+  });
 
-    $app -> get('/cart/page/:num', function($num = 0) use ($app){
-      $m = new \Content\Cart(validateNum($num));
-      printTitles($m -> getTitles(), $m -> getTotalCount());
-    });
-
-    $app -> get('/watchlist/:id/page/:num', function($id = NULL, $num = 0) use ($app){
-      $m = new \Content\Watchlist(validateNum($num), $id);
-      if(is_null($m -> getTotalCount())){
-        printTitles($m -> getTitles(), $m -> getTotalCount(), true, 'Es existiert keine Merkliste mit dieser ID.');
-      }else{
-        printTitles($m -> getTitles(), $m -> getTotalCount());
-      }
-    });
-
-    $app -> get('/search/:query/page/:num', function($query, $num = 0) use ($app){
-      $m = new \Special\Search($query, $num);
-      printTitles($m -> getTitles(), $m -> getTotalCount());
-    });
+  $app -> get('/search/:query/page/:num', function($query, $num = 0) use ($app){
+    $m = new \Special\Search($query, $num);
+    printTitles($m -> getTitles(), $m -> getTotalCount());
+  });
 
 
-    $app -> get('/pending/page/:num', function($num = 0) use ($app){
-      $m = new \Content\Pending(validateNum($num));
-      printTitles($m -> getTitles(), $m -> getTotalCount());
-    });
+  $app -> get('/pending/page/:num', function($num = 0) use ($app){
+    $m = new \Content\Pending(validateNum($num));
+    printTitles($m -> getTitles(), $m -> getTotalCount());
+  });
 
-    $app -> get('/done/page/:num', function($num = 0) use ($app){
-      $m = new \Content\Done(validateNum($num));
-      printTitles($m -> getTitles(), $m -> getTotalCount());
-    });
+  $app -> get('/done/page/:num', function($num = 0) use ($app){
+    $m = new \Content\Done(validateNum($num));
+    printTitles($m -> getTitles(), $m -> getTotalCount());
+  });
 
-    $app -> get('/rejected/page/:num', function($num = 0) use ($app){
-      $m = new \Content\Rejected(validateNum($num));
-      printTitles($m -> getTitles(), $m -> getTotalCount());
-    });
+  $app -> get('/rejected/page/:num', function($num = 0) use ($app){
+    $m = new \Content\Rejected(validateNum($num));
+    printTitles($m -> getTitles(), $m -> getTotalCount());
   });
 });
 
 $app->notFound(function () use ($app) {
-  printTitles(NULL, NULL, true, 'Not found.');
+  printResponse(NULL, true, 'Not found.');
 });
 
 function validateNum($num){
@@ -329,24 +337,25 @@ function convertTitle(\Profildienst\Title $t){
   return $r;
 }
 
-function printTitles($titles, $total, $error = false, $message = NULL){
-
-  if(!$error){
-    $titles_out = array();
-    if(!is_null($titles)){
-      foreach($titles->getTitles() as $t){
-        $titles_out[] = convertTitle($t);
-      }
+function printTitles($titles, $total){
+  $titles_out = array();
+  if(!is_null($titles)){
+    foreach($titles->getTitles() as $t){
+      $titles_out[] = convertTitle($t);
     }
-
-    printResponse(array('more' => ($titles !== NULL), 'total' => $total,'data' => $titles_out));
-  }else{
-    printResponse(array('success' => false,'message' => $message));
   }
+
+  printResponse(array('more' => ($titles !== NULL), 'total' => $total,'data' => $titles_out));
 }
 
-function printResponse($resp){
+function printResponse($resp, $error = false, $message = ''){
   global $app;
+
+  if($error){
+    $resp = array('success' => false, 'message' => $message);
+  }else{
+    $resp['success'] = true;
+  }
 
   $app->response->headers->set('Content-Type', 'application/javascript');
   $callback = $app->request()->get('callback');

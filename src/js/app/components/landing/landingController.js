@@ -1,9 +1,13 @@
-pdApp.controller('LandingController', function($scope, DataService) {
+pdApp.controller('LandingController', function($scope, LibraryService, $location) {
 
-/*
-DataService.getWatchlists().then(function(data){
-  $scope.watchlists = data.watchlists;
-  $scope.default_watchlist = data.def_wl;
-});*/
-  
+  LibraryService.getLibraries().then(function(data){
+    $scope.libraries = data.libs;
+  }, function(reason){
+    alert('Fehler: '+reason);
+  });
+
+  $scope.openLogin = function (isil){
+    $location.path('login/'+isil);
+  }
+
 });
