@@ -8,6 +8,8 @@ $app = new \Slim\Slim();
 
 $authenticate = function ($app) {
   return function () use ($app) {
+    $_SESSION['id'] = '6909';
+    $_SESSION['name'] = 'INJECTED NAME';
     if (!isset($_SESSION['id'])) {
       $app->redirect('/');
     }
@@ -116,49 +118,73 @@ $app -> group('/reject', function() use ($app){
 /**
  * User related information
  */
-$app -> get('/user', $authenticate($app)  ,function() use ($app){
+$app -> group('/user', $authenticate($app), function() use ($app){
 
-  $data = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
+  $app -> get('/', function() use ($app){
 
-  $cart=sizeof($data['cart']);
-  $watchlists=$data['watchlist'];
-  $wl_order=\Profildienst\DB::getUserData('wl_order');
+    $d = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
 
-  $wl = array();
-  foreach($wl_order as $index){
-    $watchlists[$index]['count'] = count($watchlists[$wlo]['list']);
-    $wl[] = array('id' => $watchlists[$index]['id'], 'name' => $watchlists[$index]['name'], 'count' => count($watchlists[$index]['list']));
-  }
+    $budgets = array();
+    foreach ($d['budgets'] as $budget) {
+      $budgets[] = array('key' => $budget['0'], 'value' => $budget['c'], 'default' => ($budget['0'] === $d['defaults']['budget']));
+    }
 
-  $price=$data['price']['price'];
-  $known=$data['price']['known'];
-  $est=$data['price']['est'];
+    $data = array(
+      'name' => $_SESSION['name'],
+      'def_lft' => $d['defaults']['lieft'],
+      'budgets' => $budgets
+    );
 
-  $price = number_format($price, 2, '.', '');
+    printResponse(array('data' => $data));
 
-  $defaults = $data['defaults'];
+  });
 
-  // budgets
+  $app -> get('/watchlists', function() use ($app){
 
-  $budgets = array();
-  foreach ($data['budgets'] as $budget) {
-    $budgets[] = array('key' => $budget['0'], 'value' => $budget['c'], 'default' => ($budget['0'] === $default_budget));
-  }
+    $d = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
 
-  $data = array(
-    'name' => $_SESSION['name'],
-    'cart' => count($data['cart']),
-    'price' => $data['price'],
-    'watchlists' => $wl,
-    'def_wl' => $data['wl_default'],
-    'def_lft' => $defaults['lieft'],
-    'budgets' => $budgets,
-    'settings' => \Profildienst\DB::getUserData('settings')
-  );
+    $watchlists=$d['watchlist'];
+    $wl_order=\Profildienst\DB::getUserData('wl_order');
 
-  printResponse(array('data' => $data));
-});
+    $wl = array();
+    foreach($wl_order as $index){
+      $watchlists[$index]['count'] = count($watchlists[$wlo]['list']);
+      $wl[] = array('id' => $watchlists[$index]['id'], 'name' => $watchlists[$index]['name'], 'count' => count($watchlists[$index]['list']));
+    }
 
+    $data = array(
+      'watchlists' => $wl,
+      'def_wl' => $d['wl_default']
+    );
+
+    printResponse(array('data' => $data));
+
+  });
+
+  $app -> get('/cart', function() use ($app){
+    $d = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
+
+    $data = array(
+      'cart' => count($d['cart']),
+      'price' => $d['price'],
+    );
+
+    printResponse(array('data' => $data));
+  });
+
+  $app -> get('/settings', function() use ($app){
+    $data = array(
+      'settings' => \Profildienst\DB::getUserData('settings')
+    );
+
+    printResponse(array('data' => $data));
+  });
+
+}); 
+
+/**
+ * Settings
+ */
 $app -> get('/settings', function() use ($app){
   $sortby = array();
   foreach (\Config\Config::$sortby_name as $val => $desc) {
