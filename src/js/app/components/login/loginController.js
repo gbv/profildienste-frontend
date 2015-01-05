@@ -1,8 +1,19 @@
-pdApp.controller('LoginController', function($scope, DataService) {
+pdApp.controller('LoginController', function($scope, LibraryService, $routeParams, $location) { // LoginService
 
-  DataService.getWatchlists().then(function(data){
-    $scope.watchlists = data.watchlists;
-    $scope.default_watchlist = data.def_wl;
+  LibraryService.getLibraries().then(function(data){
+    for(var i=0; i < data.libs.length; i++){
+      if(data.libs[i].isil == $routeParams.isil){
+        $scope.library = data.libs[i];
+        break;
+      }
+    }
+
+    if($scope.library === undefined){
+      $location.path('/');
+    }
+    
+  }, function(reason){
+    alert('Fehler: '+reason);
   });
   
 });
