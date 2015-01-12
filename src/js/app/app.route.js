@@ -1,5 +1,5 @@
-pdApp.config(['$routeProvider',
-  function($routeProvider) {
+pdApp.config(['$routeProvider', '$locationProvider',
+  function($routeProvider, $locationProvider) {
 
     // Authentication function
     var checkAuth = function($location, $q, $window, LogoutService) { 
@@ -58,4 +58,6 @@ pdApp.config(['$routeProvider',
       otherwise({
         redirectTo: '/'
       });
+
+      $locationProvider.html5Mode(true);
   }]);

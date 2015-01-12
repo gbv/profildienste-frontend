@@ -46,7 +46,7 @@ $app -> post('/auth', function() use ($app){
     'sub' => $pd_name,
     'pd_id' => $user,
     'iat' => time(),
-    'exp' => time() + (10)
+    'exp' => time() + (24*60*60) // Tokens should be valid for a day
   );
 
   $jwt = JWT::encode($token, \Config\Config::$token_key);

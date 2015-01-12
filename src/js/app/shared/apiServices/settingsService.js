@@ -35,17 +35,19 @@ pdApp.service('SettingsService', function($http, $rootScope, $q, LoginService) {
         defSelOptions.reject(json.message);
       }else{
 
+        this.data = json.data;
+
         defSelOptions.resolve({
           sort: json.data.settings.sortby,
           order: json.data.settings.order
         });
 
       }
-    }).error(function(reason){
+    }.bind(this)).error(function(reason){
       defSelOptions.reject(reason);
     });
 
-  });
+  }.bind(this));
 
   this.getOrder = function(){
 
