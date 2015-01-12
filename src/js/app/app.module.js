@@ -18,7 +18,7 @@ pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance, $location, 
 
 });
 
-pdApp.factory('authInterceptor', function ($rootScope, $q, $window, LogoutService) {
+pdApp.factory('authInterceptor', function ($rootScope, $q, $window, LogoutService, $location) {
   return {
     request: function (config) {
       config.headers = config.headers || {};

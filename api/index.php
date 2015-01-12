@@ -46,7 +46,7 @@ $app -> post('/auth', function() use ($app){
     'sub' => $pd_name,
     'pd_id' => $user,
     'iat' => time(),
-    'exp' => time() + (60*60)
+    'exp' => time() + (10)
   );
 
   $jwt = JWT::encode($token, \Config\Config::$token_key);

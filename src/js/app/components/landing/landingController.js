@@ -1,4 +1,8 @@
-pdApp.controller('LandingController', function($scope, LibraryService, $location, LogoutService) {
+pdApp.controller('LandingController', function($scope, LibraryService, $location, LogoutService, $window) {
+
+  if($window.sessionStorage.token){
+    $location.path('/main');
+  }
 
   LibraryService.getLibraries().then(function(data){
     $scope.libraries = data.libs;
@@ -9,6 +13,7 @@ pdApp.controller('LandingController', function($scope, LibraryService, $location
   $scope.openLogin = function (isil){
     $location.path('login/'+isil);
   }
+
 
   $scope.hasInfo = LogoutService.hasInfo();
   $scope.info = LogoutService.getInfo();
