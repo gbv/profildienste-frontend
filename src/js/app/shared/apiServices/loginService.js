@@ -1,7 +1,6 @@
 pdApp.service('LoginService', function($http, $window, $q) {
 
   var defLogin = $q.defer();
-  var token;
 
   this.performLogin = function(user, pass){
 
@@ -27,7 +26,7 @@ pdApp.service('LoginService', function($http, $window, $q) {
         defLogin.resolve();
         login.resolve();
 
-        $window.sessionStorage.token = json.token;
+        $window.sessionStorage.setItem('token',json.token);
       }
     }).error(function(reason){
       $scope.error = true;
@@ -46,5 +45,4 @@ pdApp.service('LoginService', function($http, $window, $q) {
 
     return defLogin.promise;
   };
-
 });

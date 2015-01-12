@@ -1,4 +1,4 @@
-pdApp.controller('ItemController', function($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService){
+pdApp.controller('ItemController', function($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService){
 
   $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
@@ -13,11 +13,11 @@ pdApp.controller('ItemController', function($scope, $sce, WatchlistService, Cart
 
   });
 
-  /*DataService.getOrderDetails().then(function (data){
+  UserService.getUserData().then(function (data){
     $scope.budgets = data.budgets;
     $scope.item.budget = data.budgets[0].key;
     $scope.item.lft = data.def_lft;
-  });*/
+  });
 
   ConfigService.getConfig().then(function (data){
     $scope.config = data.config;
