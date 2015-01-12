@@ -8,26 +8,33 @@ pdApp.service('CartService', function($http, $rootScope, $q, LoginService) {
         defCart.reject(json.message);
       }else{
 
+        this.data = json.data;
+
         defCart.resolve({
           cart: json.data.cart,
           price: json.data.price
         });
 
       }
-    }).error(function(reason){
+    }.bind(this)).error(function(reason){
       defCart.reject(reason);
     });
-  });
+  }.bind(this));
 
   this.getCart = function(){
-    return defCart.promise;
+    if(this.data === undefined){
+      return defCart.promise;
+    }else{
+      var d = $q.defer();
+      d.resolve({
+        cart: this.data.cart,
+        price: this.data.price
+      });
+      return d.promise;
+    }
   };
 
   this.addToCart = function(item){
-
-    if(this.data === undefined){
-      return;
-    }
 
     var def = $q.defer();
 
@@ -62,10 +69,6 @@ pdApp.service('CartService', function($http, $rootScope, $q, LoginService) {
 
 
   this.removeFromCart = function(item){
-
-    if(this.data === undefined){
-      return;
-    }
 
     var def = $q.defer();
 

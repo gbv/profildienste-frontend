@@ -76,4 +76,12 @@ pdApp.controller('MenuController', function($scope, $rootScope, WatchlistService
     $scope.loggedIn = true;
   });
 
+  $rootScope.$on('userLogin', function(e){
+    $scope.loggedIn = true;
+  });
+
+  $rootScope.$on('userLogout', function(e){
+    $scope.loggedIn = false;
+  });
+
 });

@@ -7,27 +7,34 @@ pdApp.service('WatchlistService', function($http, $rootScope, $q, LoginService) 
       if(!json.success){
         defWatchlists.reject(json.message);
       }else{
+
+        this.data = json.data;
         
-         defWatchlists.resolve({
+        defWatchlists.resolve({
           watchlists: json.data.watchlists,
           def_wl: json.data.def_wl
         });
 
       }
-    }).error(function(reason){
+    }.bind(this)).error(function(reason){
       defWatchlists.reject(reason);
     });
-  });
+  }.bind(this));
 
   this.getWatchlists = function(){
-    return defWatchlists.promise;
+    if(this.data === undefined){
+      return defWatchlists.promise;
+    }else{
+      var d = $q.defer();
+      d.resolve({
+        watchlists: this.data.watchlists,
+        def_wl: this.data.def_wl
+      });
+      return d.promise;
+    }
   };
 
   this.removeFromWatchlist = function(item){
-
-    if(this.data === undefined){
-      return;
-    }
 
     var def = $q.defer();
 
@@ -59,10 +66,6 @@ pdApp.service('WatchlistService', function($http, $rootScope, $q, LoginService) 
 
 
   this.addToWatchlist = function(item, wl){
-
-    if(this.data === undefined){
-      return;
-    }
 
     var def = $q.defer();
 

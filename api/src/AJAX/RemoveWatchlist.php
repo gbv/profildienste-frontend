@@ -45,7 +45,6 @@ class RemoveWatchlist implements AJAX{
 			$g = array_merge($f, $s);
 
 			$watchlists[$wl_id]['list']=$g;
-			$ui = new \Profildienst\UI();
 
 			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('watchlist' => $watchlists)),'users');
 			$this -> resp['content']=count($g);

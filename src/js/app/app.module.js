@@ -18,7 +18,7 @@ pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance, $location, 
 
 });
 
-pdApp.factory('authInterceptor', function ($rootScope, $q, $window, $location) {
+pdApp.factory('authInterceptor', function ($rootScope, $q, $window, LogoutService) {
   return {
     request: function (config) {
       config.headers = config.headers || {};
@@ -32,7 +32,7 @@ pdApp.factory('authInterceptor', function ($rootScope, $q, $window, $location) {
     responseError: function(rejection) {
 
       if (rejection.status === 401) {
-        $window.sessionStorage.removeItem('token');
+        LogoutService.destroySession('Sie müssen sich erneut anmelden um auf diese Seite zuzugreifen.');
         $location.path('/');
       }
       return $q.reject(rejection);

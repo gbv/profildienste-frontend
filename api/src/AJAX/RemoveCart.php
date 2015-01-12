@@ -15,7 +15,7 @@ class RemoveCart implements AJAX{
 			$this -> error('Unvollständige Daten');
 			return;
 		}
-
+		
 		$this -> resp['id'] = $id;
 
 		$cart=\Profildienst\DB::getUserData('cart', $auth);
@@ -63,8 +63,6 @@ class RemoveCart implements AJAX{
 					array_push($g, $c);
 				}
 			}
-
-			$ui = new \Profildienst\UI();
 
 			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('cart' => $g)),'users');
 			$this -> resp['content'] = count($g);

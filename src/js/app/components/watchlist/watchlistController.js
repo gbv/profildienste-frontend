@@ -14,8 +14,8 @@ pdApp.controller('WatchlistController', function($scope, Entries, ConfigService,
   });
 
   var config = {
-    hideWatchlist: false,
-    hideCart: true,
+    hideWatchlist: true,
+    hideCart: false,
     hideRejected: true,
     rejectPossible: false
   };

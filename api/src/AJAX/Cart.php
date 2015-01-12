@@ -78,10 +78,7 @@ class Cart implements AJAX{
 
 			$p['price'] = number_format($p['price'], 2, '.', '');
 			$this -> resp['price'] = $p;
-
-
-			$ui = new \Profildienst\UI();
-
+			
 			array_push($c,$ni);
 			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('cart' => $c)),'users');
 

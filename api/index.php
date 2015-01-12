@@ -109,9 +109,8 @@ $app -> group('/cart', $authenticate($app, $auth), function() use ($app, $auth){
   $app->post('/remove', function () use ($app, $auth){
 
     $id = $app->request()->post('id');
-    $rm = $app->request()->post('rm');
 
-    $m = new \AJAX\RemoveCart($id, $rm, $auth);
+    $m = new \AJAX\RemoveCart($id, $auth);
     printResponse($m -> getResponse());
   });
 

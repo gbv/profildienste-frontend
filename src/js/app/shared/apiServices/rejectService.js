@@ -6,9 +6,6 @@ pdApp.service('RejectService', function($http, $rootScope, $q) {
 
   this.addMultRejected = function(items){
 
-    if(this.data === undefined){
-      return;
-    }
     var ids = [];
     for(var i=0; i < items.length; i++){
       ids.push(items[i].id);
@@ -39,10 +36,6 @@ pdApp.service('RejectService', function($http, $rootScope, $q) {
   }
 
   this.removeRejected = function(item){
-
-    if(this.data === undefined){
-      return;
-    }
 
     var def = $q.defer();
 

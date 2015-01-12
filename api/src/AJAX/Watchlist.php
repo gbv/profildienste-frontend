@@ -37,7 +37,6 @@ class Watchlist implements AJAX{
 		if (!in_array($id, $wl)){
 			array_push($wl,$id);
 			$watchlists[$wl_id]['list']=$wl;
-			$ui = new \Profildienst\UI();
 			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('watchlist' => $watchlists)),'users');
 			$this -> resp['content']=sizeof($wl);
 			$this -> resp['success']=true;

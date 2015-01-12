@@ -33,6 +33,10 @@ pdApp.config(['$routeProvider',
         templateUrl: '/dist/html/loginView.html',
         controller: 'LoginController'
       }).
+      when('/logout', {
+        templateUrl: '/dist/html/logoutView.html',
+        controller: 'LogoutController'
+      }).
       when('/', {
         templateUrl: '/dist/html/landingView.html',
         controller: 'LandingController'
