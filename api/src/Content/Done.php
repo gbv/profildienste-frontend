@@ -7,9 +7,9 @@ class Done implements Content{
   private $titlelist;
   private $total;
 
-  public function __construct($num){
+  public function __construct($num, $auth){
 
-    $done = \Profildienst\DB::getUserData('done');
+    $done = \Profildienst\DB::getUserData('done', $auth);
 
     $dn=array();
     foreach ($done as $d){
@@ -17,9 +17,9 @@ class Done implements Content{
     }
 
 
-    $query = array('$and' => array(array('XX01' => $_SESSION["id"]), array('_id' => array('$in' => $dn))));
+    $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $dn))));
 
-    $t = \Profildienst\DB::getTitleList($query, $num);
+    $t = \Profildienst\DB::getTitleList($query, $num, $auth);
     $this->titlelist = $t['titlelist'];
     $this->total = $t['total'];
 

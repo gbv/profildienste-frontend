@@ -1,18 +1,19 @@
-pdApp.controller('MenuController', function($scope, $rootScope, DataService, $modal, SelectService){
+pdApp.controller('MenuController', function($scope, $rootScope, WatchlistService, CartService, UserService, $modal, SelectService, LoginService){
 
-  DataService.getWatchlists().then(function(data){
+
+  WatchlistService.getWatchlists().then(function(data){
     $scope.watchlists = data.watchlists;
     $scope.def_wl = data.def_wl;
   });
-
-  DataService.getName().then(function(data){
+  
+  UserService.getUserData().then(function(data){
     $scope.name = data.name;
-  })
+  });
 
-  DataService.getCart().then(function(data){
+  CartService.getCart().then(function(data){
     $scope.cart = data.cart;
     $scope.price = data.price
-  })
+  });
 
   $rootScope.$on('cartChange', function(e, cart, price){
     $scope.cart = cart;
@@ -69,8 +70,10 @@ pdApp.controller('MenuController', function($scope, $rootScope, DataService, $mo
     SelectService.rejectAll();
   }
 
-  this.loggedIn = function(){
-    return ($rootScope.token !== undefined);
-  }
+  $scope.loggedIn = false;
+
+  LoginService.whenLoggedIn().then(function(data){
+    $scope.loggedIn = true;
+  });
 
 });

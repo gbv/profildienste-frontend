@@ -1,4 +1,27 @@
-pdApp.service('CartService', function($http, $rootScope, $q) {
+pdApp.service('CartService', function($http, $rootScope, $q, LoginService) {
+
+  var defCart = $q.defer();
+
+  LoginService.whenLoggedIn().then(function(data){
+    $http.get('/api/user/cart').success(function(json){
+      if(!json.success){
+        defCart.reject(json.message);
+      }else{
+
+        defCart.resolve({
+          cart: json.data.cart,
+          price: json.data.price
+        });
+
+      }
+    }).error(function(reason){
+      defCart.reject(reason);
+    });
+  });
+
+  this.getCart = function(){
+    return defCart.promise;
+  };
 
   this.addToCart = function(item){
 

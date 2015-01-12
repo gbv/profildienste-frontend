@@ -1,4 +1,4 @@
-<div ng-controller="LoginController">
+<div ng-controller="LoginController as LoginCtrl">
   <div class="row">
     <div class="col-md-12">
       <div class="page-header">
@@ -6,28 +6,27 @@
       </div>
     </div>
     <div class="col-md-12" ng-show="error">
-      <div class="alert alert-danger">{{error_message}}</div>
+      <div class="alert alert-danger">{{errorMessage}}</div>
     </div>
   </div>
   <div class="row">
     <div class="col-md-offset-3 col-md-6">
       <br>
       <br>
-      <form role="form" class="form-horizontal" id="login-form" method="POST" action="/login">
-        <div class="form-group" id="login-form-id">
+      <form role="form" class="form-horizontal" novalidate>
+        <div class="form-group" ng-class="{'has-error': !userValid}">
           <label for="inputILN" class="control-label">Bitte geben Sie Ihre Kennung ein:</label>
-          <input type="text" class="form-control typeahead" id="inputID" placeholder="ID" name="user">
-          <span class="help-block" id="id-helper"><br>Bitte geben Sie eine gültige Kennung ein. Eine gültige Kennung besteht aus vier Ziffern.</span>
+          <input type="text" class="form-control" id="inputILN" placeholder="ID" ng-model="user">
+          <span class="help-block" ng-hide="userValid"><br>Bitte geben Sie eine gültige Kennung ein. Eine gültige Kennung besteht aus vier Ziffern.</span>
         </div>
-        <div class="form-group" id="login-form-pw">
+        <div class="form-group" ng-class="{'has-error': !passValid}">
           <label for="inputPassword" class="control-label">Bitte geben Sie Ihr Passwort ein:</label>
-          <input type="password" class="form-control login-field" id="inputPassword" placeholder="Passwort" name="pwd">
-          <span class="help-block" id="pw-helper">Bitte geben Sie ein Passwort ein.</span>
+          <input type="password" class="form-control" id="inputPassword" placeholder="Passwort" ng-model="pass" >
+          <span class="help-block" ng-hide="passValid">Bitte geben Sie ein Passwort ein.</span>
         </div>
         <div class="form-group">
-          <button type="button" id="login-form-submit" class="btn btn-primary">Anmelden</button>
+          <button type="button" class="btn btn-primary" ng-click="LoginCtrl.submitLogin()">Anmelden</button>
         </div>
-        <input type="hidden" name="isil" value="{$isil}">
       </form>
     </div>
   </div>

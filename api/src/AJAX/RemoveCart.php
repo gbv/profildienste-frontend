@@ -7,7 +7,7 @@ class RemoveCart implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($id){
+	public function __construct($id, $auth){
 
 		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL ,'errormsg' => '', 'price' => array());
 
@@ -18,7 +18,7 @@ class RemoveCart implements AJAX{
 
 		$this -> resp['id'] = $id;
 
-		$cart=\Profildienst\DB::getUserData('cart');
+		$cart=\Profildienst\DB::getUserData('cart', $auth);
 
 		$ct=array();
 		foreach ($cart as $c){
@@ -29,7 +29,7 @@ class RemoveCart implements AJAX{
 			$this -> error('Dieser Titel befindet sich nicht im Warenkorb');
 		}else{
 
-			$p = \Profildienst\DB::getUserData('price');
+			$p = \Profildienst\DB::getUserData('price', $auth);
 
 			$tit = \Profildienst\DB::getTitleByID($id);
 			$pr = $tit -> getEURPrice();
@@ -48,7 +48,7 @@ class RemoveCart implements AJAX{
 
 			$p['price'] = $p['price'] - $pr;
 
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('price' => $p)),'users');
+			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('price' => $p)),'users');
 
 			$this -> resp['price'] = $p;
 
@@ -66,7 +66,7 @@ class RemoveCart implements AJAX{
 
 			$ui = new \Profildienst\UI();
 
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('cart' => $g)),'users');
+			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('cart' => $g)),'users');
 			$this -> resp['content'] = count($g);
 			$this -> resp['success'] = true;
 		}

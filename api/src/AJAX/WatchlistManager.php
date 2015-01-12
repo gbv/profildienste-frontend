@@ -7,7 +7,7 @@ class WatchlistManager implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($id, $type, $content){
+	public function __construct($id, $type, $content, $auth){
 
 		if($content == ''){
 			$content = NULL;
@@ -23,9 +23,9 @@ class WatchlistManager implements AJAX{
 		$this -> resp['id'] = $id;
 		$this -> resp['type'] = $type;
 
-		$watchlists= \Profildienst\DB::getUserData('watchlist');
-		$wl_def= \Profildienst\DB::getUserData('wl_default');
-		$wl_order= \Profildienst\DB::getUserData('wl_order');
+		$watchlists= \Profildienst\DB::getUserData('watchlist', $auth);
+		$wl_def= \Profildienst\DB::getUserData('wl_default', $auth);
+		$wl_order= \Profildienst\DB::getUserData('wl_order', $auth);
 
 		if(!isset($watchlists[$id]) && !($type == 'add-wl' || $type == 'change-order')){
 			$this -> error('Eine Merkliste unter der angegebenen ID konnte nicht gefunden werden!');
@@ -72,7 +72,7 @@ class WatchlistManager implements AJAX{
 		}
 
 
-		\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('watchlist' => $watchlists, 'wl_default' => $wl_def, 'wl_order' => $wl_order)),'users');
+		\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('watchlist' => $watchlists, 'wl_default' => $wl_def, 'wl_order' => $wl_order)),'users');
 		$this -> resp['success']=true;
 	}
 

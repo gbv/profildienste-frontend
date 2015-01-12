@@ -7,17 +7,17 @@ class Watchlist implements Content{
   private $titlelist;
   private $total;
 
-  public function __construct($num, $id){
+  public function __construct($num, $id, $auth){
 
-    $data = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users', array() ,true);
+    $data = \Profildienst\DB::get(array('_id' => $auth->getID()),'users', array() ,true);
 
     $watchlists=$data['watchlist'];
 
     if(isset($watchlists[$id])){
       
       $list=$watchlists[$id]['list'];
-      $query = array('$and' => array(array('XX01' => $_SESSION['id']), array('_id' => array('$in' => $list))));
-      $t = \Profildienst\DB::getTitleList($query, $num);
+      $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $list))));
+      $t = \Profildienst\DB::getTitleList($query, $num, $auth);
       $this->titlelist = $t['titlelist'];
       $this->total = $t['total'];
 

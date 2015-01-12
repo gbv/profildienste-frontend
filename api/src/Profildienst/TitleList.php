@@ -7,11 +7,11 @@ class TitleList{
 	private $titles;
 	private $count;
 
-	public function __construct($titles){
+	public function __construct($titles, $auth){
 
 		$this -> titles = $titles;
 
-		$data=DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
+		$data=DB::get(array('_id' => $auth->getID()),'users',array(), true);
 		$watchlists=$data['watchlist'];
 		$this -> watchlists=$data['watchlist'];
 		$cart=$data['cart'];	

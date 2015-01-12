@@ -7,7 +7,7 @@ class Cart implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($id, $lft, $bdg, $selcode, $ssgnr, $comment){
+	public function __construct($id, $lft, $bdg, $selcode, $ssgnr, $comment, $auth){
 
 		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL,'errormsg' => '', 'price' => array(), 'order' => array());
 
@@ -16,7 +16,7 @@ class Cart implements AJAX{
 			return;
 		}
 
-		$defaults = \Profildienst\DB::getUserData('defaults');
+		$defaults = \Profildienst\DB::getUserData('defaults', $auth);
 
 
 		if($selcode == ''){
@@ -38,7 +38,7 @@ class Cart implements AJAX{
 			'comment' => $comment
 		);
 
-		$c = \Profildienst\DB::getUserData('cart');
+		$c = \Profildienst\DB::getUserData('cart', $auth);
 
 		if($c === NULL){
 			$this -> error('Kein Warenkorb für diesen Nutzer gefunden');
@@ -52,7 +52,7 @@ class Cart implements AJAX{
 			return;
 		}else{
 
-			$p = \Profildienst\DB::getUserData('price');
+			$p = \Profildienst\DB::getUserData('price', $auth);
 
 			
 			$tit = \Profildienst\DB::getTitleByID($id);
@@ -74,7 +74,7 @@ class Cart implements AJAX{
 
 			$p['price'] = $p['price'] + $pr;
 
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('price' => $p)),'users');
+			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('price' => $p)),'users');
 
 			$p['price'] = number_format($p['price'], 2, '.', '');
 			$this -> resp['price'] = $p;
@@ -83,7 +83,7 @@ class Cart implements AJAX{
 			$ui = new \Profildienst\UI();
 
 			array_push($c,$ni);
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('cart' => $c)),'users');
+			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('cart' => $c)),'users');
 
 			$this -> resp['content']=sizeof($c);
 			$this -> resp['success']=true;

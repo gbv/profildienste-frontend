@@ -7,7 +7,7 @@ class ChangeSetting implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($type, $value){
+	public function __construct($type, $value, $auth){
 
 		$this -> resp = array('success' => false, 'errormsg' => '', 'type' => NULL, 'value' => NULL);
 
@@ -16,7 +16,7 @@ class ChangeSetting implements AJAX{
 			return;
 		}
 
-		if (!$c = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array('settings' => 1, '_id' => 0),true)){
+		if (!$c = \Profildienst\DB::get(array('_id' => $auth->getID()),'users',array('settings' => 1, '_id' => 0),true)){
 			$this -> error('Kein Benutzer unter der ID gefunden.');
 		}
 
@@ -26,7 +26,7 @@ class ChangeSetting implements AJAX{
 			$this -> error('Diese Einstellung existiert nicht!');
 		}else{
 			$settings[$type]=$value;
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('settings' => $settings)),'users');
+			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('settings' => $settings)),'users');
 			$this -> resp['success']=true;
 			$this -> resp['type']=$type;
 			$this -> resp['value']=$value;

@@ -7,7 +7,7 @@ class RemoveWatchlist implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($id, $wl_id){
+	public function __construct($id, $wl_id, $auth){
 
 		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL , 'wl' => NULL , 'errormsg' => '');
 
@@ -19,7 +19,7 @@ class RemoveWatchlist implements AJAX{
 		$this -> resp['id'] = $id;
 		$this -> resp['wl'] = $wl_id;
 
-		$watchlists = \Profildienst\DB::getUserData('watchlist');
+		$watchlists = \Profildienst\DB::getUserData('watchlist', $auth);
 		if($watchlists === NULL){
 			$this -> error('Es konnten keine Merklisten für einen Benutzer mit dieser ID gefunden werden.');
 			return;
@@ -47,7 +47,7 @@ class RemoveWatchlist implements AJAX{
 			$watchlists[$wl_id]['list']=$g;
 			$ui = new \Profildienst\UI();
 
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('watchlist' => $watchlists)),'users');
+			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('watchlist' => $watchlists)),'users');
 			$this -> resp['content']=count($g);
 			$this -> resp['success']=true;
 		}

@@ -7,7 +7,7 @@ class Watchlist implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($id, $wl_id){
+	public function __construct($id, $wl_id, $auth){
 
 		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL ,  'wl' => NULL , 'errormsg' => '');
 
@@ -20,7 +20,7 @@ class Watchlist implements AJAX{
 		$this -> resp['wl'] = $wl_id;
 
 
-		$watchlists=\Profildienst\DB::getUserData('watchlist');
+		$watchlists=\Profildienst\DB::getUserData('watchlist', $auth);
 
 		if(is_null($watchlists)){
 			$this -> error('Es konnten keine Merklisten für einen Benutzer mit dieser ID gefunden werden.');
@@ -38,7 +38,7 @@ class Watchlist implements AJAX{
 			array_push($wl,$id);
 			$watchlists[$wl_id]['list']=$wl;
 			$ui = new \Profildienst\UI();
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('watchlist' => $watchlists)),'users');
+			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('watchlist' => $watchlists)),'users');
 			$this -> resp['content']=sizeof($wl);
 			$this -> resp['success']=true;
 		}else{

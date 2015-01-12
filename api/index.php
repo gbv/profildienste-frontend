@@ -4,17 +4,56 @@ require 'vendor/autoload.php';
 
 $app = new \Slim\Slim();
 
-//$app->add(new \Slim\Middleware\SessionCookie(array('secret' => 'ProfildienstGBV')));
+$auth = new \Middleware\AuthToken();
+$app->add($auth);
 
-$authenticate = function ($app) {
-  return function () use ($app) {
-    $_SESSION['id'] = '6909';
-    $_SESSION['name'] = 'INJECTED NAME';
-    if (!isset($_SESSION['id'])) {
-      $app->redirect('/');
+$authenticate = function ($app, $auth) {
+  return function () use ($app, $auth) {
+    if (!$auth->isValid()){
+      $app->halt(401);
     }
   };
 };
+
+$app -> post('/auth', function() use ($app){
+  $user = $app->request()->post('user');
+  $pass = $app->request()->post('pass');
+
+  if(is_null($user) || is_null($pass) || trim($user) === '' || trim($pass) === ''){
+    printResponse(NULL, true, 'ID und/oder Passwort dürfen nicht leer sein.');
+    $app->stop();
+  }
+
+  $l = new \Auth\Login();
+  $l->doLogin($user,$pass);
+
+  if ($l -> login){
+    $pd_name = preg_replace("/<(.*?)>/",'', $l -> name);
+    $pd_id = $user;
+  }else{
+    printResponse(NULL, true, 'Der eingegebene Benutzername und/oder das Kennwort ist ungültig.');
+    $app->stop();
+  }
+
+  if(!\Auth\LoginChecker::check($user)){
+    printResponse(NULL, true, 'Leider sind Sie nicht für den Online Profildienst freigeschaltet.');
+    $app->stop();
+  }
+
+  $token = array(
+    'iss' => 'http://online-profildienst.gbv.de',
+    'aud' => 'http://online-profildienst.gbv.de',
+    'sub' => $pd_name,
+    'pd_id' => $user,
+    'iat' => time(),
+    'exp' => time() + (60*60)
+  );
+
+  $jwt = JWT::encode($token, \Config\Config::$token_key);
+
+
+  printResponse(array('token' => $jwt));
+});
 
 $app -> get('/libraries', function() use ($app){
 
@@ -30,33 +69,33 @@ $app -> get('/libraries', function() use ($app){
 /**
  * Watchlists
  */
-$app -> group('/watchlist', function() use ($app){
+$app -> group('/watchlist', $authenticate($app, $auth), function() use ($app, $auth){
 
-  $app->post('/remove', function () use ($app){
-
-    $id = $app->request()->post('id');
-    $wl = $app->request()->post('wl');
-
-    $m = new \AJAX\RemoveWatchlist($id, $wl);
-    printResponse($m -> getResponse());
-  });
-
-  $app->post('/add', function () use ($app){
+  $app->post('/remove', function () use ($app, $auth){
 
     $id = $app->request()->post('id');
     $wl = $app->request()->post('wl');
 
-    $m = new \AJAX\Watchlist($id, $wl);
+    $m = new \AJAX\RemoveWatchlist($id, $wl, $auth);
     printResponse($m -> getResponse());
   });
 
-  $app->post('/manage', function () use ($app){
+  $app->post('/add', function () use ($app, $auth){
+
+    $id = $app->request()->post('id');
+    $wl = $app->request()->post('wl');
+
+    $m = new \AJAX\Watchlist($id, $wl, $auth);
+    printResponse($m -> getResponse());
+  });
+
+  $app->post('/manage', function () use ($app, $auth){
 
     $id = $app->request()->post('id');
     $type = $app->request()->post('type');
     $content = $app->request()->post('content');
 
-    $m = new \AJAX\WatchlistManager($id, $type, $content);
+    $m = new \AJAX\WatchlistManager($id, $type, $content, $auth);
     printResponse($m -> getResponse());
   });
 
@@ -65,19 +104,19 @@ $app -> group('/watchlist', function() use ($app){
 /**
  * Cart
  */
-$app -> group('/cart', function() use ($app){
+$app -> group('/cart', $authenticate($app, $auth), function() use ($app, $auth){
 
-  $app->post('/remove', function () use ($app){
+  $app->post('/remove', function () use ($app, $auth){
 
     $id = $app->request()->post('id');
     $rm = $app->request()->post('rm');
 
-    $m = new \AJAX\RemoveCart($id, $rm);
+    $m = new \AJAX\RemoveCart($id, $rm, $auth);
     printResponse($m -> getResponse());
   });
 
 
-  $app->post('/add', function () use ($app){
+  $app->post('/add', function () use ($app, $auth){
 
     $id = $app->request()->post('id');
     $bdg = $app->request()->post('bdg');
@@ -86,7 +125,7 @@ $app -> group('/cart', function() use ($app){
     $ssgnr = $app->request()->post('ssgnr');
     $comment = $app->request()->post('comment');
 
-    $m = new \AJAX\Cart($id, $lft, $bdg, $selcode, $ssgnr, $comment);
+    $m = new \AJAX\Cart($id, $lft, $bdg, $selcode, $ssgnr, $comment, $auth);
 
     printResponse($m -> getResponse());
   });
@@ -96,20 +135,20 @@ $app -> group('/cart', function() use ($app){
 /**
  * Reject
  */
-$app -> group('/reject', function() use ($app){
+$app -> group('/reject',  $authenticate($app, $auth), function() use ($app, $auth){
 
-  $app->post('/remove', function () use ($app){
+  $app->post('/remove', function () use ($app, $auth){
     $id = $app->request()->post('id');
 
-    $m = new \AJAX\RemoveReject($id);
+    $m = new \AJAX\RemoveReject($id, $auth);
     printResponse($m -> getResponse());
   });
 
 
-  $app->post('/add', function () use ($app){
+  $app->post('/add', function () use ($app, $auth){
     $id = $app->request()->post('id');
 
-    $m = new \AJAX\Reject($id);
+    $m = new \AJAX\Reject($id, $auth);
     printResponse($m -> getResponse());
   });
 
@@ -118,11 +157,11 @@ $app -> group('/reject', function() use ($app){
 /**
  * User related information
  */
-$app -> group('/user', $authenticate($app), function() use ($app){
+$app -> group('/user', $authenticate($app, $auth), function() use ($app, $auth){
 
-  $app -> get('/', function() use ($app){
+  $app -> get('/', function() use ($app, $auth){
 
-    $d = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
+    $d = \Profildienst\DB::get(array('_id' => $auth->getID()),'users',array(), true);
 
     $budgets = array();
     foreach ($d['budgets'] as $budget) {
@@ -130,7 +169,7 @@ $app -> group('/user', $authenticate($app), function() use ($app){
     }
 
     $data = array(
-      'name' => $_SESSION['name'],
+      'name' => $auth->getName(),
       'def_lft' => $d['defaults']['lieft'],
       'budgets' => $budgets
     );
@@ -139,12 +178,12 @@ $app -> group('/user', $authenticate($app), function() use ($app){
 
   });
 
-  $app -> get('/watchlists', function() use ($app){
+  $app -> get('/watchlists', function() use ($app, $auth){
 
-    $d = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
+    $d = \Profildienst\DB::get(array('_id' => $auth->getID()),'users',array(), true);
 
     $watchlists=$d['watchlist'];
-    $wl_order=\Profildienst\DB::getUserData('wl_order');
+    $wl_order=\Profildienst\DB::getUserData('wl_order', $auth);
 
     $wl = array();
     foreach($wl_order as $index){
@@ -161,8 +200,8 @@ $app -> group('/user', $authenticate($app), function() use ($app){
 
   });
 
-  $app -> get('/cart', function() use ($app){
-    $d = \Profildienst\DB::get(array('_id' => $_SESSION['id']),'users',array(), true);
+  $app -> get('/cart', function() use ($app, $auth){
+    $d = \Profildienst\DB::get(array('_id' => $auth->getID()),'users',array(), true);
 
     $data = array(
       'cart' => count($d['cart']),
@@ -172,9 +211,9 @@ $app -> group('/user', $authenticate($app), function() use ($app){
     printResponse(array('data' => $data));
   });
 
-  $app -> get('/settings', function() use ($app){
+  $app -> get('/settings', function() use ($app, $auth){
     $data = array(
-      'settings' => \Profildienst\DB::getUserData('settings')
+      'settings' => \Profildienst\DB::getUserData('settings', $auth)
     );
 
     printResponse(array('data' => $data));
@@ -185,7 +224,7 @@ $app -> group('/user', $authenticate($app), function() use ($app){
 /**
  * Settings
  */
-$app -> get('/settings', function() use ($app){
+$app -> get('/settings',  $authenticate($app, $auth), function() use ($app, $auth){
   $sortby = array();
   foreach (\Config\Config::$sortby_name as $val => $desc) {
     $sortby[] = array('key' => $val, 'value' => $desc);
@@ -208,59 +247,59 @@ $app -> get('/settings', function() use ($app){
 /**
  * Confirm Order
  */
-$app->post('/confirm', function () use ($app){
-  $m = new \AJAX\ConfirmOrder();
+$app->post('/confirm',  $authenticate($app, $auth), function () use ($app, $auth){
+  $m = new \AJAX\ConfirmOrder($auth);
   printResponse($m -> getResponse());
 });
 
 /**
  * Delete titles
  */
-$app->post('/delete', function () use ($app){
-  $m = new \AJAX\Delete();
+$app->post('/delete',  $authenticate($app, $auth), function () use ($app, $auth){
+  $m = new \AJAX\Delete($auth);
   printResponse($m -> getResponse());
 });
 
 /**
  * Verlagsmeldung
  */
-$app->post('/info', function () use ($app){
+$app->post('/info',  $authenticate($app, $auth), function () use ($app, $auth){
 
   $id = $app->request()->post('id');
 
-  $m = new \AJAX\Info($id);
+  $m = new \AJAX\Info($id, $auth);
   printResponse($m -> getResponse());
 });
 
 /**
  * Settings
  */
-$app->post('/settings', function () use ($app){
+$app->post('/settings',  $authenticate($app, $auth), function () use ($app, $auth){
 
   $type = $app->request()->post('type');
   $value = $app->request()->post('value');
 
-  $m = new \AJAX\ChangeSetting($type, $value);
+  $m = new \AJAX\ChangeSetting($type, $value, $auth);
   printResponse($m -> getResponse());
 });
 
 /**
  * Loader
  */
-$app -> group('/get', function () use ($app){
+$app -> group('/get',  $authenticate($app, $auth), function () use ($app, $auth){
 
-  $app -> get('/overview/page/:num', function($num = 0) use ($app){
-    $m = new \Content\Main(validateNum($num));
+  $app -> get('/overview/page/:num', function($num = 0) use ($app, $auth){
+    $m = new \Content\Main(validateNum($num), $auth);
     printTitles($m -> getTitles(), $m -> getTotalCount());
   });
 
-  $app -> get('/cart/page/:num', function($num = 0) use ($app){
-    $m = new \Content\Cart(validateNum($num));
+  $app -> get('/cart/page/:num', function($num = 0) use ($app, $auth){
+    $m = new \Content\Cart(validateNum($num), $auth);
     printTitles($m -> getTitles(), $m -> getTotalCount());
   });
 
-  $app -> get('/watchlist/:id/page/:num', function($id = NULL, $num = 0) use ($app){
-    $m = new \Content\Watchlist(validateNum($num), $id);
+  $app -> get('/watchlist/:id/page/:num', function($id = NULL, $num = 0) use ($app, $auth){
+    $m = new \Content\Watchlist(validateNum($num), $id, $auth);
     if(is_null($m -> getTotalCount())){
       printResponse(NULL, true, 'Es existiert keine Merkliste mit dieser ID.');
     }else{
@@ -268,30 +307,30 @@ $app -> group('/get', function () use ($app){
     }
   });
 
-  $app -> get('/search/:query/page/:num', function($query, $num = 0) use ($app){
-    $m = new \Special\Search($query, $num);
+  $app -> get('/search/:query/page/:num', function($query, $num = 0) use ($app, $auth){
+    $m = new \Special\Search($query, $num, $auth);
     printTitles($m -> getTitles(), $m -> getTotalCount());
   });
 
 
-  $app -> get('/pending/page/:num', function($num = 0) use ($app){
-    $m = new \Content\Pending(validateNum($num));
+  $app -> get('/pending/page/:num', function($num = 0) use ($app, $auth){
+    $m = new \Content\Pending(validateNum($num), $auth);
     printTitles($m -> getTitles(), $m -> getTotalCount());
   });
 
-  $app -> get('/done/page/:num', function($num = 0) use ($app){
-    $m = new \Content\Done(validateNum($num));
+  $app -> get('/done/page/:num', function($num = 0) use ($app, $auth){
+    $m = new \Content\Done(validateNum($num), $auth);
     printTitles($m -> getTitles(), $m -> getTotalCount());
   });
 
-  $app -> get('/rejected/page/:num', function($num = 0) use ($app){
-    $m = new \Content\Rejected(validateNum($num));
+  $app -> get('/rejected/page/:num', function($num = 0) use ($app, $auth){
+    $m = new \Content\Rejected(validateNum($num), $auth);
     printTitles($m -> getTitles(), $m -> getTotalCount());
   });
 });
 
 $app->notFound(function () use ($app) {
-  printResponse(NULL, true, 'Not found.');
+  $app->halt(404);
 });
 
 function validateNum($num){

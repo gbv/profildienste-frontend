@@ -1,4 +1,4 @@
-pdApp.controller('OptionController', function($scope, DataService, ConfigService, $q, SelectService) {
+pdApp.controller('OptionController', function($scope, SettingsService, ConfigService, $q, SelectService) {
 
   this.selectAll = function(){
     if($scope.entries === undefined){
@@ -12,7 +12,7 @@ pdApp.controller('OptionController', function($scope, DataService, ConfigService
     }
   }
 
-  var p =  $q.all([DataService.getSortby(), DataService.getOrder(), DataService.getSelOptions(), ConfigService.getConfig(), ConfigService.getEntries()]);
+  var p =  $q.all([SettingsService.getSortby(), SettingsService.getOrder(), SettingsService.getSelOptions(), ConfigService.getConfig(), ConfigService.getEntries()]);
 
   p.then(function(data){
 
@@ -50,7 +50,7 @@ pdApp.controller('OptionController', function($scope, DataService, ConfigService
       return;
     }
 
-    DataService.changeSetting('sortby', sorter).then(function(data){
+    SettingsService.changeSetting('sortby', sorter).then(function(data){
 
       $scope.selected_sorter_key = data.value;
       for(var i=0; i < $scope.sortby.length; i++){
@@ -74,7 +74,7 @@ pdApp.controller('OptionController', function($scope, DataService, ConfigService
       return;
     }
 
-    DataService.changeSetting('order', order).then(function(data){
+    SettingsService.changeSetting('order', order).then(function(data){
 
       $scope.selected_order_key = data.value;
       for(var i=0; i < $scope.order.length; i++){
@@ -90,6 +90,6 @@ pdApp.controller('OptionController', function($scope, DataService, ConfigService
       alert('Fehler: '+reason);
     });
     
-  }
+  };
 
 });

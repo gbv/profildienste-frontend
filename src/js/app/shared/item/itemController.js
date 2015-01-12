@@ -1,4 +1,4 @@
-pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, ConfigService, $rootScope, SelectService){
+pdApp.controller('ItemController', function($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService){
 
   $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
@@ -7,17 +7,17 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
   $scope.item.preis = $sce.trustAsHtml($scope.item.preis);
 
 
-  DataService.getWatchlists().then(function (data){
+  WatchlistService.getWatchlists().then(function (data){
     $scope.watchlists = data.watchlists;
     $scope.def_wl = data.def_wl;
 
   });
 
-  DataService.getOrderDetails().then(function (data){
+  /*DataService.getOrderDetails().then(function (data){
     $scope.budgets = data.budgets;
     $scope.item.budget = data.budgets[0].key;
     $scope.item.lft = data.def_lft;
-  });
+  });*/
 
   ConfigService.getConfig().then(function (data){
     $scope.config = data.config;
@@ -34,7 +34,7 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
   }.bind(this));
 
   this.addToCart = function(){
-    DataService.addToCart($scope.item).then(function(data){
+    CartService.addToCart($scope.item).then(function(data){
       $scope.item.status.cart = true;
       $scope.item.lft = data.order.lft;
       $scope.item.budget = data.order.budget;
@@ -54,7 +54,7 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
   };
 
   this.addToWL = function(wl){
-    DataService.addToWatchlist($scope.item, wl).then(function(data){
+    WatchlistService.addToWatchlist($scope.item, wl).then(function(data){
       $scope.item.status.watchlist.watched = true;
       $scope.item.status.watchlist.name = data.name;
       $scope.item.status.watchlist.id = data.id;
@@ -71,7 +71,7 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
   }
 
   this.removeFromWL = function(){
-    DataService.removeFromWatchlist($scope.item).then(function(data){
+    WatchlistService.removeFromWatchlist($scope.item).then(function(data){
       $scope.item.status.watchlist.watched = false;
 
       if($scope.config.hideWatchlist){
@@ -84,7 +84,7 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
   }
 
   this.removeFromCart = function(){
-    DataService.removeFromCart($scope.item).then(function(data){
+    CartService.removeFromCart($scope.item).then(function(data){
       $scope.item.status.cart = false;
 
       if($scope.config.hideCart){
@@ -122,7 +122,7 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
       return;
     }
 
-    DataService.getAddInf($scope.item).then(function(data){
+    InfoService.getAddInf($scope.item).then(function(data){
         if (data.type === 'html'){
           $scope.addInf = $sce.trustAsHtml(data.content);
           $scope.addInfCollapsed = false;
@@ -136,7 +136,7 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
   };
 
   this.addRejected = function(){
-    DataService.addRejected($scope.item).then(function(data){
+    RejectService.addRejected($scope.item).then(function(data){
       $scope.item.status.rejected = true;
 
       SelectService.deselect($scope.item);
@@ -150,7 +150,7 @@ pdApp.controller('ItemController', function($scope, $sce, DataService, $modal, C
   }
 
   this.removeRejected = function(){
-    DataService.removeRejected($scope.item).then(function(data){
+    RejectService.removeRejected($scope.item).then(function(data){
       $scope.item.status.rejected = false;
 
       if($scope.config.hideRejected){

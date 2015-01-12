@@ -19,6 +19,8 @@ class Config {
   public static $cbs_url='cbs-4.gbv.de';
   public static $cbs_port=3790;
 
+  public static $token_key = 'TOKEN_KEY';
+
   /* --------------------------------------------
   Main Config
   ----------------------------------------------*/
@@ -29,14 +31,6 @@ class Config {
 
   // Path to the export directory
   public static $export_dir='export';
-
-  public static $rain_config = array(
-    'tpl_dir'   => '/home/luka/Profildienst/template/',
-    'cache_dir'   => '/home/luka/Profildienst/cache/',
-    'base_dir'    => NULL,
-    'auto_escape' => false,
-    'debug'     => true
-  );
 
   public static $pagesize = 10;
   

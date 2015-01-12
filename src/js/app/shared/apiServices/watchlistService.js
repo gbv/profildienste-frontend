@@ -1,5 +1,27 @@
-pdApp.service('WatchlistService', function($http, $rootScope, $q) {
+pdApp.service('WatchlistService', function($http, $rootScope, $q, LoginService) {
 
+  var defWatchlists = $q.defer();
+
+  LoginService.whenLoggedIn().then(function(data){
+    $http.get('/api/user/watchlists').success(function(json){
+      if(!json.success){
+        defWatchlists.reject(json.message);
+      }else{
+        
+         defWatchlists.resolve({
+          watchlists: json.data.watchlists,
+          def_wl: json.data.def_wl
+        });
+
+      }
+    }).error(function(reason){
+      defWatchlists.reject(reason);
+    });
+  });
+
+  this.getWatchlists = function(){
+    return defWatchlists.promise;
+  };
 
   this.removeFromWatchlist = function(item){
 

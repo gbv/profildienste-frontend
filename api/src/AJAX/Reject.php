@@ -7,7 +7,7 @@ class Reject implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($ids){
+	public function __construct($ids, $auth){
 
 		$this -> resp = array('success' => false, 'id' => array() ,'errormsg' => '');
 
@@ -18,9 +18,9 @@ class Reject implements AJAX{
 
 		$this -> resp['id'] = $ids;
 
-		$c = \Profildienst\DB::getUserData("rejected");
-		$cart = \Profildienst\DB::getUserData('cart');
-		$wls = \Profildienst\DB::getUserData('watchlist');
+		$c = \Profildienst\DB::getUserData('rejected', $auth);
+		$cart = \Profildienst\DB::getUserData('cart', $auth);
+		$wls = \Profildienst\DB::getUserData('watchlist', $auth);
 
 		if($c === NULL || $cart === NULL ||  $wls === NULL){
 			$this -> error('Keine entsprechende Liste gefunden');
@@ -35,7 +35,7 @@ class Reject implements AJAX{
 			}
 		}
 
-		\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('rejected' => $c)),'users');
+		\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('rejected' => $c)),'users');
 		$this ->resp['success']=true;
 	}
 

@@ -8,11 +8,11 @@ class ManageWatchlists{
 	private $count;
 	private $wl_def;
 
-	public function __construct(){
+	public function __construct($auth){
 
-		$watchlists=\Profildienst\DB::getUserData('watchlist');
-		$wl_def=\Profildienst\DB::getUserData('wl_default');
-		$wl_order=\Profildienst\DB::getUserData('wl_order');
+		$watchlists=\Profildienst\DB::getUserData('watchlist', $auth);
+		$wl_def=\Profildienst\DB::getUserData('wl_default', $auth);
+		$wl_order=\Profildienst\DB::getUserData('wl_order', $auth);
 
 		$wls = array();
 

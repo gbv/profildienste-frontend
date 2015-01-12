@@ -7,7 +7,7 @@ class RemoveReject implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($id){
+	public function __construct($id, $auth){
 
 		$this -> resp = array('success' => false, 'id' => NULL ,'errormsg' => '');
 
@@ -18,7 +18,7 @@ class RemoveReject implements AJAX{
 
 		$this -> resp['id'] = $id;
 
-		$rejected=\Profildienst\DB::getUserData('rejected');
+		$rejected=\Profildienst\DB::getUserData('rejected', $auth);
 
 		if($rejected === NULL){
 			$this -> error('Es konnten keine Liste für einen Benutzer mit dieser ID gefunden werden.');
@@ -37,7 +37,7 @@ class RemoveReject implements AJAX{
 			$s = array_slice($rejected,($occ+1),count($rejected));
 			$g = array_merge($f, $s);
 
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('rejected' => $g)),'users');
+			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('rejected' => $g)),'users');
 			$this -> resp['success']=true;	
 		}
 	}

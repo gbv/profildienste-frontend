@@ -1,50 +1,77 @@
-pdApp.service('SettingsService', function($http, $rootScope, $q) {
+pdApp.service('SettingsService', function($http, $rootScope, $q, LoginService) {
 
   var defSort = $q.defer();
   var defOrder = $q.defer();
-  var promise;
 
-  this.init = function(){
+  var defSelOptions = $q.defer();
 
-    promise = $http.jsonp('/api/settings?callback=JSON_CALLBACK').success(function(data){
+  LoginService.whenLoggedIn().then(function(data){
 
-      defSort.resolve({
-        sortby: data.data.sortby
-      });
+    // all available settings
+    $http.get('/api/settings').success(function(json){
+      if(!json.success){
+        defSort.reject(json.message);
+        defOrder.reject(json.message);
+      }else{
 
-       defOrder.resolve({
-        order: data.data.order
-      });
+        defSort.resolve({
+          sortby: json.data.sortby
+        });
 
+        defOrder.resolve({
+          order: json.data.order
+        });
+
+      }
     }).error(function(reason){
       defSort.reject(reason);
       defOrder.reject(reason);
     });
-  }
+
+
+    // user specific settings
+    $http.get('/api/user/settings').success(function(json){
+      if(!json.success){
+        defSelOptions.reject(json.message);
+      }else{
+
+        defSelOptions.resolve({
+          sort: json.data.settings.sortby,
+          order: json.data.settings.order
+        });
+
+      }
+    }).error(function(reason){
+      defSelOptions.reject(reason);
+    });
+
+  });
 
   this.getOrder = function(){
 
-    if(promise === undefined){
-      this.init();
-    }
-
     return defOrder.promise;
-  }
+  };
 
   this.getSortby = function(){
 
-    if(promise === undefined){
-      this.init();
-    }
-
     return defSort.promise;
-  }
+  };
+
+
+  this.getSelOptions = function(){
+    if(this.data === undefined){
+      return defSelOptions.promise;
+    }else{
+      var d = $q.defer();
+      d.resolve({
+        sort: this.data.settings.sortby,
+        order: this.data.settings.order
+      });
+      return d.promise;
+    }
+  };
 
   this.changeSetting = function(type, value){
-
-    if(this.data === undefined){
-      return;
-    }
 
     var def = $q.defer();
 

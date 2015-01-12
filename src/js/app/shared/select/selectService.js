@@ -1,4 +1,4 @@
-pdApp.service('SelectService', function($rootScope, DataService, ConfigService){
+pdApp.service('SelectService', function($rootScope, RejectService, ConfigService){
   var selected = [];
 
   ConfigService.getConfig().then(function(data){
@@ -52,7 +52,7 @@ pdApp.service('SelectService', function($rootScope, DataService, ConfigService){
   };
 
   this.rejectAll = function(){
-    DataService.addMultRejected(selected).then(function(data){
+    RejectService.addMultRejected(selected).then(function(data){
 
       for(var i = 0; i < selected.length; i++){
         selected[i].status.rejected = true;

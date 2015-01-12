@@ -1,8 +1,8 @@
-pdApp.controller('WatchlistController', function($scope, Entries, ConfigService, $routeParams, DataService) {
+pdApp.controller('WatchlistController', function($scope, Entries, ConfigService, $routeParams, WatchlistService) {
   
   $scope.entries = new Entries('watchlist', $routeParams.id);
 
-  DataService.getWatchlists().then(function (data){
+  WatchlistService.getWatchlists().then(function (data){
 
     for(var i=0; i < data.watchlists.length; i++){
       if(data.watchlists[i].id == $routeParams.id){

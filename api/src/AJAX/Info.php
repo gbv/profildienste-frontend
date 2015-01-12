@@ -7,7 +7,7 @@ class Info implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct($id){
+	public function __construct($id, $auth){
 
 		$this -> resp = array('success' => false, 'type' => NULL , 'content' => NULL , 'id' => NULL ,'errormsg' => '');
 

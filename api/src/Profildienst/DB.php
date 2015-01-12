@@ -32,20 +32,20 @@ class DB{
 		}
 	}
 
-	public static function getUserData($v){
-		if (!$c = DB::get(array('_id' => $_SESSION['id']),'users',array($v => 1),true)){
+	public static function getUserData($v, $auth){
+		if (!$c = DB::get(array('_id' => $auth->getID()),'users',array($v => 1),true)){
 			die('Kein Benutzer unter der ID gefunden.');
 		}
 		return isset($c[$v]) ? $c[$v] : NULL;
 	}
 
-	public static function getTitleList($query, $skip = 0, $pages = true){
+	public static function getTitleList($query, $skip = 0, $auth){
 		self::init_db();
 		$collection = new \MongoCollection(self::$db, 'titles');
 		$r=array();
 		$cursor = $collection->find($query);
 		$cnt=$cursor -> count();
-		$settings=self::getUserData('settings');
+		$settings=self::getUserData('settings', $auth);
 		if($settings['order'] == 'asc'){
 			$o=1;
 		}else{
@@ -53,18 +53,15 @@ class DB{
 		}
 		$sortby=array('erj' => '011@.a' ,'wvn' => '006U.0', 'tit' => '021A.a', 'sgr' => '045G.a', 'dbn' => '006L.0', 'per' => '028A.a');
 
-		if($pages){
-			$lm=\Config\Config::$pagesize;
-			$cursor = $cursor->skip($lm*$skip);
-			$cursor = $cursor->limit($lm);
-			if ($collection -> count($query, $lm+1 ,$lm*$skip) == $lm+1){
-				$next=true;
-			}else{
-				$next=false;
-			}
+		$lm=\Config\Config::$pagesize;
+		$cursor = $cursor->skip($lm*$skip);
+		$cursor = $cursor->limit($lm);
+		if ($collection -> count($query, $lm+1 ,$lm*$skip) == $lm+1){
+			$next=true;
 		}else{
 			$next=false;
 		}
+		
 		$cursor = $cursor->sort(array($sortby[$settings['sortby']] => $o));
 		foreach ($cursor as $doc) {
 		  $t = new Title($doc);
@@ -75,9 +72,9 @@ class DB{
 		$ret = array('titlelist' => NULL, 'total' => $cnt);
 
 		if(count($r) > 0){
-			$ret['titlelist'] = new TitleList($r);
+			$ret['titlelist'] = new TitleList($r, $auth);
 		}
-
+		
 		return $ret;
 	}
 

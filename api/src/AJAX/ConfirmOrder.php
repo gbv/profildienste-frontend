@@ -7,11 +7,11 @@ class ConfirmOrder implements AJAX{
 	private $err;
 	private $resp;
 
-	public function __construct(){
+	public function __construct($auth){
 
 		$this -> resp = array('success' => false, 'content' => NULL ,'errormsg' => '');
 
-		$cart = \Profildienst\DB::getUserData('cart');
+		$cart = \Profildienst\DB::getUserData('cart', $auth);
 
 		$ct=array();
 		$ci=array();
@@ -21,7 +21,7 @@ class ConfirmOrder implements AJAX{
 		}
 
 
-		$query = array('$and' => array(array('XX01' => $_SESSION['id']), array('_id' => array('$in' => $ct))));
+		$query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $ct))));
 
 		$t = \Profildienst\DB::getTitleList($query,0, false);
 

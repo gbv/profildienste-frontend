@@ -8,7 +8,7 @@ class Search{
 	private $output;
 	private $titlelist;
 
-	public function __construct($q, $num){
+	public function __construct($q, $num, $auth){
 
 		if($q === ''){
 			$this -> error = 1;
@@ -27,32 +27,32 @@ class Search{
 
 		switch ($type){
 			case 'mak':
-				$query = array('$and' => array( array( '002@' => $regexObj), array('XX01' => $_SESSION["id"])));		
+				$query = array('$and' => array( array( '002@' => $regexObj), array('XX01' => $auth->getID())));		
 			break;
 			case 'dbn':
-				$query = array('$and' => array( array( '_id' => $regexObj), array('XX01' => $_SESSION["id"])));	
+				$query = array('$and' => array( array( '_id' => $regexObj), array('XX01' => $auth->getID())));	
 			break;
 			case 'isb':
-				$query = array('$and' => array( array( '$or' => array( array('004A.0' => $regexObj) , array('004A.A' => $regexObj) )), array('XX01' => $_SESSION["id"])));	
+				$query = array('$and' => array( array( '$or' => array( array('004A.0' => $regexObj) , array('004A.A' => $regexObj) )), array('XX01' => $auth->getID())));	
 			break;
 			case 'wvn':
-				$query = array('$and' => array( array( '006U' => $regexObj), array('XX01' => $_SESSION["id"])));		
+				$query = array('$and' => array( array( '006U' => $regexObj), array('XX01' => $auth->getID())));		
 			break;
 			case 'erj':
-				$query = array('$and' => array( array( '011@.a' => $regexObj), array('XX01' => $_SESSION["id"])));		
+				$query = array('$and' => array( array( '011@.a' => $regexObj), array('XX01' => $auth->getID())));		
 			break;
 			case 'sgr':
-				$query = array('$and' => array( array( '045G.a' => $regexObj), array('XX01' => $_SESSION["id"])));		
+				$query = array('$and' => array( array( '045G.a' => $regexObj), array('XX01' => $auth->getID())));		
 			break;
 			case 'ref':
-				$query = array('$and' => array( array( '$or' => array( array('XX00.e' => $regexObj) , array('XX01' => $regexObj) )), array('XX01' => $_SESSION["id"])));	
+				$query = array('$and' => array( array( '$or' => array( array('XX00.e' => $regexObj) , array('XX01' => $regexObj) )), array('XX01' => $auth->getID())));	
 			break;
 			case 'per':
-				$query = array('$and' => array( array( '$or' => array( array('028C.d' => $regexObj) , array('028C.a' => $regexObj), array('021A.h' => $regexObj), array('021B.h' => $regexObj) )), array('XX01' => $_SESSION["id"])));	
+				$query = array('$and' => array( array( '$or' => array( array('028C.d' => $regexObj) , array('028C.a' => $regexObj), array('021A.h' => $regexObj), array('021B.h' => $regexObj) )), array('XX01' => $auth->getID())));	
 			break;
 			default:
 			case 'tit':
-				$query = array('$and' => array( array('$or' => array (array('021A.a' => $regexObj), array('021B.a' => $regexObj),array('021A.d' => $regexObj), array('021B.d' => $regexObj), array('021A.l' => $regexObj), array('021B.l' => $regexObj) )), array('XX01' => $_SESSION["id"])));				
+				$query = array('$and' => array( array('$or' => array (array('021A.a' => $regexObj), array('021B.a' => $regexObj),array('021A.d' => $regexObj), array('021B.d' => $regexObj), array('021A.l' => $regexObj), array('021B.l' => $regexObj) )), array('XX01' => $auth->getID())));				
 			break;
 		}
 

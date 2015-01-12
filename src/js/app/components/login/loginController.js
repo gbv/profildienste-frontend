@@ -1,4 +1,4 @@
-pdApp.controller('LoginController', function($scope, LibraryService, $routeParams, $location) { // LoginService
+pdApp.controller('LoginController', function($scope, LibraryService, $routeParams, $location, LoginService) {
 
   LibraryService.getLibraries().then(function(data){
     for(var i=0; i < data.libs.length; i++){
@@ -15,5 +15,36 @@ pdApp.controller('LoginController', function($scope, LibraryService, $routeParam
   }, function(reason){
     alert('Fehler: '+reason);
   });
+
+  $scope.userValid = true;
+  $scope.passValid = true;
+
+  this.submitLogin = function(){
+
+
+    if($scope.user === undefined || !$scope.user.match(/^\d{4}$/)){
+      $scope.userValid = false;
+    }else{
+      $scope.userValid = true;
+    }
+
+    if($scope.pass === undefined || $scope.pass.trim() === ''){
+      $scope.passValid = false;
+    }else{
+      $scope.passValid = true;
+    }
+
+    if(!$scope.userValid || !$scope.passValid){
+      return;
+    }
+
+    LoginService.performLogin($scope.user, $scope.pass).then(function(data){
+      alert('data');
+      $location.path('/main');
+    }, function(error){
+      $scope.error = true;
+      $scope.errorMessage = error;
+    });
+  }
   
 });

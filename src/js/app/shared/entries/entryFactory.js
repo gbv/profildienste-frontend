@@ -3,6 +3,7 @@ pdApp.factory('Entries', function($http, $modal) {
 
   // Entry object
   var Entries = function(site, id) {
+
     this.items = [];
     this.loading = false;
     this.page = 0;
@@ -20,12 +21,12 @@ pdApp.factory('Entries', function($http, $modal) {
 
     this.loading = true;
     if(this.id === undefined){
-      var url = '/api/get/'+this.site+'/page/'+this.page+'?callback=JSON_CALLBACK';
+      var url = '/api/get/'+this.site+'/page/'+this.page;
     }else{
-      var url = '/api/get/'+this.site+'/'+this.id+'/page/'+this.page+'?callback=JSON_CALLBACK';
+      var url = '/api/get/'+this.site+'/'+this.id+'/page/'+this.page;
     }
     
-    $http.jsonp(url).success(function(data) {
+    $http.get(url).success(function(data) {
       var items = data.data;
       for (var i = 0; i < items.length; i++) {
         this.items.push(items[i]);

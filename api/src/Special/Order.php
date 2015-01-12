@@ -8,9 +8,9 @@ class Order{
 	private $output;
 	private $titlelist;
 
-	public function __construct(){
+	public function __construct($auth){
 
-		$cart=\Profildienst\DB::getUserData('cart');
+		$cart=\Profildienst\DB::getUserData('cart', $auth);
 
 		if(sizeof($cart) == 0){
 			return;
@@ -25,7 +25,7 @@ class Order{
 		}
 
 
-		$query = array('$and' => array(array('XX01' => $_SESSION['id']), array('_id' => array('$in' => $ct))));
+		$query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $ct))));
 
 		$t = \Profildienst\DB::getTitleList($query, NULL, false);
 
@@ -47,19 +47,19 @@ class Order{
 			array_push($output_titles,$a);
 		}
 
-		$isil=\Profildienst\DB::getUserData('isil');
+		$isil=\Profildienst\DB::getUserData('isil', $auth);
 		
 		$output=array(
 			'bib' => \Config\Config::$bibliotheken[$isil],
-			'best_name' => $_SESSION['name'],
-			'best_id' => $_SESSION['id'],
+			'best_name' => $auth->getName(),
+			'best_id' => $auth->getID(),
 			'isil' => $isil,
 			'datum' => time(),
 			'titel' => $output_titles
 		);
 
 		$path=\Config\Config::$export_dir.'/'.$isil.'/';
-		$filename=time().'_'.$_SESSION['id'].'.json';
+		$filename=time().'_'.$auth->getID().'.json';
 
 		if(!is_dir($path)){
 			mkdir($path);
@@ -88,20 +88,20 @@ class Order{
 
 		if($success){
 
-			$p = \Profildienst\DB::getUserData('price');
+			$p = \Profildienst\DB::getUserData('price', $auth);
 
 			$p['price'] = 0;
 			$p['est'] = 0;
 			$p['known'] = 0;
 			
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('price' => $p)),'users');
+			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('price' => $p)),'users');
 
-			$d=\Profildienst\DB::getUserData('pending');
+			$d=\Profildienst\DB::getUserData('pending', $auth);
 			$d = array_merge($d,$cart);
 
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('cart' => array(), 'pending' => $d)),'users');
+			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('cart' => array(), 'pending' => $d)),'users');
 
-			$watchlists=\Profildienst\DB::getUserData('watchlist');
+			$watchlists=\Profildienst\DB::getUserData('watchlist', $auth);
 
 			foreach($titles as $tit){
 				$id=$tit -> getDirectly('_id');
@@ -116,7 +116,7 @@ class Order{
 				$watchlists[$wl_id]['list'] = array_merge($f, $s);
 			}
 
-			\Profildienst\DB::upd(array('_id' => $_SESSION['id']),array('$set' => array('watchlist' => $watchlists)),'users');
+			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('watchlist' => $watchlists)),'users');
 
 
 		}
