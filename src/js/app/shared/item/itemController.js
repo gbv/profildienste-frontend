@@ -1,4 +1,4 @@
-pdApp.controller('ItemController', function($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService){
+pdApp.controller('ItemController', function($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout){
 
   $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
@@ -125,7 +125,8 @@ pdApp.controller('ItemController', function($scope, $sce, WatchlistService, Cart
     InfoService.getAddInf($scope.item).then(function(data){
         if (data.type === 'html'){
           $scope.addInf = $sce.trustAsHtml(data.content);
-          $scope.addInfCollapsed = false;
+          // dirty but needed
+          $timeout(function(){$scope.addInfCollapsed = false; }, 100);
         }else{ 
           window.open(data.content, '_blank');
         }
