@@ -10,6 +10,7 @@ pdApp.factory('Entries', function($http, $modal) {
     this.site = site;
     this.more = true;
     this.id = id;
+    this.total = 0;
   };
 
   // loads more entries from the server
@@ -34,6 +35,7 @@ pdApp.factory('Entries', function($http, $modal) {
       this.page++;
       this.loading = false;
       this.more = data.more;
+      this.total = data.total;
     }.bind(this)).error(function(data, status, headers, config) {
 
       $modal.open({
@@ -50,8 +52,11 @@ pdApp.factory('Entries', function($http, $modal) {
     for(var i = 0; i < this.items.length; i++){
       if(this.items[i] === item){
         this.items.splice(i, 1);
+        break;
       }
     }
+
+    this.total--;
 
     if(this.items.length == 0){
       this.loadMore();
