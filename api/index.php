@@ -271,6 +271,26 @@ $app->post('/info',  $authenticate($app, $auth), function () use ($app, $auth){
 });
 
 /**
+ * Verlagsmeldung
+ */
+$app->post('/opac',  $authenticate($app, $auth), function () use ($app, $auth){
+
+  $titel = $app->request()->post('titel');
+  $verfasser = $app->request()->post('verfasser');
+
+  $query = $titel.' '.$verfasser;
+
+  $isil = \Profildienst\DB::getUserData('isil', $auth);
+
+  $opac_url=\Config\Config::$bibliotheken[$isil]['opac'];
+
+  $url = preg_replace('/%SEARCH_TERM%/', urlencode($query), $opac_url);
+  
+  printResponse(array('data' => array('url' => $url)));
+
+});
+
+/**
  * Settings
  */
 $app->post('/settings',  $authenticate($app, $auth), function () use ($app, $auth){

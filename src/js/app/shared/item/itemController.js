@@ -105,7 +105,7 @@ pdApp.controller('ItemController', function($scope, $sce, WatchlistService, Cart
   };
 
   this.openOPAC = function(){
-    window.open('/opac/'+$scope.item.titel+' '+$scope.item.verfasser, '_blank');
+    InfoService.openOPAC($scope.item);
   };
 
   this.closeComment = function(){

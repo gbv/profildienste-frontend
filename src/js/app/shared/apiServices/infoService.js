@@ -25,4 +25,26 @@ pdApp.service('InfoService', function($http, $q) {
     return def.promise;
   };
 
+  this.openOPAC = function(item){
+
+    $http({
+      method: 'POST',
+      url: '/api/opac',
+      data: $.param({
+        titel: item.titel,
+        verfasser: item.verfasser
+      }),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function(json){
+      console.log(json);
+      if(!json.success){
+        alert('Es wurde kein OPAC Katalog für Ihre Bibliothek hinterlegt.');
+      }else{
+        window.open(json.data.url, '_blank');
+      }
+    }).error(function(reason){
+      def.reject(reason);
+    });
+  }
+
 });
