@@ -2,7 +2,6 @@ pdApp.controller('OrderController', function($scope, OrderService, $location) {
 
   OrderService.getOrderlist().then(function (data){
     $scope.orderlist = data.orderlist;
-    console.log(data.orderlist);
   }, function(reason){
     alert(reason);
     $location.path('cart');
@@ -13,6 +12,6 @@ pdApp.controller('OrderController', function($scope, OrderService, $location) {
   };
 
   this.cancel = function(){
-    alert('cancel');
+    $location.path('cart');
   }
 });

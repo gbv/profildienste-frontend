@@ -35,7 +35,8 @@ class Orderlist{
         'ssgnr' => $ci[$tit->getDirectly('_id')]['ssgnr'],
         'selcode' => $ci[$tit->getDirectly('_id')]['selcode'],
         'comment' => $ci[$tit->getDirectly('_id')]['comment'],
-        'titel' => $tit -> get('titel')
+        'titel' => $tit -> get('titel'),
+        'gvkt' => $tit->get('gvkt_mak')
       );
     }
   }
