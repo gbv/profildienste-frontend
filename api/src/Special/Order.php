@@ -3,9 +3,7 @@
 namespace Special;
 
 class Order{
-
-	private $success;
-	private $output;
+	
 	private $titlelist;
 
 	public function __construct($auth){

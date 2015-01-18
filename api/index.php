@@ -218,6 +218,17 @@ $app -> group('/user', $authenticate($app, $auth), function() use ($app, $auth){
     printResponse(array('data' => $data));
   });
 
+  $app -> get('/orderlist', function() use ($app, $auth){
+    try{
+      $m = new \Special\Orderlist($auth);
+
+      printResponse(array('data' => array('orderlist' => $m->getOrderlist())));
+    }catch(\Exception $e){
+      printResponse(NULL, true, $e->getMessage());
+    }
+    
+  });
+
 }); 
 
 /**
@@ -301,6 +312,7 @@ $app->post('/settings',  $authenticate($app, $auth), function () use ($app, $aut
   $m = new \AJAX\ChangeSetting($type, $value, $auth);
   printResponse($m -> getResponse());
 });
+
 
 /**
  * Loader

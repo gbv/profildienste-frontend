@@ -65,6 +65,7 @@ pdApp.factory('Entries', function($http, $modal) {
     this.total--;
 
     if(this.items.length == 0){
+      this.page--;
       this.loadMore();
     }
   }
