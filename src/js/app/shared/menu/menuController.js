@@ -1,4 +1,4 @@
-pdApp.controller('MenuController', function($scope, $rootScope, WatchlistService, CartService, UserService, $modal, SelectService, LoginService){
+pdApp.controller('MenuController', function($scope, $rootScope, WatchlistService, CartService, UserService, $modal, SelectService, LoginService, SearchService, $location){
 
 
   WatchlistService.getWatchlists().then(function(data){
@@ -70,6 +70,11 @@ pdApp.controller('MenuController', function($scope, $rootScope, WatchlistService
     SelectService.rejectAll();
   }
 
+  this.search = function(){
+    SearchService.setSearchterm($scope.searchterm);
+    $location.path('search');
+  }
+
   $scope.loggedIn = false;
 
   LoginService.whenLoggedIn().then(function(data){
@@ -82,6 +87,10 @@ pdApp.controller('MenuController', function($scope, $rootScope, WatchlistService
 
   $rootScope.$on('userLogout', function(e){
     $scope.loggedIn = false;
+  });
+
+  $rootScope.$on('searchViewUnload', function(){
+    $scope.searchterm = '';
   });
 
 });

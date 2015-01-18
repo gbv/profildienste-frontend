@@ -1,6 +1,6 @@
-pdApp.controller('ManageWatchlistController', function($scope, DataService, $location) {
+pdApp.controller('ManageWatchlistController', function($scope, WatchlistService, $location) {
 
-  DataService.getWatchlists().then(function(data){
+  WatchlistService.getWatchlists().then(function(data){
     $scope.watchlists = data.watchlists;
     $scope.default_watchlist = data.def_wl;
   });

@@ -70,11 +70,11 @@
         </li>
       </ul>
 
-      <form class="navbar-form" ng-hide="showSelMenu">
+      <form class="navbar-form" ng-hide="showSelMenu" novalidate ng-submit="MenuCtrl.search()">
         <div class="form-group search-form-group">
           <div class="input-group search-inp-group">
             <span class="input-group-addon search-lbl" ng-click="MenuCtrl.openHelp()"><i class="fa fa-search"></i></span>
-            <input type="text" class="form-control" id="search-field" placeholder="Suche (Für Hilfe auf das Icon links klicken)" value="{$searchval}" autofocus>
+            <input type="text" class="form-control" ng-model="searchterm" placeholder="Suche (Für Hilfe auf das Icon links klicken)" autofocus>
           </div>
         </div>
       </form>

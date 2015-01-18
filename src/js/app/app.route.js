@@ -52,6 +52,10 @@ pdApp.config(['$routeProvider', '$locationProvider',
         templateUrl: '/dist/html/logoutView.html',
         resolve: {checkAuth: checkAuth}
       }).
+      when('/search', {
+        templateUrl: '/dist/html/searchView.html',
+        resolve: {checkAuth: checkAuth}
+      }).
       when('/', {
         templateUrl: '/dist/html/landingView.html'
       }).

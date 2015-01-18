@@ -3,7 +3,6 @@ pdApp.factory('Entries', function($http, $modal) {
 
   // Entry object
   var Entries = function(site, id) {
-
     this.items = [];
     this.loading = false;
     this.page = 0;
@@ -11,6 +10,7 @@ pdApp.factory('Entries', function($http, $modal) {
     this.more = true;
     this.id = id;
     this.total = 0;
+    this.error = false;
   };
 
   // loads more entries from the server
@@ -28,14 +28,20 @@ pdApp.factory('Entries', function($http, $modal) {
     }
     
     $http.get(url).success(function(data) {
-      var items = data.data;
-      for (var i = 0; i < items.length; i++) {
-        this.items.push(items[i]);
+      if(data.success){
+        var items = data.data;
+        for (var i = 0; i < items.length; i++) {
+          this.items.push(items[i]);
+        }
+        this.page++;
+        this.loading = false;
+        this.more = data.more;
+        this.total = data.total;
+      }else{
+        this.error = true;
+        this.errorMessage = data.message;
       }
-      this.page++;
-      this.loading = false;
-      this.more = data.more;
-      this.total = data.total;
+      
     }.bind(this)).error(function(data, status, headers, config) {
 
       $modal.open({
@@ -64,7 +70,10 @@ pdApp.factory('Entries', function($http, $modal) {
   }
 
   // resets the loader
-  Entries.prototype.reset = function() {
+  Entries.prototype.reset = function(url) {
+    if(url !== undefined){
+      this.url = url;
+    }
     this.page = 0;
     this.items = [];
     this.more = true;

@@ -327,8 +327,13 @@ $app -> group('/get',  $authenticate($app, $auth), function () use ($app, $auth)
   });
 
   $app -> get('/search/:query/page/:num', function($query, $num = 0) use ($app, $auth){
-    $m = new \Special\Search($query, $num, $auth);
-    printTitles($m -> getTitles(), $m -> getTotalCount());
+    try{
+      $m = new \Special\Search($query, $num, $auth);
+      printTitles($m -> getTitles(), $m -> getTotalCount());
+    }catch(\Exception $e){
+      printResponse(NULL, true, $e->getMessage());
+    }
+    
   });
 
 

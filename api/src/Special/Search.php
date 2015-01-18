@@ -4,22 +4,19 @@ namespace Special;
 
 class Search{
 
-	private $error;
-	private $output;
 	private $titlelist;
+	private $total;
 
 	public function __construct($q, $num, $auth){
 
 		if($q === ''){
-			$this -> error = 1;
-			return;
+			throw new \Exception('Bitte geben Sie eine Suchanfrage ein.');
 		}
 
 		preg_match('/^(.*?){3,4}\s(.*)$/', $q, $matches);
 
 		if (sizeof($matches) != 3){
-			$this -> error = 2;
-			return;
+			throw new \Exception('Bitte geben Sie eine valide Suchanfrage ein. Sie können die Hilfe aufrufen um weitere Informationen zu erhalten.');
 		}
 
 		$type=strtolower($matches[1]);
@@ -56,27 +53,18 @@ class Search{
 			break;
 		}
 
-		$t = \Profildienst\DB::getTitleList($query, $num);
-
-		$results = $t -> getResult();
-
-		$this -> output = new \Profildienst\Output($results, !($num == 0) , $t -> more() , $num , '/pageloader/search/'.$q.'/page/' , false, false);
-		$this -> titlelist = $t;
-		$this -> error = 0;
+		$t = \Profildienst\DB::getTitleList($query, $num, $auth);
+		$this->titlelist = $t['titlelist'];
+    $this->total = $t['total'];
 	}
 
-	public function getCount(){
-		return (is_null($this -> titlelist)) ? 0 : $this -> titlelist -> getCount();
+	public function getTitles(){
+	  return $this->titlelist;
 	}
 
-	public function getOutput(){
-		return (is_null($this -> output)) ? NULL : $this -> output;
-	}
-
-	public function getError(){
-		return $this -> error;
+	public function getTotalCount(){
+	  return $this->total;
 	}
 }
-
 
 ?>

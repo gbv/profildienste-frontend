@@ -5,7 +5,10 @@
           <h1>
             <i class="fa fa-check"></i> Bearbeitet
             <br>
-            <small>{{entries.total}} Datensätze in dieser Ansicht</small>
+            <small>
+              <span ng-hide="entries.loading">{{entries.total}} Datensätze in dieser Ansicht</span>
+              <span ng-show="entries.loading"><i class="fa fa-spinner fa-spin"></i> Laden...</span>
+            </small>
           </h1>
       </div>
     </div>
