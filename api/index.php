@@ -452,10 +452,12 @@ function printTitles($titles, $total){
 function printResponse($resp, $error = false, $message = ''){
   global $app;
 
-  if($error){
-    $resp = array('success' => false, 'message' => $message);
-  }else{
-    $resp['success'] = true;
+  if(!isset($resp['success'])){
+    if($error){
+      $resp = array('success' => false, 'message' => $message);
+    }else{
+      $resp['success'] = true;
+    }
   }
 
   $app->response->headers->set('Content-Type', 'application/javascript');

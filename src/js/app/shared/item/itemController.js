@@ -34,6 +34,7 @@ pdApp.controller('ItemController', function($scope, $sce, WatchlistService, Cart
   }.bind(this));
 
   this.addToCart = function(){
+
     CartService.addToCart($scope.item).then(function(data){
       $scope.item.status.cart = true;
       $scope.item.lft = data.order.lft;

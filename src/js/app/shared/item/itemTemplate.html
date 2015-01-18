@@ -52,7 +52,7 @@
     <form class="form-inline" ng-show="ItemCtrl.showOrderFields()">
       <!-- Lieferant -->
       <span class="text-muted">Lieferant: </span>
-        <input type="text" pattern=".{7,}" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" maxlength="7" ng-model="item.lft" ng-show="ItemCtrl.showInpField()">
+        <input type="text" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" ng-maxlength="7" ng-minlength="1" ng-model="item.lft" ng-show="ItemCtrl.showInpField()">
       <span ng-hide="ItemCtrl.showInpField()">{{item.lft}}</span>
 
       <!-- Budget -->
@@ -64,12 +64,12 @@
 
       <!-- Selektionscode -->
       <span class="text-muted">Selektionscode: </span>
-      <input type="text" pattern=".{20,}" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20" maxlength="20" ng-model="item.selcode" ng-show="ItemCtrl.showInpField()" placeholder="Selektionscode">
+      <input type="text" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20" ng-maxlength="20" ng-minlength="0" ng-model="item.selcode" ng-show="ItemCtrl.showInpField()" placeholder="Selektionscode">
       <span ng-hide="ItemCtrl.showInpField()">{{item.selcode}}</span>
 
       <!-- SSG Nummer -->
       <span class="text-muted">SSGs-Nr.: </span>
-      <input type="text" pattern=".{3,}" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" maxlength="3" ng-model="item.ssgnr" ng-show="ItemCtrl.showInpField()" placeholder="SSG">
+      <input type="text" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" ng-maxlength="3" ng-minlength="0" ng-model="item.ssgnr" ng-show="ItemCtrl.showInpField()" placeholder="SSG">
       <span ng-hide="ItemCtrl.showInpField()">{{item.ssgnr}}</span>
 
     </form>
