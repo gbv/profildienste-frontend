@@ -35,7 +35,19 @@
         <li ng-show="showSelMenu"><a href="" ng-click="MenuCtrl.rejectAll()"><i class="fa fa-minus-circle fa-lg"></i> Auswahl ablehnen</a></li>
 
         <li>
-          <a href="/cart" ng-hide="showSelMenu">
+          <a href="/cart" 
+            ng-hide="showSelMenu"
+            popover-placement="bottom" 
+            popover="
+              <span class='text-muted'>Schätzpreis:</span><br>
+              <span id='estprice'>{{price.price | currency:'EUR '}}</span><br><br>
+              <span class='text-muted'>Details:</span><br>
+              <span id='price_known'>{{price.known}}</span> bekannt<br>
+              <span id='price_est'>{{price.est}}</span> geschätzt
+            "
+            popover-trigger="mouseenter"
+            popover-title="Preisangaben"
+          >
             <i class="fa fa-shopping-cart fa-lg"></i> Warenkorb <span class="badge">{{cart}}</span>
           </a>
         </li>
@@ -82,11 +94,8 @@
   </div>
   <!-- price -->
   <div id='price-inf'>
-    <span class='text-muted'>Schätzpreis:</span><br>
-    <span id='estprice'>{{price.price | currency:"EUR "}}</span><br><br>
-    <span class='text-muted'>Details:</span><br>
-    <span id='price_known'>{{price.known}}</span> bekannt<br>
-    <span id='price_est'>{{price.est}}</span> geschätzt
+    
+    
   </div>
   <!-- /price -->
 </div>

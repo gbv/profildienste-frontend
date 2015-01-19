@@ -42,3 +42,25 @@ pdApp.factory('authInterceptor', function ($rootScope, $q, $window, LogoutServic
 pdApp.config(function ($httpProvider) {
   $httpProvider.interceptors.push('authInterceptor');
 });
+
+
+// Overwrite the Angular Bootstrap popover template to allow HTML
+// (see http://stackoverflow.com/a/21979258)
+pdApp.filter('unsafe', ['$sce', function ($sce) {
+    return function (val) {
+        return $sce.trustAsHtml(val);
+    };
+}]);
+
+angular.module('template/popover/popover.html', []).run(['$templateCache', function ($templateCache) {
+  $templateCache.put('template/popover/popover.html',
+    '<div class=\"popover {{placement}}\" ng-class=\"{ in: isOpen(), fade: animation() }\">\n' +
+    '  <div class=\"arrow\"></div>\n' +
+    '\n' +
+    '  <div class=\"popover-inner\">\n' +
+    '      <h3 class=\"popover-title\" ng-bind-html=\"title | unsafe\" ng-show=\"title\"></h3>\n' +
+    '      <div class=\"popover-content\"ng-bind-html=\"content | unsafe\"></div>\n' +
+    '  </div>\n' +
+    '</div>\n' +
+    '');
+}]);
