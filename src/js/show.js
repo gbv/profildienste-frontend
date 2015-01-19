@@ -126,7 +126,6 @@ function addwl(){
 		{id: id, wl: wl, rm: rm},
 		function(json) {
 			if(!json.success){
-				alert("Fehler: "+json.errormsg);
 				$('#wl-btn-'+json.id).find('.add-watchlist').removeAttr('disabled');
 			}else{
 				if (!json.rm){
