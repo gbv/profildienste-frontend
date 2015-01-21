@@ -1,4 +1,4 @@
-var pdApp = angular.module('Profildienst', ['infinite-scroll', 'ui.bootstrap', 'ngRoute']);
+var pdApp = angular.module('Profildienst', ['infinite-scroll', 'ui.bootstrap', 'ngRoute', 'ui.sortable']);
 
 pdApp.filter('notEmpty', function(){
   return function(val){

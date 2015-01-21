@@ -9,8 +9,6 @@ pdApp.controller('ItemController', function($scope, $sce, WatchlistService, Cart
 
   WatchlistService.getWatchlists().then(function (data){
     $scope.watchlists = data.watchlists;
-    $scope.def_wl = data.def_wl;
-
   });
 
   UserService.getUserData().then(function (data){

@@ -45,11 +45,22 @@ gulp.task('less', function() {
 
 var vendor = [
   'bower_components/jquery/dist/jquery.min.js',
+
+  'bower_components/jquery-ui/ui/minified/core.min.js',
+  'bower_components/jquery-ui/ui/minified/widget.min.js',
+  'bower_components/jquery-ui/ui/minified/mouse.min.js',
+  'bower_components/jquery-ui/ui/minified/sortable.min.js',
+
   'bower_components/angular/angular.min.js',
+
+  'bower_components/angular-ui-sortable/sortable.min.js',
+
   'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+
   'bower_components/angular-route/angular-route.min.js',
-  'bower_components/jquery-ui/jquery-ui.min.js',
+
   'bower_components/bootstrap/dist/js/bootstrap.min.js',
+
   'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
 ];
 

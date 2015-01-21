@@ -1,4 +1,4 @@
-<div ng-controller="ManageController">
+<div ng-controller="ManageController as ManageCtrl">
   <div class="row">
     <div class="col-md-12">
       <div class="page-header">
@@ -18,9 +18,9 @@
         </ul>
         <form class="navbar-form navbar-left">
           <div class="form-group">
-            <input type="text" class="form-control" placeholder="Name" id="wlm-add">
+            <input type="text" class="form-control" placeholder="Name" ng-model="newName">
           </div>
-          <button type="button" class="btn btn-default" id="wlm-add-btn"><i class="fa fa-plus"></i> Hinzufügen</button>
+          <button type="button" class="btn btn-default" ng-click="ManageCtrl.addNewWatchlist()"><i class="fa fa-plus"></i> Hinzufügen</button>
         </form>
       </div>
     </div>
@@ -39,23 +39,34 @@
   </div>
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
-      <table id="sort" class="table">
+
+    <!-- START  -->
+
+    <ul ui-sortable ng-model="items">
+      <li ng-repeat="item in items">{{ item }}</li>
+    </ul>
+
+    <!-- END  -->
+
+      <table class="table">
         <thead>
           <tr><th colspan="2"><h3>Merklisten</h3></th></tr>
         </thead>
-        <tbody>
+        <tbody ui-sortable="sortableOptions" ng-model="watchlists">
           <tr ng-repeat="watchlist in watchlists" ng-controller="ManageWatchlistController as ManageWLCtrl" class="active">
             <td>
               <div class="col-md-6">
-                <p class="form-control-static">{{watchlist.name}}</p>
+                <p class="form-control-static" ng-hide="editMode">{{name}}</p>
+                <input type="text" class="form-control input-sm" ng-model="name" ng-show="editMode">
               </div>
-              <button class="btn btn-default wlm-edit wlm-btn" rel="{$value.id}"><i class="fa fa-pencil"></i></button>
+              <button class="btn btn-default" ng-click="ManageWLCtrl.edit()" ng-hide="editMode"><i class="fa fa-pencil"></i></button>
+              <button class="btn btn-default" ng-click="ManageWLCtrl.save()" ng-show="editMode"><i class="fa fa-check"></i></button>
             </td>
             <td>
               <div class="pull-right">
                 <button class="btn btn-default" ng-click="ManageWLCtrl.open()"><i class="fa fa-eye"></i></button>
-                <button class="btn btn-default" ng-disabled="ManageWLCtrl.disableDefault()"><i class="fa fa-bookmark"></i></button>
-                <button class="btn btn-default" ng-disabled="ManageWLCtrl.disableDelete()"><i class="fa fa-times"></i></button>
+                <button class="btn btn-default" ng-click="ManageWLCtrl.setAsDefault()" ng-disabled="ManageWLCtrl.disableDefault()"><i class="fa fa-bookmark"></i></button>
+                <button class="btn btn-default" ng-click="ManageWLCtrl.delete()" ng-disabled="ManageWLCtrl.disableDelete()"><i class="fa fa-times"></i></button>
               </div>
             </td>
           </tr>

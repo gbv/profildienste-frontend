@@ -15,7 +15,7 @@ class WatchlistManager implements AJAX{
 
 		$this -> resp = array('success' => false, 'type' => NULL, 'errormsg' => '', 'id' => NULL);
 
-		if($id == '' || $type == ''){
+		if(($id == '' && $type != 'add-wl' && $type != 'change-order') || $type == ''){
 			$this -> error('Unvollständige Daten');
 			return;
 		}
@@ -50,6 +50,7 @@ class WatchlistManager implements AJAX{
 				$nl = array('id' => $i, 'default' => false, 'name' => $content, 'list' => array());
 				$watchlists[$i]=$nl;
 				array_push($wl_order, $i);
+				$this->resp['id'] = $i;
 			break;
 			case 'def':
 				$wl_def=$id;

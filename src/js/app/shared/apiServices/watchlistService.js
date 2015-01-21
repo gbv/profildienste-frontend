@@ -30,6 +30,7 @@ pdApp.service('WatchlistService', function($http, $rootScope, $q, LoginService) 
         watchlists: this.data.watchlists,
         def_wl: this.data.def_wl
       });
+
       return d.promise;
     }
   };
@@ -67,6 +68,10 @@ pdApp.service('WatchlistService', function($http, $rootScope, $q, LoginService) 
 
   this.addToWatchlist = function(item, wl){
 
+    if(wl === undefined){
+      wl = this.data.def_wl;
+    }
+
     var def = $q.defer();
 
     $http({
@@ -94,6 +99,65 @@ pdApp.service('WatchlistService', function($http, $rootScope, $q, LoginService) 
           id: wl,
           name: name
         });
+
+      }
+    }.bind(this));
+
+    return def.promise;
+  };
+
+  this.manageWatchlist = function(wlId, type, content){
+
+    var def = $q.defer();
+
+    $http({
+      method: 'POST',
+      url: '/api/watchlist/manage',
+      data: $.param({
+        id: wlId,
+        type: type,
+        content: content
+      }),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function(json){
+      if(!json.success){
+        def.reject(json.errormsg);
+      }else{
+
+        if(type === 'upd-name'){
+          for(var i=0; i < this.data.watchlists.length; i++){
+            if(this.data.watchlists[i].id == json.id){
+              this.data.watchlists[i].name = content;
+              break;
+            }
+          }
+        }
+
+        if(type === 'add-wl'){
+          var wl = {};
+          wl.name = content;
+          wl.id = json.id;
+          wl.count = 0;
+          this.data.watchlists.push(wl);
+        }
+
+        if(type === 'remove'){
+          for(var i=0; i < this.data.watchlists.length; i++){
+            if(this.data.watchlists[i].id == json.id){
+              this.data.watchlists.splice(i, 1);
+              break;
+            }
+          }
+        }
+
+        if(type === 'def'){
+          this.data.def_wl = json.id;
+          $rootScope.$broadcast('defaultWatchlistChange', json.id);
+        }
+
+
+        $rootScope.$broadcast('watchlistChange', this.data.watchlists);
+        def.resolve();
 
       }
     }.bind(this));
