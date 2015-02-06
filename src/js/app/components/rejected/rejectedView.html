@@ -1,9 +1,12 @@
-<div ng-controller="RejectedController">
+<div ng-controller="RejectedController as RejectedCtrl">
   <div class="row">
     <div class="col-md-12">
       <div class="page-header">
           <h1>
             <i class="fa fa-minus-circle"></i> Abgelehnt
+            <button type="button" class="btn btn-primary btn-lg pull-right" ng-show="RejectedCtrl.showDeletePermanently()" ng-click="RejectedCtrl.deletePermanently()">
+              <i class="fa fa-trash"></i> Aus meiner Ansicht löschen
+            </button>
             <br>
             <small>
               <span ng-hide="entries.loading">{{entries.total}} Datensätze in dieser Ansicht</span>
