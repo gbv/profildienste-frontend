@@ -2,46 +2,52 @@
 
 namespace AJAX;
 
-class ChangeSetting implements AJAX{
-	
-	private $err;
-	private $resp;
+use Middleware\AuthToken;
+use Profildienst\DB;
 
-	public function __construct($type, $value, $auth){
+/**
+ * Changes a setting (order or sorting criterion)
+ *
+ * Class ChangeSetting
+ * @package AJAX
+ */
+class ChangeSetting extends AJAXResponse {
 
-		$this -> resp = array('success' => false, 'errormsg' => '', 'type' => NULL, 'value' => NULL);
 
-		if($type == '' || $value == ''){
-			$this -> error('Unvollständige Daten');
-			return;
-		}
+    /**
+     * @param $type string type of the setting which should be changed
+     * @param $value string the new value
+     * @param AuthToken $auth Token
+     */
+    public function __construct($type, $value, AuthToken $auth) {
 
-		if (!$c = \Profildienst\DB::get(array('_id' => $auth->getID()),'users',array('settings' => 1, '_id' => 0),true)){
-			$this -> error('Kein Benutzer unter der ID gefunden.');
-		}
+        $this->resp['type'] = NULL;
+        $this->resp['value'] = NULL;
 
-		$settings=$c['settings'];
+        //check if we got all the data we need
+        if ($type === '' || $value === '') {
+            $this->error('Unvollständige Daten');
+            return;
+        }
 
-		if (!in_array($type, array_keys($settings))){
-			$this -> error('Diese Einstellung existiert nicht!');
-		}else{
-			$settings[$type]=$value;
-			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('settings' => $settings)),'users');
-			$this -> resp['success']=true;
-			$this -> resp['type']=$type;
-			$this -> resp['value']=$value;
-		}
-	}
+        // check if user exists
+        if (!$c = DB::get(array('_id' => $auth->getID()), 'users', array('settings' => 1, '_id' => 0), true)) {
+            $this->error('Kein Benutzer unter der ID gefunden.');
+        }
 
-	private function error($msg){
-		$this -> resp['success']=false;
-		$this -> resp['errormsg']=$msg;
-	}
+        // update settings
+        $settings = $c['settings'];
 
-	public function getResponse(){
-		return $this -> resp;
-	}
-	
+        if (!in_array($type, array_keys($settings))) {
+            $this->error('Diese Einstellung existiert nicht!');
+        } else {
+            $settings[$type] = $value;
+            DB::upd(array('_id' => $auth->getID()), array('$set' => array('settings' => $settings)), 'users');
+            $this->resp['success'] = true;
+            $this->resp['type'] = $type;
+            $this->resp['value'] = $value;
+        }
+    }
 }
 
 ?>

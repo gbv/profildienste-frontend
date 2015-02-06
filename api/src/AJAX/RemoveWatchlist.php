@@ -2,66 +2,71 @@
 
 namespace AJAX;
 
-class RemoveWatchlist implements AJAX{
-	
-	private $err;
-	private $resp;
+use Middleware\AuthToken;
+use Profildienst\DB;
 
-	public function __construct($id, $wl_id, $auth){
+/**
+ * Removes a title from a watchlist.
+ *
+ * Class RemoveWatchlist
+ * @package AJAX
+ */
+class RemoveWatchlist extends AJAXResponse {
 
-		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL , 'wl' => NULL , 'errormsg' => '');
+    /**
+     * Removes a title from a watchlist.
+     *
+     * @param $id string ID of the title
+     * @param $wl_id int ID of the watchlist
+     * @param AuthToken $auth Token
+     */
+    public function __construct($id, $wl_id, AuthToken $auth) {
 
-		if($id == '' || $wl_id == ''){
-			$this -> error('Unvollständige Daten');
-			return;
-		}
+        $this->resp['content'] = NULL;
+        $this->resp['id'] = NULL;
+        $this->resp['wl'] = NULL;
 
-		$this -> resp['id'] = $id;
-		$this -> resp['wl'] = $wl_id;
+        if ($id == '' || $wl_id == '') {
+            $this->error('Unvollständige Daten');
+            return;
+        }
 
-		$watchlists = \Profildienst\DB::getUserData('watchlist', $auth);
-		if($watchlists === NULL){
-			$this -> error('Es konnten keine Merklisten für einen Benutzer mit dieser ID gefunden werden.');
-			return;
-		}
+        $this->resp['id'] = $id;
+        $this->resp['wl'] = $wl_id;
 
-		$wl=$watchlists[$wl_id]['list'];
+        $watchlists = DB::getUserData('watchlist', $auth);
+        if ($watchlists === NULL) {
+            $this->error('Es konnten keine Merklisten für einen Benutzer mit dieser ID gefunden werden.');
+            return;
+        }
 
-		if($wl === NULL){
-			$this -> error('Keine Merkliste mit dieser ID gefunden.');
-			return;
-		}
+        $wl = $watchlists[$wl_id]['list'];
 
-		if (!in_array($id, $wl)){
-			$this -> error('Dieser Titel befindet sich nicht in der Merkliste!');
-		}else{
-			// Entfernen aus dem Array
-			$occ = array_search($id, $wl);
-			if ($occ === NULL){
-				$this -> error('Der Titel konnte nicht entfernt werden!');
-			}
-			$f = array_slice($wl,0,$occ);
-			$s = array_slice($wl,($occ+1),count($wl));
-			$g = array_merge($f, $s);
+        if ($wl === NULL) {
+            $this->error('Keine Merkliste mit dieser ID gefunden.');
+            return;
+        }
 
-			$watchlists[$wl_id]['list']=$g;
+        if (!in_array($id, $wl)) {
+            $this->error('Dieser Titel befindet sich nicht in der Merkliste!');
+        } else {
+            // remove from the array
+            $occ = array_search($id, $wl);
+            if (is_null($occ)) {
+                $this->error('Der Titel konnte nicht entfernt werden!');
+            }
+            $f = array_slice($wl, 0, $occ);
+            $s = array_slice($wl, ($occ + 1), count($wl));
+            $g = array_merge($f, $s);
 
-			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('watchlist' => $watchlists)),'users');
-			$this -> resp['content']=count($g);
-			$this -> resp['success']=true;
-		}
+            $watchlists[$wl_id]['list'] = $g;
 
-	}
+            DB::upd(array('_id' => $auth->getID()), array('$set' => array('watchlist' => $watchlists)), 'users');
+            $this->resp['content'] = count($g);
+            $this->resp['success'] = true;
+        }
 
-	private function error($msg){
-		$this -> resp['success']=false;
-		$this -> resp['errormsg']=$msg;
-	}
-
-	public function getResponse(){
-		return $this -> resp;
-	}
-	
+    }
 }
 
 ?>

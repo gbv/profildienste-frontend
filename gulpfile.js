@@ -25,8 +25,7 @@ gulp.task('vendorcss', function() {
 });
 
 gulp.task('fa-font', function() {
-  return gulp.src('bower_components/fontawesome/fonts/**.*') 
-    .pipe(gulp.dest('dist/fonts')); 
+  return gulp.src('bower_components/fontawesome/fonts/**.*') .pipe(gulp.dest('dist/fonts')); 
 });
 
 gulp.task('less', function() {

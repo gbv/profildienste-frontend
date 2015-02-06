@@ -2,53 +2,57 @@
 
 namespace AJAX;
 
-class Info implements AJAX{
-	
-	private $err;
-	private $resp;
+use Middleware\AuthToken;
+use Profildienst\DB;
 
-	public function __construct($id, $auth){
+/**
+ * Loads additional information for a given title
+ *
+ * Class Info
+ * @package AJAX
+ */
+class Info extends AJAXResponse {
 
-		$this -> resp = array('success' => false, 'type' => NULL , 'content' => NULL , 'id' => NULL ,'errormsg' => '');
+    /**
+     * Loads additional information for the title with the given id.
+     *
+     * @param $id string ID of the title
+     * @param AuthToken $auth Token
+     */
+    public function __construct($id, AuthToken $auth) {
 
-		if($id == ''){
-			$this -> error('Unvollständige Daten');
-			return;
-		}
+        $this->resp['content'] = NULL;
+        $this->resp['id'] = NULL;
+        $this->resp['type'] = NULL;
 
-		$this -> resp['id'] = $id;
+        if ($id === '') {
+            $this->error('Unvollständige Daten');
+            return;
+        }
 
-		if (!$title = \Profildienst\DB::getTitleByID($id)){
-			$this -> error('Kein Eintrag unter der ID gefunden');
-		}
+        $this->resp['id'] = $id;
 
-		$url = $title -> get('addr_erg_ang_url');
-		$mime = $title -> get('addr_erg_ang_mime');
-		 
-		if ($mime == 'text/html'){
+        if (!$title = DB::getTitleByID($id)) {
+            $this->error('Kein Eintrag unter der ID gefunden');
+        }
 
-			$f=file_get_contents($url);
-			preg_match('/<body>(.*?)<\/body>/si',$f,$matches);
-			$this -> resp['content']=$matches[1];
-			$this -> resp['type']='html';
-			$this -> resp['success']=true;
+        $url = $title->get('addr_erg_ang_url');
+        $mime = $title->get('addr_erg_ang_mime');
 
-		}else{
-			$this -> resp['content']=$url;
-			$this -> resp['type']='other';
-			$this -> resp['success']=true;
-		}
-	}
+        if ($mime === 'text/html') {
 
-	private function error($msg){
-		$this -> resp['success']=false;
-		$this -> resp['errormsg']=$msg;
-	}
+            $f = file_get_contents($url);
+            preg_match('/<body>(.*?)<\/body>/si', $f, $matches);
+            $this->resp['content'] = $matches[1];
+            $this->resp['type'] = 'html';
+            $this->resp['success'] = true;
 
-	public function getResponse(){
-		return $this -> resp;
-	}
-	
+        } else {
+            $this->resp['content'] = $url;
+            $this->resp['type'] = 'other';
+            $this->resp['success'] = true;
+        }
+    }
 }
 
 ?>

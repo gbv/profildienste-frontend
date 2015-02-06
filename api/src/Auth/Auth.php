@@ -17,7 +17,7 @@ class Auth{
 
 		if ($user == '' || $pwd == ''){
 			return true;
-		} 
+		}
 
 		$fp = fsockopen(\Config\Config::$cbs_url, \Config\Config::$cbs_port, $errno, $errstr, 30);
 		if (!$fp) {

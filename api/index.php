@@ -255,18 +255,18 @@ $app -> get('/settings',  $authenticate($app, $auth), function() use ($app, $aut
 });
 
 /**
- * Confirm Order
- */
-$app->post('/confirm',  $authenticate($app, $auth), function () use ($app, $auth){
-  $m = new \AJAX\ConfirmOrder($auth);
-  printResponse($m -> getResponse());
-});
-
-/**
  * Delete titles
  */
 $app->post('/delete',  $authenticate($app, $auth), function () use ($app, $auth){
   $m = new \AJAX\Delete($auth);
+  printResponse($m -> getResponse());
+});
+
+/**
+ * Order
+ */
+$app->post('/order',  $authenticate($app, $auth), function () use ($app, $auth){
+  $m = new \Special\Order($auth);
   printResponse($m -> getResponse());
 });
 
@@ -282,7 +282,7 @@ $app->post('/info',  $authenticate($app, $auth), function () use ($app, $auth){
 });
 
 /**
- * Verlagsmeldung
+ * OPAC Abfrage
  */
 $app->post('/opac',  $authenticate($app, $auth), function () use ($app, $auth){
 

@@ -2,83 +2,88 @@
 
 namespace AJAX;
 
-class RemoveCart implements AJAX{
-	
-	private $err;
-	private $resp;
+use Middleware\AuthToken;
+use Profildienst\DB;
 
-	public function __construct($id, $auth){
+/**
+ * Removes a title from the cart.
+ *
+ * Class RemoveCart
+ * @package AJAX
+ */
+class RemoveCart extends AJAXResponse {
 
-		$this -> resp = array('success' => false, 'content' => NULL , 'id' => NULL ,'errormsg' => '', 'price' => array());
+    /**
+     * Removes a title from the cart.
+     *
+     * @param $id
+     * @param AuthToken $auth Token
+     */
+    public function __construct($id, AuthToken $auth) {
 
-		if($id == ''){
-			$this -> error('Unvollständige Daten');
-			return;
-		}
-		
-		$this -> resp['id'] = $id;
 
-		$cart=\Profildienst\DB::getUserData('cart', $auth);
+        $this->resp['content'] = NULL;
+        $this->resp['id'] = NULL;
+        $this->resp['price'] = array();
 
-		$ct=array();
-		foreach ($cart as $c){
-			array_push($ct, $c['id']);
-		}
+        if ($id === '') {
+            $this->error('Unvollständige Daten');
+            return;
+        }
 
-		if (!in_array($id, $ct)){
-			$this -> error('Dieser Titel befindet sich nicht im Warenkorb');
-		}else{
+        $this->resp['id'] = $id;
 
-			$p = \Profildienst\DB::getUserData('price', $auth);
+        $cart = DB::getUserData('cart', $auth);
 
-			$tit = \Profildienst\DB::getTitleByID($id);
-			$pr = $tit -> getEURPrice();
+        $ct = array();
+        foreach ($cart as $c) {
+            array_push($ct, $c['id']);
+        }
 
-			if(is_null($pr)){
-				// Preis war nicht bekannt
-				$p['est'] = $p['est']-1;
+        if (!in_array($id, $ct)) {
+            $this->error('Dieser Titel befindet sich nicht im Warenkorb');
+        } else {
 
-				$mean = \Profildienst\DB::get(array('_id' => 'mean'), 'data', array(), true);
-				$pr = $mean['value'];
+            $p = DB::getUserData('price', $auth);
 
-			}else{
-				// Preis war bekannt
-				$p['known'] = $p['known']-1;
-			}
+            $tit = DB::getTitleByID($id);
+            $pr = $tit->getEURPrice();
 
-			$p['price'] = $p['price'] - $pr;
+            if (is_null($pr)) {
+                // price was unknown
+                $p['est'] = $p['est'] - 1;
 
-			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('price' => $p)),'users');
+                $mean = DB::get(array('_id' => 'mean'), 'data', array(), true);
+                $pr = $mean['value'];
 
-			$this -> resp['price'] = $p;
+            } else {
+                // price was known
+                $p['known'] = $p['known'] - 1;
+            }
 
-			$occ = array_search($id, $ct);
-			if ($occ === NULL){
-				$this -> error('Der Titel konnte nicht entfernt werden');
-			}
+            $p['price'] = $p['price'] - $pr;
 
-			$g = array();
-			foreach($cart as $c){
-				if($c['id'] != $id){
-					array_push($g, $c);
-				}
-			}
+            DB::upd(array('_id' => $auth->getID()), array('$set' => array('price' => $p)), 'users');
 
-			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('cart' => $g)),'users');
-			$this -> resp['content'] = count($g);
-			$this -> resp['success'] = true;
-		}
-	}
-	
-	private function error($msg){
-		$this -> resp['success']=false;
-		$this -> resp['errormsg']=$msg;
-	}
+            $this->resp['price'] = $p;
 
-	public function getResponse(){
-		return $this -> resp;
-	}
-	
+            $occ = array_search($id, $ct);
+            if (is_null($occ)) {
+                $this->error('Der Titel konnte nicht entfernt werden');
+            }
+
+            $g = array();
+            foreach ($cart as $c) {
+                if ($c['id'] != $id) {
+                    array_push($g, $c);
+                }
+            }
+
+            DB::upd(array('_id' => $auth->getID()), array('$set' => array('cart' => $g)), 'users');
+            $this->resp['content'] = count($g);
+            $this->resp['success'] = true;
+        }
+    }
 }
 
 ?>

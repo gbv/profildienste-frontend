@@ -2,55 +2,58 @@
 
 namespace AJAX;
 
-class RemoveReject implements AJAX{
-	
-	private $err;
-	private $resp;
+use Middleware\AuthToken;
+use Profildienst\DB;
 
-	public function __construct($id, $auth){
+/**
+ * Removes a title from the rejected list.
+ *
+ * Class RemoveReject
+ * @package AJAX
+ */
+class RemoveReject extends AJAXResponse {
 
-		$this -> resp = array('success' => false, 'id' => NULL ,'errormsg' => '');
+    /**
+     * Removes a title from the rejected list.
+     *
+     * @param $id string ID of the title
+     * @param AuthToken $auth Token
+     */
+    public function __construct($id, AuthToken $auth) {
 
-		if($id == ''){
-			$this -> error('Unvollständige Daten');
-			return;
-		}
+        $this->resp['id'] = NULL;
 
-		$this -> resp['id'] = $id;
 
-		$rejected=\Profildienst\DB::getUserData('rejected', $auth);
+        if ($id === '') {
+            $this->error('Unvollständige Daten');
+            return;
+        }
 
-		if($rejected === NULL){
-			$this -> error('Es konnten keine Liste für einen Benutzer mit dieser ID gefunden werden.');
-		}
+        $this->resp['id'] = $id;
 
-		if (!in_array($id, $rejected)){
-			$this -> error('Dieser Titel wurde nicht abgelehnt');
-		}else{
-			// Entfernen aus dem Array
-			$occ = array_search($id, $rejected);
-			if ($occ === NULL){
-				$this -> error('Der Titel konnte nicht entfernt werden!');
-			}
+        $rejected = DB::getUserData('rejected', $auth);
 
-			$f = array_slice($rejected,0,$occ);
-			$s = array_slice($rejected,($occ+1),count($rejected));
-			$g = array_merge($f, $s);
+        if ($rejected === NULL) {
+            $this->error('Es konnten keine Liste für einen Benutzer mit dieser ID gefunden werden.');
+        }
 
-			\Profildienst\DB::upd(array('_id' => $auth->getID()),array('$set' => array('rejected' => $g)),'users');
-			$this -> resp['success']=true;	
-		}
-	}
+        if (!in_array($id, $rejected)) {
+            $this->error('Dieser Titel wurde nicht abgelehnt');
+        } else {
+            // remove from the array
+            $occ = array_search($id, $rejected);
+            if (is_null($occ)) {
+                $this->error('Der Titel konnte nicht entfernt werden!');
+            }
 
-	private function error($msg){
-		$this -> resp['success']=false;
-		$this -> resp['errormsg']=$msg;
-	}
+            $f = array_slice($rejected, 0, $occ);
+            $s = array_slice($rejected, ($occ + 1), count($rejected));
+            $g = array_merge($f, $s);
 
-	public function getResponse(){
-		return $this -> resp;
-	}
-	
+            DB::upd(array('_id' => $auth->getID()), array('$set' => array('rejected' => $g)), 'users');
+            $this->resp['success'] = true;
+        }
+    }
 }
 
 ?>

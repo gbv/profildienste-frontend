@@ -1,41 +1,71 @@
 <div ng-controller="OrderController as OrderCtrl">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="page-header">
-          <h1>
-            <i class="fa fa-shopping-cart"></i> Bestätigung
-            <br>
-            <small>
-              Bitte überprüfen Sie, ob alle Angaben korrekt sind.
-            </small>
-          </h1>
+  <div ng-hide="orderComplete">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="page-header">
+            <h1>
+              <i class="fa fa-shopping-cart"></i> Bestätigung
+              <br>
+              <small>
+                Bitte überprüfen Sie, ob alle Angaben korrekt sind.
+              </small>
+            </h1>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr><th>Titel</th><th>Lieferant</th><th>Budget</th><th>Selektionscode</th><th>SSG-Nr.</th><th>GVK-Treffer</th><th>Kommentar</th></tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="order in orderlist">
+                <td>{{order.titel}}</td><td>{{order.lieft}}</td><td>{{order.budget}}</td><td>{{order.selcode}}</td><td>{{order.ssgnr}}</td><td>{{order.gvkt}}</td><td>{{order.comment}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 btns-order">
+        <button type="button" class="btn btn-default btn-order btn-lg" ng-click="OrderCtrl.cancel()">
+          <i class="fa fa-times icon-large"></i> Abbrechen
+        </button> 
+        <button type="button" class="btn btn-primary btn-order btn-lg" ng-click="OrderCtrl.order()">
+          <i class="fa fa-shopping-cart"></i> Bestellen
+        </button>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="table-responsive">
-        <table class="table table-striped">
-          <thead>
-            <tr><th>Titel</th><th>Lieferant</th><th>Budget</th><th>Selektionscode</th><th>SSG-Nr.</th><th>GVK-Treffer</th><th>Kommentar</th></tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="order in orderlist">
-              <td>{{order.titel}}</td><td>{{order.lieft}}</td><td>{{order.budget}}</td><td>{{order.selcode}}</td><td>{{order.ssgnr}}</td><td>{{order.gvkt}}</td><td>{{order.comment}}</td>
-            </tr>
-          </tbody>
-        </table>
+  <div ng-show="orderComplete">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="page-header">
+            <h1>
+              <i class="fa fa-check"></i> Vorgang erfolgreich abgeschlossen
+              <br>
+              <small>
+                Folgende Titel werden weitergeleitet.
+              </small>
+            </h1>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3 btns-order">
-      <button type="button" class="btn btn-default btn-order btn-lg" ng-click="OrderCtrl.cancel()">
-        <i class="fa fa-times icon-large"></i> Abbrechen
-      </button> 
-      <button type="button" class="btn btn-primary btn-order btn-lg" ng-click="OrderCtrl.order()">
-        <i class="fa fa-shopping-cart"></i> Bestellen
-      </button>
+    <div class="row">
+      <div class="col-md-12">
+      <ul class="nav nav-pills nav-stacked orders">
+        <li ng-repeat="order in orderlist"><a href=""><i class="fa fa-caret-right orders-caret"></i>{{order.titel}}</a></li>
+      </ul>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 btns-order">
+        <button type="button" class="btn btn-primary btn-order btn-lg" ng-click="OrderCtrl.finish()">
+          <i class="fa fa-reply"></i> Zurück zur Gesamtübersicht
+        </button>
+      </div>
     </div>
   </div>
 </div>

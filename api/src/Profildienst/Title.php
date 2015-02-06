@@ -2,6 +2,8 @@
 
 namespace Profildienst;
 
+use Auth\Auth;
+
 class Title{
 
 	private $j;
@@ -90,6 +92,7 @@ class Title{
 	} 
 
 	public function get($v){
+
 		$fields= isset($this -> lookup[$v])? $this -> lookup[$v] : NULL;
 		if ($fields){ // Es existiert ein Eintrag in der Lookup-Tabelle
 			if (isset($fields['mult'])){ // Ist der Eintrag mehrdeutig?
