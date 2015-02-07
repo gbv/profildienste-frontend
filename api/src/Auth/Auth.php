@@ -1,7 +1,8 @@
 <?php
 
 namespace Auth;
-use Config\BackendConfig;
+
+use Config\Config;
 
 /**
  * Performs a basic authentication against the CBS
@@ -29,7 +30,6 @@ class Auth {
     private $loggedIn = false;
 
 
-
     /**
      * Performs the authentication
      *
@@ -43,7 +43,7 @@ class Auth {
             return true;
         }
 
-        $fp = fsockopen(BackendConfig::$cbs_url, BackendConfig::$cbs_port, $errno, $errstr, 30);
+        $fp = fsockopen(Config::$cbs_url, Config::$cbs_port, $errno, $errstr, 30);
         if (!$fp) {
             return false;
         }

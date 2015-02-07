@@ -3,6 +3,9 @@
 namespace Profildienst;
 use Config\Config;
 use Middleware\AuthToken;
+use MongoClient;
+use MongoCollection;
+use MongoDB;
 
 /**
  * Connection to the Database (Singleton)
@@ -12,9 +15,17 @@ use Middleware\AuthToken;
  */
 class DB {
 
-    // save the instance
+    /**
+     * @var MongoClient database instance
+     */
     private static $m;
+    /**
+     * @var MongoDB database instance
+     */
     private static $db;
+    /**
+     * @var array options
+     */
     private static $opt = array(
         'safe' => true,
         'fsync' => true,
@@ -29,10 +40,14 @@ class DB {
     private function __clone() {
     }
 
+    /**
+     * Initializes the Database connection.
+     * @throws \Exception
+     */
     private static function init_db() {
         // create a new instance if we can't use a previous one
         if (!isset(self::$m)) {
-            self::$m = new \MongoClient();
+            self::$m = new MongoClient();
             self::$db = self::$m->selectDB('pd');
             if (!isset(self::$m)) {
                 throw new \Exception('Connection failed');
@@ -40,6 +55,12 @@ class DB {
         }
     }
 
+    /**
+     * Retrieves user data
+     * @param $v string Desired aspect of user data
+     * @param AuthToken $auth Token
+     * @return array|null
+     */
     public static function getUserData($v, AuthToken $auth) {
         if (!$c = DB::get(array('_id' => $auth->getID()), 'users', array($v => 1), true)) {
             die('Kein Benutzer unter der ID gefunden.');
@@ -47,6 +68,15 @@ class DB {
         return isset($c[$v]) ? $c[$v] : NULL;
     }
 
+    /**
+     * Gets a list of Titles according to the provided query.
+     *
+     * @param $query array The query
+     * @param $skip int Amount of titles which should be skipped
+     * @param AuthToken $auth Token
+     * @return array
+     * @throws \Exception
+     */
     public static function getTitleList($query, $skip, AuthToken $auth) {
         self::init_db();
         $collection = new \MongoCollection(self::$db, 'titles');
@@ -83,6 +113,12 @@ class DB {
         return $ret;
     }
 
+    /**
+     * Gets a single title which matches the query.
+     * @param $query array query
+     * @return null|Title
+     * @throws \Exception
+     */
     public static function getTitle($query) {
         self::init_db();
         $collection = new \MongoCollection(self::$db, 'titles');
@@ -90,6 +126,13 @@ class DB {
         return $c ? new Title($c) : $c;
     }
 
+    /**
+     * Gets a title by its ID.
+     *
+     * @param $id string The ID
+     * @return null|Title
+     * @throws \Exception
+     */
     public static function getTitleByID($id) {
         self::init_db();
         $collection = new \MongoCollection(self::$db, 'titles');
@@ -98,6 +141,14 @@ class DB {
         return $c ? new Title($c) : $c;
     }
 
+    /**
+     * Check if titles matching the query exist in a collection.
+     *
+     * @param $query array Query
+     * @param $coll string Name of collection
+     * @return bool true if there exists a title
+     * @throws \Exception
+     */
     public static function exists($query, $coll) {
         self::init_db();
         $collection = new \MongoCollection(self::$db, $coll);
@@ -105,6 +156,13 @@ class DB {
         return $c ? true : false;
     }
 
+    /**
+     * Inserts data into the collection
+     *
+     * @param $data mixed Data
+     * @param $coll string Name of collection
+     * @throws \Exception
+     */
     public static function ins($data, $coll) {
         self::init_db();
         $collection = new \MongoCollection(self::$db, $coll);
@@ -115,6 +173,16 @@ class DB {
         }
     }
 
+    /**
+     * Gets data from the database
+     *
+     * @param $query array Query
+     * @param $coll string Name of the collection
+     * @param array $fields
+     * @param bool $findone
+     * @return array
+     * @throws \Exception
+     */
     public static function get($query, $coll, $fields = array(), $findone = false) {
         self::init_db();
         $collection = new \MongoCollection(self::$db, $coll);
@@ -131,6 +199,14 @@ class DB {
         }
     }
 
+    /**
+     * Update data in the database
+     *
+     * @param $cond array Condition
+     * @param $data mixed Data
+     * @param $coll string Name of collection
+     * @throws \Exception
+     */
     public static function upd($cond, $data, $coll) {
         self::init_db();
         $collection = new \MongoCollection(self::$db, $coll);

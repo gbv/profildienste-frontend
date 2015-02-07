@@ -95,7 +95,7 @@ class TitleList {
     /**
      * Getter for the titles
      *
-     * @return array Titles
+     * @return Title[] Titles
      */
     public function getTitles() {
         return $this->titles;

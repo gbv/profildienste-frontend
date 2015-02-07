@@ -1,13 +1,18 @@
 <?php
 
+use Auth\Login;
+use Config\Config;
+use Middleware\AuthToken;
+use Profildienst\TitleList;
+
 require 'vendor/autoload.php';
 
 $app = new \Slim\Slim();
 
-$auth = new \Middleware\AuthToken();
+$auth = new AuthToken();
 $app->add($auth);
 
-$authenticate = function ($app, $auth) {
+$authenticate = function (\Slim\Slim $app, AuthToken $auth) {
   return function () use ($app, $auth) {
     if (!$auth->isValid()){
       $app->halt(401);
@@ -24,12 +29,12 @@ $app -> post('/auth', function() use ($app){
     $app->stop();
   }
 
-  $l = new \Auth\Login();
+  $l = new Login();
   $l->doLogin($user,$pass);
 
+  $pd_name = '';
   if ($l -> login){
     $pd_name = preg_replace("/<(.*?)>/",'', $l -> name);
-    $pd_id = $user;
   }else{
     printResponse(NULL, true, 'Der eingegebene Benutzername und/oder das Kennwort ist ungültig.');
     $app->stop();
@@ -49,7 +54,7 @@ $app -> post('/auth', function() use ($app){
     'exp' => time() + (24*60*60) // Tokens should be valid for a day
   );
 
-  $jwt = JWT::encode($token, \Config\BackendConfig::$token_key);
+  $jwt = JWT::encode($token, Config::$token_key);
 
 
   printResponse(array('token' => $jwt));
@@ -58,7 +63,7 @@ $app -> post('/auth', function() use ($app){
 $app -> get('/libraries', function() use ($app){
 
   $data = array();
-  foreach (\Config\BackendConfig::$bibliotheken as $isil => $bib) {
+  foreach (Config::$bibliotheken as $isil => $bib) {
     $data[] = array('isil' => $isil, 'name' => $bib['name']);
   }
 
@@ -186,7 +191,7 @@ $app -> group('/user', $authenticate($app, $auth), function() use ($app, $auth){
 
     $wl = array();
     foreach($wl_order as $index){
-      $watchlists[$index]['count'] = count($watchlists[$wlo]['list']);
+      $watchlists[$index]['count'] = count($watchlists[$index]['list']);
       $wl[] = array('id' => $watchlists[$index]['id'], 'name' => $watchlists[$index]['name'], 'count' => count($watchlists[$index]['list']));
     }
 
@@ -236,12 +241,12 @@ $app -> group('/user', $authenticate($app, $auth), function() use ($app, $auth){
  */
 $app -> get('/settings',  $authenticate($app, $auth), function() use ($app, $auth){
   $sortby = array();
-  foreach (\Config\BackendConfig::$sortby_name as $val => $desc) {
+  foreach (Config::$sortby_name as $val => $desc) {
     $sortby[] = array('key' => $val, 'value' => $desc);
   }
 
   $order = array();
-  foreach (\Config\BackendConfig::$order_name as $val => $desc) {
+  foreach (Config::$order_name as $val => $desc) {
     $order[] = array('key' => $val, 'value' => $desc);
   }
 
@@ -293,7 +298,7 @@ $app->post('/opac',  $authenticate($app, $auth), function () use ($app, $auth){
 
   $isil = \Profildienst\DB::getUserData('isil', $auth);
 
-  $opac_url=\Config\BackendConfig::$bibliotheken[$isil]['opac'];
+  $opac_url=Config::$bibliotheken[$isil]['opac'];
 
   $url = preg_replace('/%SEARCH_TERM%/', urlencode($query), $opac_url);
   
@@ -425,7 +430,7 @@ function convertTitle(\Profildienst\Title $t){
     );
 
   if(!$t->hasCover()){
-    $r['cover_md'] = \Config\BackendConfig::$no_cover_path;
+    $r['cover_md'] = Config::$no_cover_path;
   }
 
   if($t->get('isbn13') !== NULL){
