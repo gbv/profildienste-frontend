@@ -48,7 +48,7 @@ class Order{
     $isil=\Profildienst\DB::getUserData('isil', $auth);
     
     $output=array(
-      'bib' => \Config\Config::$bibliotheken[$isil],
+      'bib' => \Config\BackendConfig::$bibliotheken[$isil],
       'best_name' => $auth->getName(),
       'best_id' => $auth->getID(),
       'isil' => $isil,
@@ -56,7 +56,7 @@ class Order{
       'titel' => $output_titles
     );
 
-    $path=\Config\Config::$export_dir.'/'.$isil.'/';
+    $path=\Config\BackendConfig::$export_dir.'/'.$isil.'/';
     $filename=time().'_'.$auth->getID().'.json';
 
     if(!is_dir($path)){

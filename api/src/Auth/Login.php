@@ -2,24 +2,49 @@
 
 namespace Auth;
 
-class Login{
+/**
+ * Wrapper for the Auth Class.
+ *
+ * Class Login
+ * @package Auth
+ */
+class Login {
 
-	public $login=false;
-	public $name='';
-	public $bib='';
-	public $isil='';
+    /**
+     * @var bool Indicates whether the user is logged in
+     */
+    public $login = false;
+    /**
+     * @var string Name of the user
+     */
+    public $name = '';
+    /**
+     * @var string Library of the user
+     */
+    public $bib = '';
+    /**
+     * @var string Users librarys ISIL
+     */
+    public $isil = '';
 
-	public function doLogin ($user, $pwd){
+    /**
+     * Initiates and performs the authentication
+     *
+     * @param $user Username
+     * @param $pwd Password
+     */
+    public function doLogin($user, $pwd) {
 
-		$a = new Auth();
-		$a -> auth_user($user,$pwd);
+        $a = new Auth();
+        $a->auth_user($user, $pwd);
 
-		if ($a -> logged_in()){
-			$this -> name = $a -> get_name();
-			$this -> bib = $a -> get_bib();
-			$this -> isil = $a -> get_isil();
-			$this -> login = true;
-		}
-	}
+        if ($a->isLoggedIn()) {
+            $this->name = $a->getName();
+            $this->bib = $a->getBib();
+            $this->isil = $a->getISIL();
+            $this->login = true;
+        }
+    }
 }
+
 ?>

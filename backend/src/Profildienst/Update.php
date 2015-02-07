@@ -8,7 +8,7 @@ class Update extends \Profildienst\Backend{
 	private $users;
 
 	public function __construct($quiet){
-		parent::__construct(\Config\Config::$update_dir, \Config\Config::$opt);
+		parent::__construct(\Config\BackendConfig::$update_dir, \Config\BackendConfig::$opt);
 		$this -> quiet = $quiet;
 
 		$this -> users = new \MongoCollection($this -> db, 'users');

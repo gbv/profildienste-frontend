@@ -49,7 +49,7 @@ $app -> post('/auth', function() use ($app){
     'exp' => time() + (24*60*60) // Tokens should be valid for a day
   );
 
-  $jwt = JWT::encode($token, \Config\Config::$token_key);
+  $jwt = JWT::encode($token, \Config\BackendConfig::$token_key);
 
 
   printResponse(array('token' => $jwt));
@@ -58,7 +58,7 @@ $app -> post('/auth', function() use ($app){
 $app -> get('/libraries', function() use ($app){
 
   $data = array();
-  foreach (\Config\Config::$bibliotheken as $isil => $bib) {
+  foreach (\Config\BackendConfig::$bibliotheken as $isil => $bib) {
     $data[] = array('isil' => $isil, 'name' => $bib['name']);
   }
 
@@ -236,12 +236,12 @@ $app -> group('/user', $authenticate($app, $auth), function() use ($app, $auth){
  */
 $app -> get('/settings',  $authenticate($app, $auth), function() use ($app, $auth){
   $sortby = array();
-  foreach (\Config\Config::$sortby_name as $val => $desc) {
+  foreach (\Config\BackendConfig::$sortby_name as $val => $desc) {
     $sortby[] = array('key' => $val, 'value' => $desc);
   }
 
   $order = array();
-  foreach (\Config\Config::$order_name as $val => $desc) {
+  foreach (\Config\BackendConfig::$order_name as $val => $desc) {
     $order[] = array('key' => $val, 'value' => $desc);
   }
 
@@ -293,7 +293,7 @@ $app->post('/opac',  $authenticate($app, $auth), function () use ($app, $auth){
 
   $isil = \Profildienst\DB::getUserData('isil', $auth);
 
-  $opac_url=\Config\Config::$bibliotheken[$isil]['opac'];
+  $opac_url=\Config\BackendConfig::$bibliotheken[$isil]['opac'];
 
   $url = preg_replace('/%SEARCH_TERM%/', urlencode($query), $opac_url);
   
@@ -425,7 +425,7 @@ function convertTitle(\Profildienst\Title $t){
     );
 
   if(!$t->hasCover()){
-    $r['cover_md'] = \Config\Config::$no_cover_path;
+    $r['cover_md'] = \Config\BackendConfig::$no_cover_path;
   }
 
   if($t->get('isbn13') !== NULL){

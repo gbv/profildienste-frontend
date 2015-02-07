@@ -6,7 +6,7 @@
 
 namespace Config;
 
-class Config {
+class BackendConfig {
 
 	public static $import_dir = './import/';
 	public static $import_ref_dir = './import_ref/';

@@ -7,7 +7,7 @@ class Import extends \Profildienst\Backend{
 	private $quiet;
 
 	public function __construct($quiet){
-		parent::__construct(\Config\Config::$import_dir, \Config\Config::$opt);
+		parent::__construct(\Config\BackendConfig::$import_dir, \Config\BackendConfig::$opt);
 		$this -> quiet = $quiet;
 	}
 

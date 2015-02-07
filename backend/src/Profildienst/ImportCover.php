@@ -11,10 +11,10 @@ class ImportCover extends \Profildienst\Backend{
 	private $titles;
 
 	public function __construct($quiet){
-		parent::__construct(NULL, \Config\Config::$opt);
+		parent::__construct(NULL, \Config\BackendConfig::$opt);
 		$this -> quiet = $quiet;
-		$this -> AWSAccessKeyId = \Config\Config::$aws_access;
-		$this -> SecretAccessKey = \Config\Config::$aws_secret;
+		$this -> AWSAccessKeyId = \Config\BackendConfig::$aws_access;
+		$this -> SecretAccessKey = \Config\BackendConfig::$aws_secret;
 	}
 
 	private function out($msg){

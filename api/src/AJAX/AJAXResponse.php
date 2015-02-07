@@ -19,7 +19,7 @@ abstract class AJAXResponse {
      * @return array
      */
     public function getResponse() {
-        return $this->response;
+        return $this->resp;
     }
 
     /**
