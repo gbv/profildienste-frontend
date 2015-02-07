@@ -2,28 +2,34 @@
 
 namespace Content;
 
-class Rejected implements Content{
+use Middleware\AuthToken;
+use Profildienst\DB;
 
-  private $titlelist;
-  private $total;
+/**
+ * Loads rejected titles.
+ *
+ * Class Rejected
+ * @package Content
+ */
+class Rejected extends Content {
 
-  public function __construct($num, $auth){
+    /**
+     * Loads rejected titles.
+     *
+     * @param $num int page number
+     * @param $auth AuthToken Token
+     */
+    public function __construct($num, AuthToken $auth) {
 
-    $rj=\Profildienst\DB::getUserData('rejected', $auth);
+        $rj = DB::getUserData('rejected', $auth);
 
-    $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $rj))));
+        $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $rj))));
 
-    $t = \Profildienst\DB::getTitleList($query, $num, $auth);
-    $this->titlelist = $t['titlelist'];
-    $this->total = $t['total'];
-  }
+        $t = DB::getTitleList($query, $num, $auth);
+        $this->titlelist = $t['titlelist'];
+        $this->total = $t['total'];
+    }
 
-  public function getTitles(){
-    return $this -> titlelist;
-  }
-
-  public function getTotalCount(){
-    return $this->total;
-  }
 }
+
 ?>

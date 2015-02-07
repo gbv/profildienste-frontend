@@ -2,34 +2,39 @@
 
 namespace Content;
 
-class Cart implements Content{
+use Middleware\AuthToken;
+use Profildienst\DB;
 
-  private $titlelist;
-  private $total;
+/**
+ * Loads titles from the cart
+ *
+ * Class Cart
+ * @package Content
+ */
+class Cart extends Content {
 
-  public function __construct($num, $auth){
 
-    $cart=\Profildienst\DB::getUserData('cart', $auth);
-    $ct=array();
+    /**
+     * Loads titles from the cart
+     *
+     * @param $num int Page number
+     * @param $auth AuthToken Token
+     */
+    public function __construct($num, AuthToken $auth) {
 
-    foreach ($cart as $c){
-      array_push($ct, $c['id']);
+        $cart = \Profildienst\DB::getUserData('cart', $auth);
+        $ct = array();
+
+        foreach ($cart as $c) {
+            array_push($ct, $c['id']);
+        }
+
+        $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $ct))));
+
+        $t = DB::getTitleList($query, $num, $auth);
+        $this->titlelist = $t['titlelist'];
+        $this->total = $t['total'];
     }
-
-    $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $ct))));
-
-    $t = \Profildienst\DB::getTitleList($query, $num, $auth);
-    $this->titlelist = $t['titlelist'];
-    $this->total = $t['total'];
-  }
-
-  public function getTitles(){
-    return $this->titlelist;
-  }
-
-  public function getTotalCount(){
-    return $this->total;
-  }
 }
 
 

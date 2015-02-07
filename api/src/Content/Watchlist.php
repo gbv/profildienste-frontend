@@ -2,36 +2,41 @@
 
 namespace Content;
 
-class Watchlist implements Content{
+use Middleware\AuthToken;
+use Profildienst\DB;
 
-  private $titlelist;
-  private $total;
+/**
+ * Loads titles in a watchlist.
+ *
+ * Class Watchlist
+ * @package Content
+ */
+class Watchlist extends Content {
 
-  public function __construct($num, $id, $auth){
+    /**
+     * Loads titles in a watchlist.
+     *
+     * @param $num int page number
+     * @param $id int watchlist ID
+     * @param AuthToken $auth Token
+     */
+    public function __construct($num, $id, AuthToken $auth) {
 
-    $data = \Profildienst\DB::get(array('_id' => $auth->getID()),'users', array() ,true);
+        $data = DB::get(array('_id' => $auth->getID()), 'users', array(), true);
 
-    $watchlists=$data['watchlist'];
+        $watchlists = $data['watchlist'];
 
-    if(isset($watchlists[$id])){
-      
-      $list=$watchlists[$id]['list'];
-      $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $list))));
-      $t = \Profildienst\DB::getTitleList($query, $num, $auth);
-      $this->titlelist = $t['titlelist'];
-      $this->total = $t['total'];
+        if (isset($watchlists[$id])) {
 
+            $list = $watchlists[$id]['list'];
+            $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $list))));
+            $t = DB::getTitleList($query, $num, $auth);
+            $this->titlelist = $t['titlelist'];
+            $this->total = $t['total'];
+
+        }
     }
-  }
 
-  public function getTitles(){
-    return $this -> titlelist;
-  }
-
-  public function getTotalCount(){
-    return $this->total;
-  }
 }
-
 
 ?>

@@ -3,6 +3,7 @@
 use Auth\Login;
 use Config\Config;
 use Middleware\AuthToken;
+use Profildienst\Title;
 use Profildienst\TitleList;
 
 require 'vendor/autoload.php';
@@ -20,7 +21,10 @@ $authenticate = function (\Slim\Slim $app, AuthToken $auth) {
   };
 };
 
-$app -> post('/auth', function() use ($app){
+$app -> post('/auth', /**
+ * @throws \Slim\Exception\Stop
+ */
+    function() use ($app){
   $user = $app->request()->post('user');
   $pass = $app->request()->post('pass');
 
@@ -374,6 +378,12 @@ $app->notFound(function () use ($app) {
   $app->halt(404);
 });
 
+/**
+ * Validates a number, i.e. if the number is natural.
+ *
+ * @param $num string potential number
+ * @return int value of the number if the number is natural or 0 otherwise
+ */
 function validateNum($num){
   if ($num != '' && $num > 0 && is_numeric($num)){
     return $num;
@@ -382,7 +392,13 @@ function validateNum($num){
   }
 }
 
-function convertTitle(\Profildienst\Title $t){
+/**
+ * Extracts the relevant information from a title to display it.
+ *
+ * @param Title $t Title
+ * @return array Array containing relevant information
+ */
+function convertTitle(Title $t){
   $r = array(
     'id' => $t->getDirectly('_id'),
 
@@ -443,6 +459,12 @@ function convertTitle(\Profildienst\Title $t){
   return $r;
 }
 
+/**
+ * Prints a response consisting of titles.
+ *
+ * @param $titles TitleList|null
+ * @param $total int total amount of titles
+ */
 function printTitles($titles, $total){
   $titles_out = array();
   if(!is_null($titles)){
@@ -454,6 +476,11 @@ function printTitles($titles, $total){
   printResponse(array('more' => ($titles !== NULL), 'total' => $total,'data' => $titles_out));
 }
 
+/**
+ * @param $resp mixed response
+ * @param bool $error If true the response will be marked as an error
+ * @param string $message error message
+ */
 function printResponse($resp, $error = false, $message = ''){
   global $app;
 
