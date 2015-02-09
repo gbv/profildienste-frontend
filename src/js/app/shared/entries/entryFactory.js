@@ -1,5 +1,5 @@
 // Load the entries
-pdApp.factory('Entries', function($http, $modal) {
+pdApp.factory('Entries', ['$http', '$modal', function($http, $modal) {
 
   // Entry object
   var Entries = function(site, id) {
@@ -82,4 +82,4 @@ pdApp.factory('Entries', function($http, $modal) {
   }
 
   return Entries;
-});
+}]);

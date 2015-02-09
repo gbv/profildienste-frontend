@@ -1,4 +1,4 @@
-pdApp.service('WatchlistService', function($http, $rootScope, $q, LoginService) {
+pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', function($http, $rootScope, $q, LoginService) {
 
   var defWatchlists = $q.defer();
 
@@ -165,4 +165,4 @@ pdApp.service('WatchlistService', function($http, $rootScope, $q, LoginService) 
     return def.promise;
   };
 
-});
+}]);

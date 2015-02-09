@@ -1,4 +1,4 @@
-pdApp.controller('CartController', function($scope, Entries, ConfigService, $location) {
+pdApp.controller('CartController', ['$scope', 'Entries', 'ConfigService', '$location', function($scope, Entries, ConfigService, $location) {
 
   $scope.entries = new Entries('cart');
 
@@ -20,4 +20,4 @@ pdApp.controller('CartController', function($scope, Entries, ConfigService, $loc
     $location.path('order');
   }
 
-});
+}]);

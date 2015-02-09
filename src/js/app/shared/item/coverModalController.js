@@ -1,4 +1,4 @@
-pdApp.controller('CoverModalCtrl', function ($scope, $modalInstance, cover) {
+pdApp.controller('CoverModalCtrl', ['$scope', '$modalInstance', 'cover', function ($scope, $modalInstance, cover) {
 
   $scope.cover = cover;
 
@@ -6,4 +6,4 @@ pdApp.controller('CoverModalCtrl', function ($scope, $modalInstance, cover) {
     $modalInstance.close();
   };
 
-});
+}]);

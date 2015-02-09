@@ -1,4 +1,4 @@
-pdApp.controller('LoginController', function($scope, LibraryService, $routeParams, $location, LoginService) {
+pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams', '$location', 'LoginService', function($scope, LibraryService, $routeParams, $location, LoginService) {
 
   LibraryService.getLibraries().then(function(data){
     for(var i=0; i < data.libs.length; i++){
@@ -46,4 +46,4 @@ pdApp.controller('LoginController', function($scope, LibraryService, $routeParam
     });
   }
   
-});
+}]);

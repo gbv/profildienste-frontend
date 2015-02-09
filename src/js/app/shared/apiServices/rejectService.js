@@ -1,4 +1,4 @@
-pdApp.service('RejectService', function($http, $rootScope, $q) {
+pdApp.service('RejectService', ['$http', '$rootScope', '$q', function($http, $rootScope, $q) {
 
   this.addRejected = function(item){
     return this.addMultRejected([item]);    
@@ -33,7 +33,7 @@ pdApp.service('RejectService', function($http, $rootScope, $q) {
     }.bind(this));
 
     return def.promise;
-  }
+  };
 
   this.removeRejected = function(item){
 
@@ -55,7 +55,7 @@ pdApp.service('RejectService', function($http, $rootScope, $q) {
     }.bind(this));
 
     return def.promise;
-  }
+  };
 
 
-});
+}]);

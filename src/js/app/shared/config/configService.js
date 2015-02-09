@@ -1,4 +1,4 @@
-pdApp.service('ConfigService', function($q){
+pdApp.service('ConfigService', ['$q', function($q){
 
   var config;
   var entries;
@@ -45,4 +45,4 @@ pdApp.service('ConfigService', function($q){
     });
   };
 
-});
+}]);

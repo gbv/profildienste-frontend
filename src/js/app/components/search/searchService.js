@@ -1,4 +1,4 @@
-pdApp.service('SearchService', function($rootScope){
+pdApp.service('SearchService', ['$rootScope', function($rootScope){
 
   var searchterm;
 
@@ -11,4 +11,4 @@ pdApp.service('SearchService', function($rootScope){
     return searchterm;
   };
 
-});
+}]);

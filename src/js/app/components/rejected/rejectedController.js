@@ -1,4 +1,4 @@
-pdApp.controller('RejectedController', function($scope, Entries, ConfigService, $http, $location) {
+pdApp.controller('RejectedController', ['$scope', 'Entries', 'ConfigService', '$http', '$location', function($scope, Entries, ConfigService, $http, $location) {
 
   $scope.entries = new Entries('rejected');
   
@@ -30,4 +30,4 @@ pdApp.controller('RejectedController', function($scope, Entries, ConfigService, 
     }.bind(this));
   }
 
-});
+}]);

@@ -1,4 +1,4 @@
-pdApp.controller('OrderController', function($scope, OrderService, $location, $http, $rootScope) {
+pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$http', '$rootScope', function($scope, OrderService, $location, $http, $rootScope) {
 
   $scope.orderComplete = false;
 
@@ -33,4 +33,4 @@ pdApp.controller('OrderController', function($scope, OrderService, $location, $h
     $location.path('main');
   };
 
-});
+}]);

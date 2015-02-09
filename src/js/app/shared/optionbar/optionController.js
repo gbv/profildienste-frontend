@@ -1,4 +1,4 @@
-pdApp.controller('OptionController', function($scope, SettingsService, ConfigService, $q, SelectService) {
+pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigService', '$q', 'SelectService', function($scope, SettingsService, ConfigService, $q, SelectService) {
 
   this.selectAll = function(){
     if($scope.entries === undefined){
@@ -92,4 +92,4 @@ pdApp.controller('OptionController', function($scope, SettingsService, ConfigSer
     
   };
 
-});
+}]);

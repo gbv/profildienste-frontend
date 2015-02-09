@@ -1,4 +1,4 @@
-pdApp.controller('ManageController', function($scope, WatchlistService, $rootScope) {
+pdApp.controller('ManageController', ['$scope', 'WatchlistService', '$rootScope', function($scope, WatchlistService, $rootScope) {
 
   WatchlistService.getWatchlists().then(function(data){
     $scope.watchlists = data.watchlists;
@@ -39,4 +39,4 @@ pdApp.controller('ManageController', function($scope, WatchlistService, $rootSco
     axis: 'y'
   };
 
-});
+}]);

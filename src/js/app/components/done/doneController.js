@@ -1,4 +1,4 @@
-pdApp.controller('DoneController', function($scope, Entries, ConfigService) {
+pdApp.controller('DoneController', ['$scope', 'Entries', 'ConfigService', function($scope, Entries, ConfigService) {
 
   $scope.entries = new Entries('done');
   
@@ -12,4 +12,4 @@ pdApp.controller('DoneController', function($scope, Entries, ConfigService) {
   ConfigService.setConfig(config);
   ConfigService.setEntries($scope.entries);
 
-});
+}]);

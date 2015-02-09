@@ -1,4 +1,4 @@
-pdApp.controller('ItemController', function($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout){
+pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartService', '$modal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', function($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout){
 
   $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
@@ -206,4 +206,4 @@ pdApp.controller('ItemController', function($scope, $sce, WatchlistService, Cart
   this.showWatchlistRemBtn = function(){
     return !$scope.item.status.done && !$scope.item.status.rejected && $scope.item.status.watchlist.watched;
   };
-});
+}]);

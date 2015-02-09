@@ -1,4 +1,4 @@
-pdApp.controller('WatchlistController', function($scope, Entries, ConfigService, $routeParams, WatchlistService) {
+pdApp.controller('WatchlistController', ['$scope', 'Entries', 'ConfigService', '$routeParams', 'WatchlistService', function($scope, Entries, ConfigService, $routeParams, WatchlistService) {
   
   $scope.entries = new Entries('watchlist', $routeParams.id);
 
@@ -23,4 +23,4 @@ pdApp.controller('WatchlistController', function($scope, Entries, ConfigService,
   ConfigService.setConfig(config);
   ConfigService.setEntries($scope.entries);
 
-});
+}]);

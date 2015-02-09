@@ -1,4 +1,4 @@
-pdApp.controller('SearchController', function($scope, SearchService, $rootScope, Entries, ConfigService) {
+pdApp.controller('SearchController', ['$scope', 'SearchService', '$rootScope', 'Entries', 'ConfigService', function($scope, SearchService, $rootScope, Entries, ConfigService) {
 
   this.doSearch = function (){
 
@@ -47,4 +47,4 @@ pdApp.controller('SearchController', function($scope, SearchService, $rootScope,
     $rootScope.$broadcast('searchViewUnload');
   });
 
-});
+}]);

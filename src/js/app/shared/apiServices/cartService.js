@@ -1,4 +1,4 @@
-pdApp.service('CartService', function($http, $rootScope, $q, LoginService) {
+pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', function($http, $rootScope, $q, LoginService) {
 
   var defCart = $q.defer();
 
@@ -95,4 +95,4 @@ pdApp.service('CartService', function($http, $rootScope, $q, LoginService) {
     return def.promise;
   };
 
-});
+}]);

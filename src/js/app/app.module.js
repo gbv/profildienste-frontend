@@ -8,7 +8,7 @@ pdApp.filter('notEmpty', function(){
 
 pdApp.constant('version', '1.0');
 
-pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance, $location, $rootScope) {
+pdApp.controller('ErrorModalCtrl', ['$scope', '$modalInstance', '$location', '$rootScope', function ($scope, $modalInstance, $location, $rootScope) {
 
   $scope.redirect = function () {
   	$location.path('/');
@@ -16,9 +16,9 @@ pdApp.controller('ErrorModalCtrl', function ($scope, $modalInstance, $location, 
   	$rootScope.token = undefined;
   };
 
-});
+}]);
 
-pdApp.factory('authInterceptor', function ($rootScope, $q, $window, LogoutService) {
+pdApp.factory('authInterceptor', ['$rootScope', '$q', '$window', 'LogoutService', function ($rootScope, $q, $window, LogoutService) {
   return {
     request: function (config) {
       config.headers = config.headers || {};
@@ -37,12 +37,11 @@ pdApp.factory('authInterceptor', function ($rootScope, $q, $window, LogoutServic
       return $q.reject(rejection);
     }
   };
-});
+}]);
 
-pdApp.config(function ($httpProvider) {
+pdApp.config(['$httpProvider', function ($httpProvider) {
   $httpProvider.interceptors.push('authInterceptor');
-});
-
+}]);
 
 // Overwrite the Angular Bootstrap popover template to allow HTML
 // (see http://stackoverflow.com/a/21979258)

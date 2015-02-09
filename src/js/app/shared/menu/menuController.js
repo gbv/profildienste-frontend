@@ -1,4 +1,4 @@
-pdApp.controller('MenuController', function($scope, $rootScope, WatchlistService, CartService, UserService, $modal, SelectService, LoginService, SearchService, $location){
+pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 'CartService', 'UserService', '$modal', 'SelectService', 'LoginService', 'SearchService', '$location', function($scope, $rootScope, WatchlistService, CartService, UserService, $modal, SelectService, LoginService, SearchService, $location){
 
 
   WatchlistService.getWatchlists().then(function(data){
@@ -93,4 +93,4 @@ pdApp.controller('MenuController', function($scope, $rootScope, WatchlistService
     $scope.searchterm = '';
   });
 
-});
+}]);

@@ -1,4 +1,4 @@
-pdApp.service('LibraryService', function($http, $q) {
+pdApp.service('LibraryService', ['$http', '$q', function($http, $q) {
 
   var defLibs = $q.defer();
 
@@ -16,4 +16,4 @@ pdApp.service('LibraryService', function($http, $q) {
     return defLibs.promise;
   };
 
-});
+}]);

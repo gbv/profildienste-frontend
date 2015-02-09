@@ -1,4 +1,4 @@
-pdApp.controller('MainController', function($scope, Entries, ConfigService) {
+pdApp.controller('MainController', ['$scope', 'Entries', 'ConfigService', function($scope, Entries, ConfigService) {
 
   $scope.entries = new Entries('overview');
   
@@ -12,4 +12,4 @@ pdApp.controller('MainController', function($scope, Entries, ConfigService) {
   ConfigService.setConfig(config);
   ConfigService.setEntries($scope.entries);
 
-});
+}]);

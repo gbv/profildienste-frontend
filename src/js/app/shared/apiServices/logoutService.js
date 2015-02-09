@@ -1,4 +1,4 @@
-pdApp.service('LogoutService', function($window, $rootScope, $location) {
+pdApp.service('LogoutService', ['$window', '$rootScope', function($window, $rootScope) {
 
   var hasInfo = false;
   var info;
@@ -23,4 +23,4 @@ pdApp.service('LogoutService', function($window, $rootScope, $location) {
   this.getInfo = function(){
     return info;
   }
-});
+}]);

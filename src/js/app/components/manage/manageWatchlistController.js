@@ -1,4 +1,4 @@
-pdApp.controller('ManageWatchlistController', function($scope, WatchlistService, $location, $rootScope) {
+pdApp.controller('ManageWatchlistController', ['$scope', 'WatchlistService', '$location', '$rootScope', function($scope, WatchlistService, $location, $rootScope) {
 
   WatchlistService.getWatchlists().then(function(data){
     $scope.watchlists = data.watchlists;
@@ -53,4 +53,4 @@ pdApp.controller('ManageWatchlistController', function($scope, WatchlistService,
     $location.path('watchlist/'+$scope.watchlist.id);
   }
 
-});
+}]);

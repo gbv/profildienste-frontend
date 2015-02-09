@@ -1,4 +1,4 @@
-pdApp.service('UserService', function($http, $q, LoginService) {
+pdApp.service('UserService', ['$http', '$q', 'LoginService', function($http, $q, LoginService) {
 
   var defUser = $q.defer();
 
@@ -27,4 +27,4 @@ pdApp.service('UserService', function($http, $q, LoginService) {
     return defUser.promise;
   };
 
-});
+}]);

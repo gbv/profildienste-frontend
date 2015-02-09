@@ -2,7 +2,7 @@ pdApp.config(['$routeProvider', '$locationProvider',
   function($routeProvider, $locationProvider) {
 
     // Authentication function
-    var checkAuth = function($location, $q, $window, LogoutService) { 
+    var checkAuth = function($location, $q, $window, LogoutService) {
       var deferred = $q.defer();
       if(!$window.sessionStorage.token) {
         deferred.reject()
@@ -13,13 +13,13 @@ pdApp.config(['$routeProvider', '$locationProvider',
       }
       return deferred.promise;
     };
+    checkAuth.$inject = ['$location', '$q', '$window', 'LogoutService'];
 
     // Routes
-
     $routeProvider.
       when('/main', {
         templateUrl: '/dist/html/mainView.html',
-        resolve: {checkAuth: checkAuth}
+        requireLogin: {checkAuth: checkAuth}
       }).
       when('/cart', {
         templateUrl: '/dist/html/cartView.html',

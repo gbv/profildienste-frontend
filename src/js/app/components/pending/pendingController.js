@@ -1,4 +1,4 @@
-pdApp.controller('PendingController', function($scope, Entries, ConfigService) {
+pdApp.controller('PendingController', ['$scope', 'Entries', 'ConfigService', function($scope, Entries, ConfigService) {
 
   $scope.entries = new Entries('pending');
   
@@ -12,4 +12,4 @@ pdApp.controller('PendingController', function($scope, Entries, ConfigService) {
   ConfigService.setConfig(config);
   ConfigService.setEntries($scope.entries);
 
-});
+}]);

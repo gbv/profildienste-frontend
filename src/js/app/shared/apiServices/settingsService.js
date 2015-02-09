@@ -1,4 +1,4 @@
-pdApp.service('SettingsService', function($http, $rootScope, $q, LoginService) {
+pdApp.service('SettingsService', ['$http', '$rootScope', '$q', 'LoginService', function($http, $rootScope, $q, LoginService) {
 
   var defSort = $q.defer();
   var defOrder = $q.defer();
@@ -106,4 +106,4 @@ pdApp.service('SettingsService', function($http, $rootScope, $q, LoginService) {
     return def.promise;
   }
 
-});
+}]);

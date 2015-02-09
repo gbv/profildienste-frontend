@@ -1,4 +1,4 @@
-pdApp.controller('LandingController', function($scope, LibraryService, $location, LogoutService, $window) {
+pdApp.controller('LandingController', ['$scope', 'LibraryService', '$location', 'LogoutService', '$window', function($scope, LibraryService, $location, LogoutService, $window) {
 
   if($window.sessionStorage.token){
     $location.path('/main');
@@ -18,4 +18,4 @@ pdApp.controller('LandingController', function($scope, LibraryService, $location
   $scope.hasInfo = LogoutService.hasInfo();
   $scope.info = LogoutService.getInfo();
 
-});
+}]);

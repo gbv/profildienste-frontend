@@ -1,4 +1,4 @@
-pdApp.service('SelectService', function($rootScope, RejectService, ConfigService){
+pdApp.service('SelectService', ['$rootScope', 'RejectService', 'ConfigService', function($rootScope, RejectService, ConfigService){
   var selected = [];
 
   ConfigService.getConfig().then(function(data){
@@ -11,11 +11,11 @@ pdApp.service('SelectService', function($rootScope, RejectService, ConfigService
 
   this.getSelected = function(){
     return selected;
-  }
+  };
 
   this.selectAll = function(){
     $rootScope.$broadcast('selectAll');
-  }
+  };
 
   this.deselectAll = function(){
     var i;
@@ -28,7 +28,7 @@ pdApp.service('SelectService', function($rootScope, RejectService, ConfigService
     if(i > 0){
       $rootScope.$broadcast('itemDeselected');
     }
-  }
+  };
 
   this.select = function(item){
     if(selected.indexOf(item) >= 0){
@@ -69,4 +69,4 @@ pdApp.service('SelectService', function($rootScope, RejectService, ConfigService
     });
   }.bind(this);
 
-});
+}]);

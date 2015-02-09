@@ -1,4 +1,4 @@
-pdApp.service('LoginService', function($http, $window, $q, $rootScope) {
+pdApp.service('LoginService', ['$http', '$window', '$q', '$rootScope', function($http, $window, $q, $rootScope) {
 
   var defLogin = $q.defer();
 
@@ -58,4 +58,4 @@ pdApp.service('LoginService', function($http, $window, $q, $rootScope) {
     $window.sessionStorage.removeItem('token');
     $rootScope.$broadcast('userLogout');
   };
-});
+}]);

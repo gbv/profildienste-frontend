@@ -1,4 +1,4 @@
-pdApp.service('InfoService', function($http, $q) {
+pdApp.service('InfoService', ['$http', '$q', function($http, $q) {
 
   this.getAddInf = function(item){
 
@@ -47,4 +47,4 @@ pdApp.service('InfoService', function($http, $q) {
     });
   }
 
-});
+}]);
