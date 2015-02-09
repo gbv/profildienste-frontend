@@ -26,7 +26,7 @@ class Order {
      */
     public function __construct(AuthToken $auth) {
 
-        $this->resp = array('success' => false, 'type' => NULL, 'content' => NULL, 'id' => NULL, 'errormsg' => '');
+        $this->resp = array('success' => true, 'price' => NULL, 'cart' => NULL, 'watchlist' => NULL, 'errormsg' => '');
 
         $cart = DB::getUserData('cart', $auth);
 
@@ -45,9 +45,9 @@ class Order {
 
         $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $ct))));
 
-        $t = DB::getTitleList($query, NULL, false);
+        $t = DB::getTitleList($query, NULL, $auth);
 
-        $titles = $t['titlelist']->getResult();
+        $titles = $t['titlelist']->getTitles();
 
         $output_titles = array();
         foreach ($titles as $tit) {
@@ -78,31 +78,32 @@ class Order {
         $filename = time() . '_' . $auth->getID() . '.json';
 
         if (!is_dir($path)) {
-            mkdir($path);
+            try {
+                mkdir($path);
+            } catch (\Exception $e) {
+                $this->resp['success'] = false;
+                $this->resp['errormsg'] = 'Verzeichnis konnte nicht angelegt werden.';
+                return;
+            }
+
         }
 
-        $success = true;
+        $h = NULL;
+        try {
+            $h = fopen($path . $filename, 'w+');
+        } catch (\Exception $e) {
+            $this->resp['success'] = false;
+            $this->resp['errormsg'] = 'Datei konnte nicht angelegt werden.';
+            return;
+        }
 
-        do {
+        if($this->resp['success'])
+        // Hier JSON_PRETTY_PRINT falls nötig
+        if ( fwrite($h, json_encode($output)) === NULL) {
+            $this->resp['success'] = false;
+        }
 
-            $h = fopen($path . $filename, 'w');
-
-            if ($h === NULL) {
-                $success = false;
-                continue;
-            }
-
-            // Hier JSON_PRETTY_PRINT falls nötig
-            if (fwrite($h, json_encode($output)) === NULL) {
-                $success = false;
-                continue;
-            }
-
-            fclose($h);
-
-        } while (false);
-
-        if ($success) {
+        if ($this->resp['success']) {
 
             $p = DB::getUserData('price', $auth);
 
@@ -134,10 +135,29 @@ class Order {
 
             DB::upd(array('_id' => $auth->getID()), array('$set' => array('watchlist' => $watchlists)), 'users');
 
+            //include new cart, new price and new watchlist status in the response
+            $this->resp['cart'] = 0;
+            $this->resp['price'] = $p;
+
+            // get watchlists
+            $d = DB::get(array('_id' => $auth->getID()),'users',array(), true);
+
+            $wl_order = DB::getUserData('wl_order', $auth);
+
+            $wl = array();
+            foreach($wl_order as $index){
+                $watchlists[$index]['count'] = count($watchlists[$index]['list']);
+                $wl[] = array('id' => $watchlists[$index]['id'], 'name' => $watchlists[$index]['name'], 'count' => count($watchlists[$index]['list']));
+            }
+
+            $data = array(
+                'watchlists' => $wl,
+                'def_wl' => $d['wl_default']
+            );
+
+            $this->resp['watchlists'] = $data;
 
         }
-
-        $this->success = $success;
     }
 
     /**

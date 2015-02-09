@@ -1,4 +1,4 @@
-pdApp.controller('OrderController', function($scope, OrderService, $location) {
+pdApp.controller('OrderController', function($scope, OrderService, $location, $http, $rootScope) {
 
   $scope.orderComplete = false;
 
@@ -10,15 +10,27 @@ pdApp.controller('OrderController', function($scope, OrderService, $location) {
   });
   
   this.order = function(){
-    alert('order');
-    $scope.orderComplete = true;
+    $http({
+      method: 'POST',
+      url: '/api/order',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function(json){
+      if(!json.success){
+        alert('Fehler: '+json.errormsg);
+      }else{
+        $scope.orderComplete = true;
+        $rootScope.$broadcast('cartChange', json.cart, json.price);
+        $rootScope.$broadcast('watchlistChange', json.watchlists.watchlists);
+      }
+    });
   };
 
   this.cancel = function(){
     $location.path('cart');
-  }
+  };
 
   this.finish = function(){
-    $location.path('/main');
-  }
+    $location.path('main');
+  };
+
 });

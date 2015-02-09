@@ -32,6 +32,7 @@ class Orderlist {
             throw new \Exception('Keine Titel im Warenkorb.');
         }
 
+
         $ct = array();
         $ci = array();
 
