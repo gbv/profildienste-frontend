@@ -36,7 +36,6 @@ pdApp.service('InfoService', ['$http', '$q', function($http, $q) {
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(json){
-      console.log(json);
       if(!json.success){
         alert('Es wurde kein OPAC Katalog für Ihre Bibliothek hinterlegt.');
       }else{
