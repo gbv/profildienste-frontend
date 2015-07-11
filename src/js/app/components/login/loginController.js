@@ -22,7 +22,7 @@ pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams',
   this.submitLogin = function(){
 
 
-    if($scope.user === undefined || !$scope.user.match(/^\d{4}$/)){
+    if($scope.user === undefined || !$scope.user.match(/^\d+$/)){
       $scope.userValid = false;
     }else{
       $scope.userValid = true;
