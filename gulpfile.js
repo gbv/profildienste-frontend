@@ -7,6 +7,7 @@ var gulp = require('gulp'),
     concat = require('gulp-concat'),
     path = require('path'),
     notify = require('gulp-notify'),
+    copy = require('gulp-copy'),
     del = require('del');
 
 var vendor_css = [
@@ -24,8 +25,7 @@ gulp.task('vendorcss', function() {
 });
 
 gulp.task('fa-font', function() {
-  return gulp.src('bower_components/fontawesome/fonts/**.*') 
-    .pipe(gulp.dest('dist/fonts')); 
+  return gulp.src('bower_components/fontawesome/fonts/**.*') .pipe(gulp.dest('dist/fonts')); 
 });
 
 gulp.task('less', function() {
@@ -43,11 +43,23 @@ gulp.task('less', function() {
 });
 
 var vendor = [
-  'bower_components/angular/angular.min.js',
-  'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
   'bower_components/jquery/dist/jquery.min.js',
-  'bower_components/jquery-ui/jquery-ui.min.js',
+
+  'bower_components/jquery-ui/ui/minified/core.min.js',
+  'bower_components/jquery-ui/ui/minified/widget.min.js',
+  'bower_components/jquery-ui/ui/minified/mouse.min.js',
+  'bower_components/jquery-ui/ui/minified/sortable.min.js',
+
+  'bower_components/angular/angular.min.js',
+
+  'bower_components/angular-ui-sortable/sortable.min.js',
+
+  'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+
+  'bower_components/angular-route/angular-route.min.js',
+
   'bower_components/bootstrap/dist/js/bootstrap.min.js',
+
   'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
 ];
 
@@ -59,6 +71,13 @@ gulp.task('js', function() {
     .pipe(uglify())
     .pipe(gulp.dest('dist/js/'))
     .pipe(notify({ message: 'JavaScript compiled!'}));
+});
+
+gulp.task('partials', function() {
+
+  return gulp.src('src/js/**/*.html')
+    .pipe(copy('dist/html', {prefix: 1000}))
+    .pipe(notify({ message: 'Partials copied'}));
 });
 
 gulp.task('vendorjs', function() {
@@ -76,7 +95,7 @@ gulp.task('clean', function(callback) {
 });
 
 gulp.task('build', ['clean'] ,function(){
-  gulp.start('less', 'js', 'vendorjs' ,'vendorcss', 'fa-font');
+  gulp.start('less', 'js', 'partials', 'vendorjs' ,'vendorcss', 'fa-font');
 });
 
 gulp.task('default', ['clean'], function() {
@@ -85,4 +104,6 @@ gulp.task('default', ['clean'], function() {
   gulp.watch('src/less/**/*.less', ['less']);
 
   gulp.watch('src/js/**/*.js', ['js']);
+
+  gulp.watch('src/js/**/*.html', ['partials']);
 });

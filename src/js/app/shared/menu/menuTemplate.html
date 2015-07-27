@@ -1,0 +1,101 @@
+<div class="navbar navbar-default navbar-fixed-top" ng-controller="MenuController as MenuCtrl">
+  <div ng-hide="loggedIn">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">Profildienst</a>
+    </div>
+    <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="http://www.gbv.de/wikis/cls/Profildienste" class="btn btn-link help-btn"><i class="fa fa-question-circle"></i> Hilfe</a></li>
+        </ul>
+    </div>
+  </div>
+  <div class="container" ng-show="loggedIn">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand pd-brand" href="/main">Profildienst</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav shop-options" ng-class="{'navbar-right': !showSelMenu, 'navbar-left': showSelMenu}">
+
+        <p class="navbar-text" ng-show="showSelMenu">
+          Elemente in der aktuellen Auswahl: <span class="badge">{{selNumber}}</span>
+        </p>
+        
+        <li ng-show="showSelMenu"><a href="" ng-click="MenuCtrl.deselectAll()"><i class="fa fa-bolt fa-lg"></i> Auswahl aufheben</a></li>
+        <li ng-show="showSelMenu"><a href="" ng-click="MenuCtrl.selectAll()"><i class="fa fa-asterisk fa-lg"></i> Alles auswählen</a></li>
+        <li ng-show="showSelMenu"><a href="" ng-click="MenuCtrl.rejectAll()"><i class="fa fa-minus-circle fa-lg"></i> Auswahl ablehnen</a></li>
+
+        <li>
+          <a href="/cart" 
+            ng-hide="showSelMenu"
+            popover-placement="bottom" 
+            popover="
+              <span class='text-muted'>Schätzpreis:</span><br>
+              <span id='estprice'>{{price.price | currency:'EUR '}}</span><br><br>
+              <span class='text-muted'>Details:</span><br>
+              <span id='price_known'>{{price.known}}</span> bekannt<br>
+              <span id='price_est'>{{price.est}}</span> geschätzt
+            "
+            popover-trigger="mouseenter"
+            popover-title="Preisangaben"
+          >
+            <i class="fa fa-shopping-cart fa-lg"></i> Warenkorb <span class="badge">{{cart}}</span>
+          </a>
+        </li>
+        <li class="dropdown" ng-hide="showSelMenu">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-star fa-lg"></i> Merklisten <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li ng-repeat="wl in watchlists">
+              <a href="/watchlist/{{wl.id}}">{{wl.name}} <span class="badge">{{wl.count}}</span></a>
+            </li>
+            <li class="divider"></li>
+            <li><a href="/manage">Merklisten verwalten</a></li>
+          </ul>
+        </li>
+        <li ng-show="itemsSelected">
+          <a href="" ng-click="MenuCtrl.toggleSelMenu()">
+            <i class="fa fa-shopping-cart fa-exchange"></i>
+            <span ng-hide="showSelMenu">Auswahlmenü</span>
+            <span ng-show="showSelMenu">Hauptmenü</span>
+          </a>
+        </li>
+        <li class="dropdown sep-right">
+          <a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-lg"></i> <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header"> {{name}}</li>
+            <li><a href="/cart">Warenkorb</a></li>
+            <li><a href="/pending">In Bearbeitung</a></li>
+            <li><a href="/done">Bearbeitet</a></li>
+            <li><a href="/rejected">Abgelehnt</a></li>
+            <li class="divider"></li>
+            <li><a href="/logout">Abmelden</a></li>
+          </ul>
+        </li>
+      </ul>
+
+      <form class="navbar-form" ng-hide="showSelMenu" novalidate ng-submit="MenuCtrl.search()">
+        <div class="form-group search-form-group">
+          <div class="input-group search-inp-group">
+            <span class="input-group-addon search-lbl" ng-click="MenuCtrl.openHelp()"><i class="fa fa-search"></i></span>
+            <input type="text" class="form-control" ng-model="searchterm" placeholder="Suche (Für Hilfe auf das Icon links klicken)" autofocus>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- price -->
+  <div id='price-inf'>
+    
+    
+  </div>
+  <!-- /price -->
+</div>
