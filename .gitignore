@@ -1,5 +1,3 @@
-bower_components/
-node_modules/
-export/
-npm-debug.log
-dist/
+/*
+/*/
+!/web/
