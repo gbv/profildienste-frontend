@@ -86,7 +86,7 @@ class Order {
 
           //upload
           foreach ($reihen as $reihe => $dir){
-            $rdir = Config::$remote['basedir'].'/'.$iln.$reihe.'/return/';
+            $rdir = Config::$remote['basedir'].$iln.$reihe.'/return/';
             $host = Config::$remote['user'].'@'.Config::$remote['host'].':'.$rdir;
 
             exec('rsync -azPi '.$dir.' '.$host.' 2>&1', $output, $ret);
