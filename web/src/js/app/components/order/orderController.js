@@ -8,7 +8,7 @@ pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$ht
     alert(reason);
     $location.path('cart');
   });
-  
+
   this.order = function(){
     $http({
       method: 'POST',
@@ -20,7 +20,6 @@ pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$ht
       }else{
         $scope.orderComplete = true;
         $rootScope.$broadcast('cartChange', json.cart, json.price);
-        $rootScope.$broadcast('watchlistChange', json.watchlists.watchlists);
       }
     });
   };

@@ -1,5 +1,9 @@
 var pdApp = angular.module('Profildienst', ['infinite-scroll', 'ui.bootstrap', 'ngRoute', 'ui.sortable']);
 
+pdApp.config(['$compileProvider', function ($compileProvider) {
+  $compileProvider.debugInfoEnabled(false);
+}]);
+
 pdApp.filter('notEmpty', function(){
   return function(val){
     return val !== undefined && val !== null;
