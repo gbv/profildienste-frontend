@@ -1,4 +1,4 @@
-pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams', '$location', 'LoginService', function($scope, LibraryService, $routeParams, $location, LoginService) {
+pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams', '$location', 'LoginService', 'Notification', function($scope, LibraryService, $routeParams, $location, LoginService, Notification) {
 
   LibraryService.getLibraries().then(function(data){
     for(var i=0; i < data.libs.length; i++){
@@ -13,7 +13,7 @@ pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams',
     }
     
   }, function(reason){
-    alert('Fehler: '+reason);
+    Notification.error(reason);
   });
 
   $scope.userValid = true;

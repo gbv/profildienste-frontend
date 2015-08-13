@@ -1,4 +1,4 @@
-pdApp.service('SelectService', ['$rootScope', 'RejectService', 'ConfigService', function($rootScope, RejectService, ConfigService){
+pdApp.service('SelectService', ['$rootScope', 'RejectService', 'ConfigService', 'Notification', function($rootScope, RejectService, ConfigService, Notification){
   var selected = [];
 
   ConfigService.getConfig().then(function(data){
@@ -65,7 +65,7 @@ pdApp.service('SelectService', ['$rootScope', 'RejectService', 'ConfigService', 
       this.deselectAll();
 
     }.bind(this), function(reason){
-      alert('Fehler: '+reason);
+      Notification.error(reason);
     });
   }.bind(this);
 

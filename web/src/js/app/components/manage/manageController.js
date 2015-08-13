@@ -1,4 +1,4 @@
-pdApp.controller('ManageController', ['$scope', 'WatchlistService', '$rootScope', function($scope, WatchlistService, $rootScope) {
+pdApp.controller('ManageController', ['$scope', 'WatchlistService', '$rootScope', 'Notification', function($scope, WatchlistService, $rootScope, Notification) {
 
   WatchlistService.getWatchlists().then(function(data){
     $scope.watchlists = data.watchlists;
@@ -16,12 +16,12 @@ pdApp.controller('ManageController', ['$scope', 'WatchlistService', '$rootScope'
   this.addNewWatchlist = function(){
 
     if($scope.newName === undefined || $scope.newName === ''){
-      alert('Fehler: Bitte geben Sie einen Namen ein.');
+      Notification.error('Bitte geben Sie einen Namen ein.');
       return;
     }
 
     WatchlistService.manageWatchlist(undefined, 'add-wl', $scope.newName).then(function(){},function(reason){
-      alert('Fehler: '+reason);
+      Notification.error(reason);
     });
   };
 
@@ -33,7 +33,7 @@ pdApp.controller('ManageController', ['$scope', 'WatchlistService', '$rootScope'
       }
 
       WatchlistService.manageWatchlist(undefined, 'change-order', JSON.stringify(order)).then(function(){},function(reason){
-        alert('Fehler: '+reason);
+        Notification.error(reason);
       });
     },
     axis: 'y'

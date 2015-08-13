@@ -1,4 +1,4 @@
-pdApp.controller('RejectedController', ['$scope', 'Entries', 'ConfigService', '$http', '$location', function($scope, Entries, ConfigService, $http, $location) {
+pdApp.controller('RejectedController', ['$scope', 'Entries', 'ConfigService', '$http', '$location', 'Notification', function($scope, Entries, ConfigService, $http, $location, Notification) {
 
   $scope.entries = new Entries('rejected');
   
@@ -23,7 +23,7 @@ pdApp.controller('RejectedController', ['$scope', 'Entries', 'ConfigService', '$
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(json){
       if(!json.success){
-        alert('Fehler: '+json.errormsg);
+        Notification.error(json.errormsg);
       }else{
         $location.path('/main');
       }
