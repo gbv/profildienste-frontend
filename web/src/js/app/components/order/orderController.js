@@ -1,11 +1,11 @@
-pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$http', '$rootScope', function($scope, OrderService, $location, $http, $rootScope) {
+pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$http', '$rootScope', 'Notification', function($scope, OrderService, $location, $http, $rootScope, Notification) {
 
   $scope.orderComplete = false;
 
   OrderService.getOrderlist().then(function (data){
     $scope.orderlist = data.orderlist;
   }, function(reason){
-    alert(reason);
+    Notification.error(reason);
     $location.path('cart');
   });
 
@@ -16,7 +16,7 @@ pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$ht
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(json){
       if(!json.success){
-        alert('Fehler: '+json.errormsg);
+        Notification.error(json.errormsg);
       }else{
         $scope.orderComplete = true;
         $rootScope.$broadcast('cartChange', json.cart, json.price);

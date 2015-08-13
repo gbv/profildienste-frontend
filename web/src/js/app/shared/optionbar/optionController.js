@@ -1,4 +1,4 @@
-pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigService', '$q', 'SelectService', function($scope, SettingsService, ConfigService, $q, SelectService) {
+pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigService', '$q', 'SelectService', 'Notification', function($scope, SettingsService, ConfigService, $q, SelectService, Notification) {
 
   this.selectAll = function(){
     if($scope.entries === undefined){
@@ -41,7 +41,7 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
 
 
   }, function(reason){
-    alert('Fehler: '+reason);
+    Notification.error(reason);
   });
 
   this.setSorter = function (sorter){
@@ -63,7 +63,7 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
       $scope.entries.reset();
 
     }, function(reason){
-      alert('Fehler: '+reason);
+      Notification.error(reason);
     });
     
   }
@@ -87,7 +87,7 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
       $scope.entries.reset();
 
     }, function(reason){
-      alert('Fehler: '+reason);
+      Notification.error(reason);
     });
     
   };

@@ -1,4 +1,4 @@
-pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartService', '$modal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', function($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout){
+pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartService', '$modal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', 'Notification', function($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout, Notification){
 
   $scope.bibInfCollapsed = true;
   $scope.addInfCollapsed = true;
@@ -48,7 +48,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
       }
     },
     function(reason){
-      alert('Fehler: '+reason);
+      Notification.error(reason);
     });
   };
 
@@ -65,7 +65,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
       }
     },
     function(reason){
-      alert('Fehler: '+reason);
+      Notification.error(reason);
     });
   }
 
@@ -78,7 +78,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
       }
     },
     function(reason){
-      alert('Fehler: '+reason);
+      Notification.error(reason);
     });
   }
 
@@ -91,7 +91,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
       }
     },
     function(reason){
-      alert('Fehler: '+reason);
+      Notification.error(reason);
     });
   }
 
@@ -131,7 +131,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
         }
     },
     function(reason){
-      alert('Fehler: '+reason);
+      Notification.error(reason);
     });
   };
 
@@ -145,7 +145,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
         $scope.entries.removeItem($scope.item);
       }
     }, function(reason){
-      alert('Fehler: '+reason);
+      Notification.error(reason);
     });
   }
 
@@ -157,7 +157,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
         $scope.entries.removeItem($scope.item);
       }
     }, function(reason){
-      alert('Fehler: '+reason);
+      Notification.error(reason);
     });
   }
 

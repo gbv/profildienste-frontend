@@ -11,7 +11,8 @@ var gulp = require('gulp'),
     del = require('del');
 
 var vendor_css = [
-  'bower_components/fontawesome/css/font-awesome.css'
+  'bower_components/fontawesome/css/font-awesome.css',
+  'bower_components/angular-ui-notification/dist/angular-ui-notification.min.css'
 ];
 
 gulp.task('vendorcss', function() {
@@ -60,7 +61,9 @@ var vendor = [
 
   'bower_components/bootstrap/dist/js/bootstrap.min.js',
 
-  'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js'
+  'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js',
+
+  'bower_components/angular-ui-notification/dist/angular-ui-notification.min.js'
 ];
 
 gulp.task('js', function() {
@@ -91,7 +94,7 @@ gulp.task('vendorjs', function() {
 });
 
 gulp.task('clean', function(callback) {
-    del(['css/', 'js/'], callback);
+    del(['dist/'], callback);
 });
 
 gulp.task('build', ['clean'] ,function(){

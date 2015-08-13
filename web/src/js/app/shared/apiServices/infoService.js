@@ -1,4 +1,4 @@
-pdApp.service('InfoService', ['$http', '$q', function($http, $q) {
+pdApp.service('InfoService', ['$http', '$q', 'Notification', function($http, $q, Notification) {
 
   this.getAddInf = function(item){
 
@@ -37,7 +37,7 @@ pdApp.service('InfoService', ['$http', '$q', function($http, $q) {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(json){
       if(!json.success){
-        alert('Es wurde kein OPAC Katalog für Ihre Bibliothek hinterlegt.');
+        Notification.error('Es wurde kein OPAC Katalog für Ihre Bibliothek hinterlegt.');
       }else{
         window.open(json.data.url, '_blank');
       }
