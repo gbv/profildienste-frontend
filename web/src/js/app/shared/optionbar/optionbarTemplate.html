@@ -1,35 +1,36 @@
 <div class="row controls" ng-controller="OptionController as OptCtrl">
-<div class="col-xs-12">
-    <nav class="navbar navbar-inverse" role="navigation">
-      <ul class="nav navbar-nav">
-        <li ng-show="showSelectAll">
-          <a href="" id="btn-sel-all-bar" tooltip-placement="bottom" tooltip="Alle selektierbaren Titel auswählen" ng-click="OptCtrl.selectAll()">
-            <i class="fa fa-asterisk"></i>
-          </a>
-        </li>
-        <p class="navbar-text">Sortieren nach: </p>
-        <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown">
-            {{selected_sorter}} <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li ng-repeat="sorter in sortby">
-            <a href="" class="chg-set" ng-click="OptCtrl.setSorter(sorter.key)">{{sorter.value}}</a>
-            </li>
-          </ul>
-        </li>
-        <p class="navbar-text">Reihenfolge: </p>
-        <li class="dropdown">
-          <a href="" class="dropdown-toggle" data-toggle="dropdown">
-            {{selected_order}} <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            <li ng-repeat="ord in order">
-              <a href="" class="chg-set" ng-click="OptCtrl.setOrder(ord.key)">{{ord.value}}</a>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </nav>
-  </div>
+    <div class="col-xs-12">
+        <nav class="navbar navbar-inverse" role="navigation">
+            <ul class="nav navbar-nav">
+                <li ng-show="showSelectAll">
+                    <a href="" id="btn-sel-all-bar" tooltip-placement="bottom"
+                       tooltip="Alle selektierbaren Titel auswählen" ng-click="OptCtrl.selectAll()">
+                        <i class="fa fa-asterisk"></i>
+                    </a>
+                </li>
+                <p class="navbar-text">Sortieren nach: </p>
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                        {{selected_sorter}} <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="sorter in sortby">
+                            <a href="" class="chg-set" ng-click="OptCtrl.setSorter(sorter.key)">{{sorter.value}}</a>
+                        </li>
+                    </ul>
+                </li>
+                <p class="navbar-text">Reihenfolge: </p>
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                        {{selected_order}} <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-repeat="ord in order">
+                            <a href="" class="chg-set" ng-click="OptCtrl.setOrder(ord.key)">{{ord.value}}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
