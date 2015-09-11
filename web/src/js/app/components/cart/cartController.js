@@ -12,12 +12,6 @@ pdApp.controller('CartController', ['$scope', 'Entries', 'ConfigService', '$loca
   ConfigService.setConfig(config);
   ConfigService.setEntries($scope.entries);
 
-  this.showContinue = function(){
-    return ($scope.entries.total > 0);
-  }
 
-  this.continue = function(){
-    $location.path('order');
-  }
 
 }]);

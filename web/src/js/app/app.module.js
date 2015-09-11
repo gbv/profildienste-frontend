@@ -1,4 +1,4 @@
-var pdApp = angular.module('Profildienst', ['infinite-scroll', 'ui.bootstrap', 'ngRoute', 'ui.sortable', 'ui-notification']);
+var pdApp = angular.module('Profildienst', ['infinite-scroll', 'ui.bootstrap', 'ngRoute', 'ui.sortable', 'ui-notification', 'ngScrollSpy']);
 
 pdApp.config(['$compileProvider', function ($compileProvider) {
     $compileProvider.debugInfoEnabled(false);
@@ -57,6 +57,30 @@ pdApp.factory('authInterceptor', ['$rootScope', '$q', '$window', 'LogoutService'
 
 pdApp.config(['$httpProvider', function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
+}]);
+
+pdApp.controller('ContentController', ['$scope', '$rootScope', 'LoginService', function ($scope, $rootScope, LoginService) {
+
+    $scope.loggedIn = false;
+
+    $rootScope.$on('userLogin', function(e){
+        $scope.loggedIn = true;
+    });
+
+    $rootScope.$on('userLogout', function(e){
+        $scope.loggedIn = false;
+    });
+
+    LoginService.whenLoggedIn().then(function(data){
+        $scope.loggedIn = true;
+    });
+
+    //workaround since the affix occasionally bugs and does not
+    //remove the affix class when scrolling to top
+    $rootScope.$on('siteChanged', function(e){
+       $('#header-fixed').removeClass('affix');
+    });
+
 }]);
 
 // Overwrite the Angular Bootstrap popover template to allow HTML

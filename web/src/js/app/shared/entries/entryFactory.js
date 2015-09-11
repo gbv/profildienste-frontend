@@ -1,8 +1,8 @@
 // Load the entries
-pdApp.factory('Entries', ['$http', '$modal', function($http, $modal) {
+pdApp.factory('Entries', ['$http', '$modal', '$rootScope', function($http, $modal, $rootScope) {
 
   // Entry object
-  var Entries = function(site, id) {
+  var Entries = function(site, id, title) {
     this.items = [];
     this.loading = false;
     this.page = 0;
@@ -11,6 +11,11 @@ pdApp.factory('Entries', ['$http', '$modal', function($http, $modal) {
     this.id = id;
     this.total = 0;
     this.error = false;
+
+    $rootScope.$broadcast('siteChanged', {
+      site: (title !== undefined) ? title : site,
+      watchlist: (id !== undefined)
+    });
   };
 
   // loads more entries from the server
@@ -21,6 +26,7 @@ pdApp.factory('Entries', ['$http', '$modal', function($http, $modal) {
     }
 
     this.loading = true;
+    $rootScope.$broadcast('siteLoading');
     if(this.id === undefined){
       var url = '/api/get/'+this.site+'/page/'+this.page;
     }else{
@@ -37,9 +43,11 @@ pdApp.factory('Entries', ['$http', '$modal', function($http, $modal) {
         this.loading = false;
         this.more = data.more;
         this.total = data.total;
+        $rootScope.$broadcast('siteLoadingFinished', data.total);
       }else{
         this.error = true;
         this.errorMessage = data.message;
+        $rootScope.$broadcast('siteLoadingFinished', -1);
       }
       
     }.bind(this)).error(function(data, status, headers, config) {

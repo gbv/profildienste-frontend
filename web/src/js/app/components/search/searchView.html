@@ -3,32 +3,12 @@
   <div ng-show="entries.error">
     <div class="row">
       <div class="col-md-12">
-        <div class="page-header">
-            <h1>
-              <i class="fa fa-times"></i> Leider ist ein Fehler aufgetreten
-            </h1>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
         <div class="alert alert-danger">{{entries.errorMessage}}</div>
       </div>
     </div>
   </div>
 
   <div ng-show="SearchCtrl.showNoHits()">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="page-header">
-            <h1>
-              <i class="fa fa-meh-o"></i> Keine Treffer
-              <br>
-              <small> Keine Ergebnisse gefunden</small>
-            </h1>
-        </div>
-      </div>
-    </div>
     <div class="row">
       <div class="col-md-12">
         Vorschläge:
@@ -44,24 +24,15 @@
   <div ng-show="getStarted">
     <div class="row">
       <div class="col-md-12">
-        <div class="page-header">
-            <h1>
-              <i class="fa fa-search"></i> Suche
-            </h1>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
         <p> Hier können Sie gezielt nach Titeln suchen.<br><br>
-        Sie können eine Suche starten, indem sie in das Textfeld in der Menüleiste Ihre Suchanfrage eingeben und anschließend auf <code>Enter</code> drücken.
+        Sie können eine Suche starten, indem Sie in das Textfeld in der Menüleiste Ihre Suchanfrage eingeben und anschließend auf <code>Enter</code> drücken.
         </p>
         <br>
         <p> Bitte beachten Sie bei ihrer Suchanfrage folgendes:
           <ul>
             <li> Ihre Suchanfrage muss dem Format <code>Schlüssel Suchbegriff</code> entsprechen. Weitere Informationen hierzu erhalten Sie in der Hilfe.</li>
             <li> Es wird nicht zwischen Groß- und Kleinschreibung unterschieden</li>
-            <li> Suchergebnisse enthalten alle Treffer, die ihrer Suchanfrage genügen, unabhängig davon, ob Sie diese ausgeblendet haben.</li>
+            <li> Suchergebnisse enthalten alle Treffer, die Ihrer Suchanfrage genügen - unabhängig davon, ob Sie diese ausgeblendet haben.</li>
           </ul>
         </p>
       </div>
@@ -69,20 +40,6 @@
   </div>
 
   <div ng-show="SearchCtrl.showSearch()">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="page-header">
-            <h1>
-              <i class="fa fa-search"></i> Suche nach '{{searchterm}}'
-              <br>
-              <small>
-                <span ng-hide="entries.loading">{{entries.total}} Ergebnisse</span>
-                <span ng-show="entries.loading"><i class="fa fa-spinner fa-spin"></i> Laden...</span>
-              </small>
-            </h1>
-        </div>
-      </div>
-    </div>
     <ng-optionbar></ng-optionbar>
     <!-- List -->
     <div infinite-scroll='entries.loadMore()' infinite-scroll-disabled='entries.loading' infinite-scroll-distance='1'>

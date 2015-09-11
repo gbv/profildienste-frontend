@@ -5,42 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="shortcut icon" type="image/x-icon" href="assets/icon/profildienst.ico">
-    <link href="/dist/css/main.min.css" rel="stylesheet" media="screen">
     <link href="/dist/css/vendor.min.css" rel="stylesheet" media="screen">
+    <link href="/dist/css/main.min.css" rel="stylesheet" media="screen">
     <base href="/">
 </head>
-<body>
-    <script src="/dist/js/vendor.min.js"></script>
-    <script src="/dist/js/main.min.js"></script>
+<div>
+<script src="/dist/js/vendor.min.js"></script>
+<script src="/dist/js/main.min.js"></script>
+<div id="header-fixed" affix>
     <ng-menubar></ng-menubar>
-    <div class="container">
-      <div ng-view></div>
+    <ng-header></ng-header>
+</div>
+<div ng-controller="ContentController as ContentCtrl">
+    <div class="container" id="content" ng-class="loggedIn ? 'spacer' : 'small-spacer'">
+        <div ng-view></div>
     </div>
-    <ng-footer></ng-footer>
-    
-    <script type="text/ng-template" id="coverModal.html">
-            <div class="modal-header">
-                <h4 class="modal-title">Cover-Ansicht</h4>
-            </div>
-            <div class="modal-body">
-                <img ng-src="{{cover}}">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="close()">Schließen</button>
-            </div>
-    </script>
+</div>
+<ng-footer></ng-footer>
 
-    <script type="text/ng-template" id="errorModal.html">
-            <div class="modal-header">
-                <h4 class="modal-title">Sitzung abgelaufen</h4>
-            </div>
-            <div class="modal-body">
-                <p>Ihre Sitzung ist abgelaufen. Sie müssen sich erneut anmelden,
-                um den Profildienst weiter verwenden zu können.</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" ng-click="redirect()">Anmelden</button>
-            </div>
-    </script>
+<script type="text/ng-template" id="coverModal.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Cover-Ansicht</h4>
+    </div>
+    <div class="modal-body">
+        <img ng-src="{{cover}}">
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="close()">Schließen</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="errorModal.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Sitzung abgelaufen</h4>
+    </div>
+    <div class="modal-body">
+        <p>Ihre Sitzung ist abgelaufen. Sie müssen sich erneut anmelden,
+            um den Profildienst weiter verwenden zu können.</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="redirect()">Anmelden</button>
+    </div>
+</script>
 </body>
 </html>
