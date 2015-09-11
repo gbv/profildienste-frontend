@@ -1,5 +1,10 @@
 pdApp.controller('SearchController', ['$scope', 'SearchService', '$rootScope', 'Entries', 'ConfigService', function($scope, SearchService, $rootScope, Entries, ConfigService) {
 
+  $rootScope.$broadcast('siteChanged', {
+    site: 'search',
+    watchlist: false
+  });
+
   this.doSearch = function (){
 
     $scope.searchterm = SearchService.getSearchterm();
@@ -7,17 +12,19 @@ pdApp.controller('SearchController', ['$scope', 'SearchService', '$rootScope', '
     $scope.getStarted = false;
     if($scope.searchterm === undefined || $scope.searchterm === ''){
       $scope.getStarted = true;
-      return;
     }else{
       $scope.getStarted = false;
     }
 
-    $scope.entries = new Entries('search/'+window.encodeURIComponent($scope.searchterm));
-    ConfigService.setEntries($scope.entries);
-
-    $scope.entries.loadMore();
-    
-  }
+    $rootScope.$broadcast('siteLoading');
+    if(!$scope.getStarted) {
+      $scope.entries = new Entries('search/' + window.encodeURIComponent($scope.searchterm), undefined, 'search');
+      ConfigService.setEntries($scope.entries);
+      $scope.entries.loadMore();
+    }else{
+      $rootScope.$broadcast('siteLoadingFinished', -2);
+    }
+  };
 
   $rootScope.$on('search', function (e) {
     this.doSearch();
@@ -40,8 +47,7 @@ pdApp.controller('SearchController', ['$scope', 'SearchService', '$rootScope', '
 
   this.showNoHits = function(){
     return ($scope.entries !== undefined && $scope.entries.total === 0  && !$scope.entries.error && !$scope.getStarted && !$scope.entries.loading);
-  }
-
+  };
 
   $scope.$on('$locationChangeStart', function(event){
     $rootScope.$broadcast('searchViewUnload');

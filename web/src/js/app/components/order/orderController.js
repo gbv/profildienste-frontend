@@ -4,6 +4,15 @@ pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$ht
 
   OrderService.getOrderlist().then(function (data){
     $scope.orderlist = data.orderlist;
+
+    $rootScope.$broadcast('siteChanged', {
+      site: 'order',
+      watchlist: false
+    });
+
+    $rootScope.$broadcast('siteLoading');
+    $rootScope.$broadcast('siteLoadingFinished', 0);
+
   }, function(reason){
     Notification.error(reason);
     $location.path('cart');
@@ -20,6 +29,10 @@ pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$ht
       }else{
         $scope.orderComplete = true;
         $rootScope.$broadcast('cartChange', json.cart, json.price);
+        $rootScope.$broadcast('siteChanged', {
+          site: 'ordered',
+          watchlist: false
+        });
       }
     });
   };

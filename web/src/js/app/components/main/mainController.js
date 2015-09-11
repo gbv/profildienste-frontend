@@ -12,4 +12,6 @@ pdApp.controller('MainController', ['$scope', 'Entries', 'ConfigService', functi
   ConfigService.setConfig(config);
   ConfigService.setEntries($scope.entries);
 
+
+
 }]);

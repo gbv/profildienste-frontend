@@ -3,6 +3,15 @@ pdApp.controller('ManageController', ['$scope', 'WatchlistService', '$rootScope'
   WatchlistService.getWatchlists().then(function(data){
     $scope.watchlists = data.watchlists;
     $scope.default_watchlist = data.def_wl;
+
+    $rootScope.$broadcast('siteChanged', {
+      site: 'manage',
+      watchlist: false
+    });
+
+    $rootScope.$broadcast('siteLoading');
+    $rootScope.$broadcast('siteLoadingFinished', $scope.watchlists.length);
+
   });
 
   $rootScope.$on('watchlistChange', function(e, data){

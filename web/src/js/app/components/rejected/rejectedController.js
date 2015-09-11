@@ -1,4 +1,4 @@
-pdApp.controller('RejectedController', ['$scope', 'Entries', 'ConfigService', '$http', '$location', 'Notification', function($scope, Entries, ConfigService, $http, $location, Notification) {
+pdApp.controller('RejectedController', ['$scope', 'Entries', 'ConfigService', function($scope, Entries, ConfigService) {
 
   $scope.entries = new Entries('rejected');
   
@@ -11,23 +11,5 @@ pdApp.controller('RejectedController', ['$scope', 'Entries', 'ConfigService', '$
 
   ConfigService.setConfig(config);
   ConfigService.setEntries($scope.entries);
-
-  this.showDeletePermanently = function(){
-    return ($scope.entries.total > 0);
-  }
-
-  this.deletePermanently = function(){
-    $http({
-      method: 'POST',
-      url: '/api/delete',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
-        Notification.error(json.errormsg);
-      }else{
-        $location.path('/main');
-      }
-    }.bind(this));
-  }
 
 }]);
