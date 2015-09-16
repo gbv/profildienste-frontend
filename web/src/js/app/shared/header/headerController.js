@@ -75,6 +75,10 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
     $scope.total = total;
   });
 
+  $rootScope.$on('totalChanged', function (ev, total){
+    $scope.total = total;
+  });
+
   $scope.loggedIn = false;
 
   LoginService.whenLoggedIn().then(function(data){

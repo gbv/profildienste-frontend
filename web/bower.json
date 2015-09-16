@@ -16,7 +16,6 @@
     "angular-bootstrap": "latest",
     "angular-route": "latest",
     "angular-ui-sortable": "latest",
-    "angular-ui-notification": "~0.0.11",
-    "ngScrollSpy": "~1.0.8"
+    "angular-ui-notification": "~0.0.11"
   }
 }
