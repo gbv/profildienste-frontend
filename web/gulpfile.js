@@ -63,9 +63,7 @@ var vendor = [
 
   'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js',
 
-  'bower_components/angular-ui-notification/dist/angular-ui-notification.min.js',
-
-  'bower_components/ngScrollSpy/dist/ngScrollSpy.min.js'
+  'bower_components/angular-ui-notification/dist/angular-ui-notification.min.js'
 ];
 
 gulp.task('js', function() {

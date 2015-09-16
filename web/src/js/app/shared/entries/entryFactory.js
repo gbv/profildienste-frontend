@@ -71,6 +71,7 @@ pdApp.factory('Entries', ['$http', '$modal', '$rootScope', function($http, $moda
     }
 
     this.total--;
+    $rootScope.$broadcast('totalChanged', this.total);
 
     if(this.items.length == 0){
       this.page--;
