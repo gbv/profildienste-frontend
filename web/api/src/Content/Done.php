@@ -22,15 +22,7 @@ class Done extends Content {
      */
     public function __construct($num, AuthToken $auth) {
 
-        $done = DB::getUserData('done', $auth);
-
-        $dn = array();
-        foreach ($done as $d) {
-            array_push($dn, $d['id']);
-        }
-
-
-        $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $dn))));
+        $query = array('$and' => array(array('user' => $auth->getID()), array('status' => 'done')));
 
         $t = DB::getTitleList($query, $num, $auth);
         $this->titlelist = $t['titlelist'];

@@ -35,6 +35,8 @@ class Cart extends AJAXResponse {
             return;
         }
 
+        /* needed later
+
         // insert defaults if needed
         $defaults = DB::getUserData('defaults', $auth);
 
@@ -46,85 +48,62 @@ class Cart extends AJAXResponse {
             $ssgnr = $defaults['ssgnr'];
         }
 
+        */
+
         // prepare part of response
         $this->resp['id'] = $id;
 
         $this->resp['order'] = array(
-            'lft' => $lft,
-            'budget' => $bdg,
-            'ssgnr' => $ssgnr,
-            'selcode' => $selcode,
-            'comment' => $comment
+            'lft' => 'UNUSED',
+            'budget' => 'UNUSED',
+            'ssgnr' => 'UNUSED',
+            'selcode' => 'UNUSED',
+            'comment' => 'UNUSED'
         );
 
-        //insert title into cart
-        $c = DB::getUserData('cart', $auth);
+        $tit = DB::getTitleByID($id);
 
-        if (is_null($c)) {
-            $this->error('Kein Warenkorb für diesen Nutzer gefunden');
+        if($tit->getUser() !== $auth->getID()){
+            $this->error('Sie haben keine Berechtigung diesen Titel zu bearbeiten.');
             return;
         }
 
-        $ni = array('id' => $id, 'budget' => $bdg, 'lieft' => $lft, 'selcode' => $selcode, 'ssgnr' => $ssgnr, 'comment' => $comment);
-
-        if ($this->in_cart($ni, $c)) {
+        if ($tit->getStatus() === 'cart') {
             $this->error('Dieser Titel befindet sich bereits im Warenkorb!');
             return;
+        }
+
+        $p = DB::getUserData('price', $auth);
+        $pr = $tit->getEURPrice();
+
+        if (is_null($pr)) {
+            // price is unknown
+            $p['est'] = $p['est'] + 1;
+
+            $mean = DB::get(array('_id' => 'mean'), 'data', array(), true);
+            $pr = $mean['value'];
+
         } else {
-
-            $p = DB::getUserData('price', $auth);
-
-            $tit = DB::getTitleByID($id);
-
-            $pr = $tit->getEURPrice();
-
-
-            if (is_null($pr)) {
-                // price is unknown
-                $p['est'] = $p['est'] + 1;
-
-                $mean = DB::get(array('_id' => 'mean'), 'data', array(), true);
-                $pr = $mean['value'];
-
-            } else {
-                // we know the price
-                $p['known'] = $p['known'] + 1;
-            }
-
-            $p['price'] = $p['price'] + $pr;
-
-            //update the total price for the whole cart
-            DB::upd(array('_id' => $auth->getID()), array('$set' => array('price' => $p)), 'users');
-
-            // insert updated price into response
-            $p['price'] = number_format($p['price'], 2, '.', '');
-            $this->resp['price'] = $p;
-
-            // update the cart
-            array_push($c, $ni);
-            DB::upd(array('_id' => $auth->getID()), array('$set' => array('cart' => $c)), 'users');
-
-            $this->resp['content'] = sizeof($c);
-            $this->resp['success'] = true;
+            // we know the price
+            $p['known'] = $p['known'] + 1;
         }
-    }
 
-    /**
-     * Checks if the item is in the cart
-     *
-     * @param $item string Item
-     * @param $cart array Cart
-     * @return bool true if the item is in the cart
-     */
-    private function in_cart($item, $cart) {
-        foreach ($cart as $c) {
-            if ($c['id'] == $item['id']) {
-                return true;
-            }
-        }
-        return false;
-    }
+        $p['price'] = $p['price'] + $pr;
 
+        //update the total price for the whole cart
+        DB::upd(array('_id' => $auth->getID()), array('$set' => array('price' => $p)), 'users');
+
+        // insert updated price into response
+        $p['price'] = number_format($p['price'], 2, '.', '');
+        $this->resp['price'] = $p;
+
+
+        DB::upd(array('_id' => $id), array('$set' => array('status' => 'cart')), 'titles');
+
+        $this->resp['content'] = DB::getCartSize($auth);
+        $this->resp['success'] = true;
+
+    }
 }
 
 ?>

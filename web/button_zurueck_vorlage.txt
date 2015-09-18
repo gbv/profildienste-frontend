@@ -1,0 +1,6 @@
+<a class="navbar-brand pd-brand" href="/main" style="
+    line-height: 0.8;
+">Profildienst<br><span style="
+    color: #c0c0c0;
+    font-size: 12px;
+"><i class="fa fa-caret-left"></i> Gesamtübersicht</span></a>

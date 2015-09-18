@@ -31,40 +31,32 @@ class RemoveWatchlist extends AJAXResponse {
             return;
         }
 
-        $this->resp['id'] = $id;
-        $this->resp['wl'] = $wl_id;
-
         $watchlists = DB::getUserData('watchlist', $auth);
-        if ($watchlists === NULL) {
+
+        if (is_null($watchlists)) {
             $this->error('Es konnten keine Merklisten für einen Benutzer mit dieser ID gefunden werden.');
             return;
         }
 
-        $wl = $watchlists[$wl_id]['list'];
-
-        if ($wl === NULL) {
+        if (is_null($watchlists[$wl_id]['list'])) {
             $this->error('Keine Merkliste mit dieser ID gefunden.');
             return;
         }
 
-        if (!in_array($id, $wl)) {
-            $this->error('Dieser Titel befindet sich nicht in der Merkliste!');
-        } else {
-            // remove from the array
-            $occ = array_search($id, $wl);
-            if (is_null($occ)) {
-                $this->error('Der Titel konnte nicht entfernt werden!');
-            }
-            $f = array_slice($wl, 0, $occ);
-            $s = array_slice($wl, ($occ + 1), count($wl));
-            $g = array_merge($f, $s);
-
-            $watchlists[$wl_id]['list'] = $g;
-
-            DB::upd(array('_id' => $auth->getID()), array('$set' => array('watchlist' => $watchlists)), 'users');
-            $this->resp['content'] = count($g);
-            $this->resp['success'] = true;
+        $title = DB::getTitleByID($id);
+        if($title->getUser() !== $auth->getID()){
+            $this->error('Sie haben keine Berechtigung diesen Titel zu bearbeiten.');
+            return;
         }
+
+        if(!$title->isInWatchlist()){
+            $this->error('Dieser Titel befindet sich nicht in der Merkliste.');
+            return;
+        }
+
+        DB::upd(array('_id' => $id), array('$set' => array('watchlist' => null)), 'titles');
+        $this->resp['content'] = DB::getWatchlistSize($wl_id, $auth);
+        $this->resp['success'] = true;
 
     }
 }

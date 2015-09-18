@@ -30,57 +30,24 @@ class Reject extends AJAXResponse {
 
         $this->resp['id'] = $ids;
 
-        $c = DB::getUserData('rejected', $auth);
-        $cart = DB::getUserData('cart', $auth);
-        $wls = DB::getUserData('watchlist', $auth);
-
-        if (is_null($c) || is_null($cart) || is_null($wls)) {
-            $this->error('Keine entsprechende Liste gefunden');
-        }
-
         foreach ($ids as $id) {
 
-            if ($this->in_cart($id, $cart) || $this->in_wl($id, $wls)) {
+            $title = DB::getTitleByID($id);
+
+            if($title->getUser() !== $auth->getID()){
+                $this->error('Sie haben keine Berechtigung diesen Titel zu bearbeiten.');
+                return;
+            }
+
+            if ($title->getStatus() !== 'normal' || $title->isInWatchlist()) {
                 $this->error('Sie können keinen Titel ausblenden, der sich in einer Merkliste oder im Warenkorb befindet!');
-            } else {
-                array_push($c, $id);
+                return;
             }
+
+            DB::upd(array('_id' => $id), array('$set' => array('status' => 'rejected')), 'titles');
         }
 
-        DB::upd(array('_id' => $auth->getID()), array('$set' => array('rejected' => $c)), 'users');
         $this->resp['success'] = true;
-    }
-
-    /**
-     * Checks if the title with the given id is in the cart.
-     *
-     * @param $id string ID
-     * @param $cart array Cart
-     * @return bool true if the item is in the cart
-     */
-    private function in_cart($id, $cart) {
-        foreach ($cart as $c) {
-            if ($c['id'] === $id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks if the title with the given id is in any watchlist.
-     *
-     * @param $id string ID
-     * @param $watchlists array Watchlists
-     * @return bool true if the item is in a watchlist
-     */
-    private function in_wl($id, $watchlists) {
-        foreach ($watchlists as $watchlist) {
-            if (in_array($id, $watchlist['list'])) {
-                return true;
-            }
-        }
-        return false;
     }
 }
 

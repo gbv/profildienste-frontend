@@ -16,22 +16,10 @@ class Title {
     private $j;
 
     /**
-     * @var bool Indicates if the title is in a watchlist
-     */
-    private $in_watchlist = false;
-    /**
-     * @var int ID of the watchlist the title is in
-     */
-    private $wl_id;
-    /**
      * @var string name of the watchlist the title is in
      */
     private $wl_name;
 
-    /**
-     * @var bool Indicates if the title is in the cart
-     */
-    private $in_cart = false;
     /**
      * @var string Lieferant
      */
@@ -52,15 +40,6 @@ class Title {
      * @var string Kommentar
      */
     private $comment = NULL;
-
-    /**
-     * @var bool Indicates if the title is in the done list
-     */
-    private $done = false;
-    /**
-     * @var bool Indicates if the title is rejected
-     */
-    private $rj = false;
 
     /**
      * @var string URL of the cover
@@ -255,47 +234,24 @@ class Title {
     }
 
     /**
-     * Setter for inCart
-     */
-    public function inCart() {
-        $this->in_cart = true;
-    }
-
-    /**
-     * Setter for inWatchlist
-     */
-    public function inWatchlist() {
-        $this->in_watchlist = true;
-    }
-
-    /**
      * @return bool true if the title is in cart
      */
     public function isInCart() {
-        return $this->in_cart;
+        return ($this->j['status'] === 'cart');
     }
 
     /**
      * @return bool true if the title is in a watchlist
      */
     public function isInWatchlist() {
-        return $this->in_watchlist;
+        return !is_null($this->j['watchlist']);
     }
 
     /**
      * @return int|null the ID of the watchlist
      */
     public function getWlID() {
-        return $this->wl_id;
-    }
-
-    /**
-     * Sets the watchlist ID.
-     *
-     * @param $v int ID of the watchlist
-     */
-    public function setWlID($v) {
-        $this->wl_id = $v;
+        return $this->j['watchlist'];
     }
 
     /**
@@ -315,28 +271,10 @@ class Title {
     }
 
     /**
-     * Sets the Lieferant.
-     *
-     * @param $v string Lieferant
-     */
-    public function setLft($v) {
-        $this->lft = $v;
-    }
-
-    /**
      * @return string Lieferant
      */
     public function getLft() {
         return $this->lft;
-    }
-
-    /**
-     * Sets the budget
-     *
-     * @param $v string Budget
-     */
-    public function setBdg($v) {
-        $this->bdg = $v;
     }
 
     /**
@@ -355,40 +293,17 @@ class Title {
     }
 
     /**
-     * Set title to done.
-     */
-    public function setDone() {
-        $this->done = true;
-    }
-
-    /**
      * @return bool true if the title is done
      */
     public function isDone() {
-        return $this->done;
-    }
-
-    /**
-     * Reject title
-     */
-    public function setRejected() {
-        $this->rj = true;
+        return ($this->j['status'] === 'done');
     }
 
     /**
      * @return bool true if the title has been rejected
      */
     public function isRejected() {
-        return $this->rj;
-    }
-
-    /**
-     * Sets the SSG-Nr.
-     *
-     * @param $v string SSG-Nr.
-     */
-    public function setSSGNr($v) {
-        $this->ssgnr = $v;
+        return ($this->j['status'] === 'rejected');
     }
 
     /**
@@ -399,28 +314,10 @@ class Title {
     }
 
     /**
-     * Sets the Selektionscode.
-     *
-     * @param $v string Selektionscode
-     */
-    public function setSelcode($v) {
-        $this->selcode = $v;
-    }
-
-    /**
      * @return string Selektionscode
      */
     public function getSelcode() {
         return $this->selcode;
-    }
-
-    /**
-     * Sets a comment.
-     *
-     * @param $v string comment
-     */
-    public function setComment($v) {
-        $this->comment = $v;
     }
 
     /**
@@ -434,7 +331,7 @@ class Title {
      * @return bool true if there is a cover assigned to this title
      */
     public function hasCover() {
-        return $this->cover != NULL;
+        return !is_null($this->cover);
     }
 
     /**
@@ -484,6 +381,14 @@ class Title {
      */
     public function getMAK() {
         return $this->mak;
+    }
+
+    public function getUser(){
+        return $this->j['user'];
+    }
+
+    public function getStatus(){
+        return $this->j['status'];
     }
 }
 ?>

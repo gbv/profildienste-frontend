@@ -41,22 +41,25 @@ class Watchlist extends AJAXResponse {
             return;
         }
 
-        $wl = $watchlists[$wl_id]['list'];
-
-        if (is_null($wl)) {
+        if (is_null($watchlists[$wl_id]['list'])) {
             $this->error('Keine Merkliste mit dieser ID gefunden.');
             return;
         }
 
-        if (!in_array($id, $wl)) {
-            array_push($wl, $id);
-            $watchlists[$wl_id]['list'] = $wl;
-            DB::upd(array('_id' => $auth->getID()), array('$set' => array('watchlist' => $watchlists)), 'users');
-            $this->resp['content'] = count($wl);
-            $this->resp['success'] = true;
-        } else {
-            $this->error('Dieser Titel befindet sich bereits in der Merkliste');
+        $title = DB::getTitleByID($id);
+        if($title->getUser() !== $auth->getID()){
+            $this->error('Sie haben keine Berechtigung diesen Titel zu bearbeiten.');
+            return;
         }
+
+        if($title->isInWatchlist()){
+            $this->error('Dieser Titel befindet sich bereits in der Merkliste.');
+            return;
+        }
+
+        DB::upd(array('_id' => $id), array('$set' => array('watchlist' => $wl_id)), 'titles');
+        $this->resp['content'] = DB::getWatchlistSize($wl_id, $auth);
+        $this->resp['success'] = true;
     }
 }
 

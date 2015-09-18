@@ -216,6 +216,18 @@ class DB {
             die('Error: ' . $mce);
         }
     }
+
+    public static function getWatchlistSize($id, AuthToken $auth){
+        self::init_db();
+        $titles = new \MongoCollection(self::$db, 'titles');
+        return $titles->find(array('$and' => array(array('user' => $auth->getID()), array('watchlist' => strval($id)))))->count();
+    }
+
+    public static function getCartSize(AuthToken $auth){
+        self::init_db();
+        $titles = new \MongoCollection(self::$db, 'titles');
+        return $titles->find(array('$and' => array(array('user' => $auth->getID()), array('status' => 'cart'))))->count();
+    }
 }
 
 ?>

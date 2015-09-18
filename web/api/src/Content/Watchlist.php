@@ -29,7 +29,7 @@ class Watchlist extends Content {
         if (isset($watchlists[$id])) {
 
             $list = $watchlists[$id]['list'];
-            $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $list))));
+            $query = array('$and' => array(array('user' => $auth->getID()), array('watchlist' => $id)));
             $t = DB::getTitleList($query, $num, $auth);
             $this->titlelist = $t['titlelist'];
             $this->total = $t['total'];

@@ -11,7 +11,8 @@ use Profildienst\DB;
  * Class RemoveCart
  * @package AJAX
  */
-class RemoveCart extends AJAXResponse {
+class RemoveCart extends AJAXResponse
+{
 
     /**
      * Removes a title from the cart.
@@ -19,7 +20,8 @@ class RemoveCart extends AJAXResponse {
      * @param $id
      * @param AuthToken $auth Token
      */
-    public function __construct($id, AuthToken $auth) {
+    public function __construct($id, AuthToken $auth)
+    {
 
 
         $this->resp['content'] = NULL;
@@ -33,56 +35,43 @@ class RemoveCart extends AJAXResponse {
 
         $this->resp['id'] = $id;
 
-        $cart = DB::getUserData('cart', $auth);
+        $tit = DB::getTitleByID($id);
 
-        $ct = array();
-        foreach ($cart as $c) {
-            array_push($ct, $c['id']);
+        if ($tit->getUser() !== $auth->getID()) {
+            $this->error('Sie haben keine Berechtigung diesen Titel zu bearbeiten.');
+            return;
         }
 
-        if (!in_array($id, $ct)) {
-            $this->error('Dieser Titel befindet sich nicht im Warenkorb');
+        if ($tit->getStatus() !== 'cart') {
+            $this->error('Dieser Titel befindet sich nicht im Warenkorb!');
+            return;
+        }
+
+
+        $p = DB::getUserData('price', $auth);
+        $pr = $tit->getEURPrice();
+
+        if (is_null($pr)) {
+            // price was unknown
+            $p['est'] = $p['est'] - 1;
+
+            $mean = DB::get(array('_id' => 'mean'), 'data', array(), true);
+            $pr = $mean['value'];
+
         } else {
-
-            $p = DB::getUserData('price', $auth);
-
-            $tit = DB::getTitleByID($id);
-            $pr = $tit->getEURPrice();
-
-            if (is_null($pr)) {
-                // price was unknown
-                $p['est'] = $p['est'] - 1;
-
-                $mean = DB::get(array('_id' => 'mean'), 'data', array(), true);
-                $pr = $mean['value'];
-
-            } else {
-                // price was known
-                $p['known'] = $p['known'] - 1;
-            }
-
-            $p['price'] = $p['price'] - $pr;
-
-            DB::upd(array('_id' => $auth->getID()), array('$set' => array('price' => $p)), 'users');
-
-            $this->resp['price'] = $p;
-
-            $occ = array_search($id, $ct);
-            if (is_null($occ)) {
-                $this->error('Der Titel konnte nicht entfernt werden');
-            }
-
-            $g = array();
-            foreach ($cart as $c) {
-                if ($c['id'] != $id) {
-                    array_push($g, $c);
-                }
-            }
-
-            DB::upd(array('_id' => $auth->getID()), array('$set' => array('cart' => $g)), 'users');
-            $this->resp['content'] = count($g);
-            $this->resp['success'] = true;
+            // price was known
+            $p['known'] = $p['known'] - 1;
         }
+
+        $p['price'] = $p['price'] - $pr;
+        DB::upd(array('_id' => $auth->getID()), array('$set' => array('price' => $p)), 'users');
+
+        $this->resp['price'] = $p;
+
+        DB::upd(array('_id' => $id), array('$set' => array('status' => 'normal')), 'titles');
+        $this->resp['content'] = DB::getCartSize($auth);
+        $this->resp['success'] = true;
+
     }
 }
 

@@ -23,7 +23,6 @@ class RemoveReject extends AJAXResponse {
 
         $this->resp['id'] = NULL;
 
-
         if ($id === '') {
             $this->error('Unvollständige Daten');
             return;
@@ -31,28 +30,21 @@ class RemoveReject extends AJAXResponse {
 
         $this->resp['id'] = $id;
 
-        $rejected = DB::getUserData('rejected', $auth);
+        $title = DB::getTitleByID($id);
 
-        if ($rejected === NULL) {
-            $this->error('Es konnten keine Liste für einen Benutzer mit dieser ID gefunden werden.');
+        if($title->getUser() !== $auth->getID()){
+            $this->error('Sie haben keine Berechtigung diesen Titel zu bearbeiten.');
+            return;
         }
 
-        if (!in_array($id, $rejected)) {
-            $this->error('Dieser Titel wurde nicht abgelehnt');
-        } else {
-            // remove from the array
-            $occ = array_search($id, $rejected);
-            if (is_null($occ)) {
-                $this->error('Der Titel konnte nicht entfernt werden!');
-            }
-
-            $f = array_slice($rejected, 0, $occ);
-            $s = array_slice($rejected, ($occ + 1), count($rejected));
-            $g = array_merge($f, $s);
-
-            DB::upd(array('_id' => $auth->getID()), array('$set' => array('rejected' => $g)), 'users');
-            $this->resp['success'] = true;
+        if ($title->getStatus() !== 'rejected') {
+            $this->error('Dieser Titel wurde nicht abgelehnt!');
+            return;
         }
+
+        DB::upd(array('_id' => $id), array('$set' => array('status' => 'normal')), 'titles');
+
+        $this->resp['success'] = true;
     }
 }
 

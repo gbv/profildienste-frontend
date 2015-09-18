@@ -22,14 +22,7 @@ class Cart extends Content {
      */
     public function __construct($num, AuthToken $auth) {
 
-        $cart = \Profildienst\DB::getUserData('cart', $auth);
-        $ct = array();
-
-        foreach ($cart as $c) {
-            array_push($ct, $c['id']);
-        }
-
-        $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $ct))));
+        $query = array('$and' => array(array('user' => $auth->getID()), array('status' => 'cart')));
 
         $t = DB::getTitleList($query, $num, $auth);
         $this->titlelist = $t['titlelist'];

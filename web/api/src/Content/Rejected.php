@@ -21,9 +21,7 @@ class Rejected extends Content {
      */
     public function __construct($num, AuthToken $auth) {
 
-        $rj = DB::getUserData('rejected', $auth);
-
-        $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $rj))));
+        $query = array('$and' => array(array('user' => $auth->getID()), array('status' => 'rejected')));
 
         $t = DB::getTitleList($query, $num, $auth);
         $this->titlelist = $t['titlelist'];
