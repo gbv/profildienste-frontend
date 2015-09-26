@@ -41,7 +41,7 @@ class Watchlist extends AJAXResponse {
             return;
         }
 
-        if (is_null($watchlists[$wl_id]['list'])) {
+        if (is_null($watchlists[$wl_id])) {
             $this->error('Keine Merkliste mit dieser ID gefunden.');
             return;
         }

@@ -61,9 +61,9 @@ class WatchlistManager extends AJAXResponse {
                     $this->error('Unvollständige Informationen');
                 }
                 $i = max(array_keys($watchlists)) + 1;
-                $nl = array('id' => $i, 'default' => false, 'name' => $content, 'list' => array());
+                $nl = array('id' => $i, 'name' => $content);
                 $watchlists[$i] = $nl;
-                array_push($wl_order, $i);
+                array_push($wl_order, strval($i));
                 $this->resp['id'] = $i;
                 break;
             case 'def':
