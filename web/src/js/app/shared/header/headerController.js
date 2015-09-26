@@ -9,7 +9,7 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
   var titles = {
     overview : {
       title: 'Gesamtübersicht Neuerscheinungen',
-      icon: ''
+      icon: 'fa-home'
     },
     cart: {
       title: 'Warenkorb',

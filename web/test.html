@@ -1,21 +1,69 @@
-<div class="navbar navbar-default navbar-static-top" ng-controller="MenuController as MenuCtrl">
-    <div ng-hide="loggedIn">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Profildienst</a>
-        </div>
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="http://www.gbv.de/wikis/cls/Profildienste" class="btn btn-link help-btn"><i
-                        class="fa fa-question-circle"></i> Hilfe</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="container" ng-show="loggedIn">
+<!DOCTYPE html>
+<html ng-app="Profildienst">
+<head>
+    <title>GBV-Profildienste</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/icon/profildienst.ico">
+    <link href="/dist/css/vendor.min.css" rel="stylesheet" media="screen">
+    <link href="/dist/css/main.min.css" rel="stylesheet" media="screen">
+    <style type="text/css">
+
+        @keyframes logoIn {
+            from {line-height:20px;}
+            to {line-height:14px;}
+        }
+
+        @keyframes logoOut {
+            from {line-height:14px}
+            to {line-height:20px}
+        }
+
+        @keyframes backIn {
+            from {font-size:0px; opacity: 0;}
+            to {font-size:12px; opacity: 1;}
+        }
+
+        @keyframes backOut {
+            from {font-size:12px; opacity: 1;}
+            to {font-size:0px; opacity:0;}
+        }
+
+        .logo-in{
+            animation-name: logoIn;
+            animation-duration: 0.3s;
+            animation-fill-mode: forwards;
+        }
+
+        .logo-out{
+            animation-name: logoOut;
+            animation-duration: 0.3s;
+            animation-fill-mode: forwards;
+        }
+
+        .back-in{
+            animation-name: backIn;
+            animation-duration: 0.3s;
+            animation-fill-mode: forwards;
+        }
+
+        .back-out{
+            animation-name: backOut;
+            animation-duration: 0.3s;
+            animation-fill-mode: forwards;
+        }
+
+        #back{
+            font-size:0px;
+        }
+
+    </style>
+    <base href="/">
+</head>
+<script src="/dist/js/vendor.min.js"></script>
+<script src="/dist/js/main.min.js"></script>
+<div class="navbar navbar-default navbar-static-top">
+    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="icon-bar"></span>
@@ -24,7 +72,7 @@
             </button>
             <a class="navbar-brand pd-brand" id="logo" href="/main">
                 Profildienst<br>
-                <span id="back">
+                <span style="color: #c0c0c0;" id="back">
                     <i class="fa fa-caret-left"></i> Übersicht
                 </span>
             </a>
@@ -113,3 +161,27 @@
     </div>
     <!-- /price -->
 </div>
+<div style="margin-top:200px">
+    <a href="javascript:void(0);" id="test">Test</a>
+    <a href="javascript:void(0);" id="out">Out</a>
+</div>
+<script type="text/javascript">
+
+    $('#test').click(function(){
+        $('#back').removeClass('back-out');
+        $('#back').addClass('back-in');
+
+        $('#logo').removeClass('logo-out');
+        $('#logo').addClass('logo-in');
+    });
+
+    $('#out').click(function(){
+        $('#back').removeClass('back-in');
+        $('#back').addClass('back-out');
+
+        $('#logo').removeClass('logo-in');
+        $('#logo').addClass('logo-out');
+    });
+</script>
+</body>
+</html>

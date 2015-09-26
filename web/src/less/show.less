@@ -193,6 +193,10 @@
   color: #ccc;
 }
 
+.controls{
+  margin-bottom:10px;
+}
+
 .xt-list {
   padding: 3px;
 }
@@ -264,16 +268,13 @@
 }
 
 .small-spacer{
-  padding-top:100px;
+  padding-top:80px;
 }
 
 .spacer{
-  padding-top:167px;
+  padding-top:140px;
 }
 
-#header{
-  margin-top:20px;
-}
 
 .navbar{
   margin: 0 !important;
@@ -281,4 +282,57 @@
 
 .header-icon{
   margin-right:5px;
+}
+
+@keyframes logoIn {
+  from {line-height:20px;}
+  to {line-height:14px;}
+}
+
+@keyframes logoOut {
+  from {line-height:14px}
+  to {line-height:20px}
+}
+
+@keyframes backIn {
+  from {font-size:0px; opacity: 0;}
+  to {font-size:12px; opacity: 1;}
+}
+
+@keyframes backOut {
+  from {font-size:12px; opacity: 1;}
+  to {font-size:0px; opacity:0;}
+}
+
+.logo-in{
+  animation-name: logoIn;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+.logo-out{
+  animation-name: logoOut;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+.back-in{
+  animation-name: backIn;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+.back-out{
+  animation-name: backOut;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+#back{
+  color: @navbar-back-color;
+}
+
+.navbar-default .navbar-nav > li > a:focus {
+  background-color: #FFFF00;
+  color: #FFC0CB;
 }

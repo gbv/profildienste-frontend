@@ -214,7 +214,7 @@ $app -> group('/user', $authenticate($app, $auth), function() use ($app, $auth){
     $d = \Profildienst\DB::get(array('_id' => $auth->getID()),'users',array(), true);
 
     $data = array(
-      'cart' => count($d['cart']),
+      'cart' => \Profildienst\DB::getCartSize($auth),
       'price' => $d['price'],
     );
 
