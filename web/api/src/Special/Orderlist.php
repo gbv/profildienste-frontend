@@ -26,34 +26,23 @@ class Orderlist {
      */
     public function __construct(AuthToken $auth) {
 
-        $cart = DB::getUserData('cart', $auth);
 
-        if (sizeof($cart) == 0) {
+        if (DB::getCartSize($auth) == 0) {
             throw new \Exception('Keine Titel im Warenkorb.');
         }
 
-
-        $ct = array();
-        $ci = array();
-
-        foreach ($cart as $c) {
-            array_push($ct, $c['id']);
-            $ci[$c['id']] = $c;
-        }
-
-
-        $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $ct))));
+        $query = array('$and' => array(array('user' => $auth->getID()), array('status' => 'cart')));
 
         $t = DB::getTitleList($query, NULL, $auth);
         $titlelist = $t['titlelist'];
 
         foreach ($titlelist->getTitles() as $tit) {
             $this->orderlist[] = array(
-                'lieft' => $ci[$tit->getDirectly('_id')]['lieft'],
-                'budget' => $ci[$tit->getDirectly('_id')]['budget'],
-                'ssgnr' => $ci[$tit->getDirectly('_id')]['ssgnr'],
-                'selcode' => $ci[$tit->getDirectly('_id')]['selcode'],
-                'comment' => $ci[$tit->getDirectly('_id')]['comment'],
+                'lieft' => $tit->getLft(),
+                'budget' => $tit->getBdg(),
+                'ssgnr' => $tit->getSSGNr(),
+                'selcode' => $tit->getSelcode(),
+                'comment' => $tit->getComment(),
                 'titel' => $tit->get('titel'),
                 'gvkt' => $tit->get('gvkt_mak')
             );

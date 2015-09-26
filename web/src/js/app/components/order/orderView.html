@@ -30,19 +30,6 @@
   <div ng-show="orderComplete">
     <div class="row">
       <div class="col-md-12">
-        <div class="page-header">
-            <h1>
-              <i class="fa fa-check"></i> Vorgang erfolgreich abgeschlossen
-              <br>
-              <small>
-                Folgende Titel werden weitergeleitet.
-              </small>
-            </h1>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
       <ul class="nav nav-pills nav-stacked orders">
         <li ng-repeat="order in orderlist"><a href=""><i class="fa fa-caret-right orders-caret"></i>{{order.titel}}</a></li>
       </ul>

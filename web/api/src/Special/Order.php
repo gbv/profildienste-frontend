@@ -28,29 +28,15 @@ class Order {
 
         $this->resp = array('success' => true, 'price' => NULL, 'cart' => NULL, 'watchlist' => NULL, 'errormsg' => '');
 
-        //get cart
-        $cart = DB::getUserData('cart', $auth);
-
         // nothing to do if there are no titles in the cart
-        if (count($cart) == 0) {
+        if (DB::getCartSize($auth) == 0) {
             return;
         }
 
-        $ct = array();
-        $ci = array();
-        foreach ($cart as $c) {
-            array_push($ct, $c['id']);
-            $ci[$c['id']] = $c;
-        }
-
         // get the titles from the db
-        $query = array('$and' => array(array('XX01' => $auth->getID()), array('_id' => array('$in' => $ct))));
+        $query = array('$and' => array(array('user' => $auth->getID()), array('status' => 'cart')));
         $t = DB::getTitleList($query, NULL, $auth);
         $titles = $t['titlelist']->getTitles();
-
-        foreach ($titles as $title){
-          $ci[$title->getDirectly('_id')]['title'] = $title;
-        }
 
         $isil = DB::getUserData('isil', $auth);
         $config = Config::$bibliotheken[$isil];
@@ -63,22 +49,22 @@ class Order {
 
           $reihen = array();
 
-          foreach ($ci as $id => $entry){
-            $reihe = $entry['title']->get('sachgruppe');
+          foreach ($titles as $title){
+            $reihe = $title->get('sachgruppe');
             if(!isset($reihen[$reihe])){
               $reihen[$reihe] = $this->tempdir($base).'/';
             }
             $dir = $reihen[$reihe];
 
-            $ppn = $entry['title']->get('ppn');
+            $ppn = $title->get('ppn');
 
             $output = array(
               'ppn' => $ppn,
-              'budget' => $entry['budget'],
-              'lieft' => $entry['lieft'],
-              'selcode' => $entry['selcode'],
-              'ssgnr' => $entry['ssgnr'],
-              'comment' => $entry['comment']
+              'budget' => $title->getBdg(),
+              'lieft' => $title->getLft(),
+              'selcode' => $title->getSelcode(),
+              'ssgnr' => $title->getSSGNr(),
+              'comment' => $title->getComment()
             );
 
             file_put_contents($dir.$ppn.'.json', json_encode($output, JSON_PRETTY_PRINT));
@@ -103,16 +89,16 @@ class Order {
 
           $dir = $this->tempdir().'/';
 
-          foreach ($ci as $id => $entry){
-            $ppn = $entry['title']->get('ppn');
+          foreach ($titles as $title){
+            $ppn = $title->get('ppn');
 
             $output = array(
-              'ppn' => $ppn,
-              'budget' => $entry['budget'],
-              'lieft' => $entry['lieft'],
-              'selcode' => $entry['selcode'],
-              'ssgnr' => $entry['ssgnr'],
-              'comment' => $entry['comment']
+                'ppn' => $ppn,
+                'budget' => $title->getBdg(),
+                'lieft' => $title->getLft(),
+                'selcode' => $title->getSelcode(),
+                'ssgnr' => $title->getSSGNr(),
+                'comment' => $title->getComment()
             );
 
             file_put_contents($dir.$ppn.'.json', json_encode($output, JSON_PRETTY_PRINT));
@@ -141,10 +127,10 @@ class Order {
 
         DB::upd(array('_id' => $auth->getID()), array('$set' => array('price' => $p)), 'users');
 
-        $d = DB::getUserData('pending', $auth);
-        $d = array_merge($d, $cart);
-
-        DB::upd(array('_id' => $auth->getID()), array('$set' => array('cart' => array(), 'pending' => $d)), 'users');
+        foreach ($titles as $title) {
+            $id = $title->getDirectly('_id');
+            DB::upd(array('_id' => $id), array('$set' => array('status' => 'pending')), 'titles');
+        }
 
         $this->resp['cart'] = 0;
         $this->resp['price'] = $p;
