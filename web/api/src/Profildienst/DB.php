@@ -217,12 +217,39 @@ class DB {
         }
     }
 
+    /**
+     * @param $id Title to delete
+     * @param AuthToken $auth AuthToken
+     * @throws \Exception
+     */
+    public static function deleteTitle($id, AuthToken $auth){
+        self::init_db();
+        $titles = new \MongoCollection(self::$db, 'titles');
+        try{
+            $titles->remove(array('_id' => $id));
+        }catch(\Exception $e) {
+            return $e->getMessage();
+        }
+        return TRUE;
+    }
+
+    /**
+     * @param $id Id of the watchlist
+     * @param AuthToken $auth
+     * @return int Number of titles in the watchlist
+     * @throws \Exception
+     */
     public static function getWatchlistSize($id, AuthToken $auth){
         self::init_db();
         $titles = new \MongoCollection(self::$db, 'titles');
         return $titles->find(array('$and' => array(array('user' => $auth->getID()), array('watchlist' => strval($id)))))->count();
     }
 
+    /**
+     * @param AuthToken $auth
+     * @return int Number of titles in the cart
+     * @throws \Exception
+     */
     public static function getCartSize(AuthToken $auth){
         self::init_db();
         $titles = new \MongoCollection(self::$db, 'titles');

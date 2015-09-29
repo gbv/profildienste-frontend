@@ -114,6 +114,7 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
       if(!json.success){
         Notification.error(json.errormsg);
       }else{
+        Notification.success(json.msg);
         $location.path('/main');
       }
     }.bind(this));

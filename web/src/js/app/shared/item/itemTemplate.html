@@ -93,7 +93,7 @@
      <div collapse="CommentCollapsed" ng-show="ItemCtrl.showOrderFields()">
        <br>
        <span class="text-muted">Kommentar: </span><br>
-       <textarea class="form-control cmt-field" rows="3" ng-model="item.commentField" ng-blur="ItemCtrl.closeComment()" placeholder="Freitext-Kommentar"></textarea>
+       <textarea class="form-control cmt-field" rows="3" ng-model="item.commentField" ng-focus="ItemCtrl.saveComment()" ng-blur="ItemCtrl.closeComment()" placeholder="Freitext-Kommentar"></textarea>
      </div>
 
      <br>
