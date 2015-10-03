@@ -21,27 +21,6 @@ class Title {
     private $wl_name;
 
     /**
-     * @var string Lieferant
-     */
-    private $lft = NULL;
-    /**
-     * @var string Budget
-     */
-    private $bdg = NULL;
-    /**
-     * @var string SSG-Nr.
-     */
-    private $ssgnr = NULL;
-    /**
-     * @var string Selektionscode
-     */
-    private $selcode = NULL;
-    /**
-     * @var string Kommentar
-     */
-    private $comment = NULL;
-
-    /**
      * @var string URL of the cover
      */
     private $cover;
@@ -121,7 +100,6 @@ class Title {
             $this->mak = $this->get('gvkt_mak');
             $this->ilns = NULL;
         }
-
     }
 
     /**
@@ -274,14 +252,14 @@ class Title {
      * @return string Lieferant
      */
     public function getLft() {
-        return $this->lft;
+        return $this->j['lieft'];;
     }
 
     /**
      * @return string Budget
      */
     public function getBdg() {
-        return $this->bdg;
+        return $this->j['budget'];
     }
 
     /**
@@ -310,21 +288,21 @@ class Title {
      * @return string SSG-Nr.
      */
     public function getSSGNr() {
-        return $this->ssgnr;
+        return $this->j['ssgnr'];
     }
 
     /**
      * @return string Selektionscode
      */
     public function getSelcode() {
-        return $this->selcode;
+        return $this->j['selcode'];
     }
 
     /**
      * @return string comment
      */
     public function getComment() {
-        return $this->comment;
+        return $this->j['comment'];
     }
 
     /**

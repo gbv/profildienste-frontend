@@ -75,6 +75,31 @@ class WatchlistManager extends AJAXResponse {
                 $f = array_slice($wl_order, 0, $occ);
                 $s = array_slice($wl_order, ($occ + 1), count($wl_order));
                 $wl_order = array_merge($f, $s);
+
+                $query = array('$and' => array(array('user' => $auth->getID()), array('watchlist' => $id)));
+                $t = DB::getTitleList($query, NULL, $auth);
+
+                if(!is_null($t['titlelist'])) {
+
+                    $titles = $t['titlelist']->getTitles();
+
+                    foreach ($titles as $title) {
+
+                        if ($title->getUser() !== $auth->getID()) {
+                            $this->error('Sie haben keine Berechtigung diesen Titel zu bearbeiten.');
+                            return;
+                        }
+
+                        if (!$title->isInWatchlist()) {
+                            $this->error('Dieser Titel befindet sich nicht in der Merkliste.');
+                            return;
+                        }
+
+                        DB::upd(array('_id' => $title->getDirectly('_id')), array('$set' => array('watchlist' => null)), 'titles');
+
+                    }
+                }
+
                 break;
             case 'change-order':
                 if (!is_null($content)) {

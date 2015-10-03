@@ -12,7 +12,7 @@ pdApp.service('UserService', ['$http', '$q', 'LoginService', function ($http, $q
 
                 defUser.resolve({
                     name: json.data.name,
-                    def_lft: json.data.def_lft,
+                    defaults: json.data.defaults,
                     budgets: json.data.budgets,
                     show: {
                         comments: false,

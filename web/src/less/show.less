@@ -333,14 +333,26 @@
 }
 
 .item-select{
-  color: #c9c9c9 !important;
+  color: @select-color !important;
   outline: 0 !important;
 }
 
 .item-remove{
-  color: #AD2B2B !important;
+  color: @remove-color !important;
 }
 
 .itemSelected{
   color: @primary !important;
+}
+
+
+@keyframes saved {
+  0% {background-color: transparent}
+  50% {background-color: @save-success-color}
+  100% {background-color:transparent}
+}
+
+.saved{
+  animation-name: saved;
+  animation-duration: 2.0s;
 }

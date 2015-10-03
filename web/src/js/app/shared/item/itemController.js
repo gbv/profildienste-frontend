@@ -1,8 +1,25 @@
-pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartService', '$modal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', 'Notification', function ($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout, Notification) {
+pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartService', '$modal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', 'Notification', 'SaveService', function ($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout, Notification, SaveService) {
 
     $scope.bibInfCollapsed = true;
     $scope.addInfCollapsed = true;
-    $scope.CommentCollapsed = true;
+    $scope.CommentCollapsed = ($scope.item.comment == null || $scope.item.comment == '');
+
+    $scope.loading = {
+      comment: false,
+        lieft: false,
+        selcode: false,
+        ssgnr: false,
+        budget: false
+    };
+
+    // for the background fade
+    $scope.saved = {
+      comment: false,
+        lieft: false,
+        selcode: false,
+        ssgnr: false,
+        budget: false
+    };
 
     $scope.item.preis = $sce.trustAsHtml($scope.item.preis);
 
@@ -13,8 +30,17 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
 
     UserService.getUserData().then(function (data) {
         $scope.budgets = data.budgets;
-        $scope.item.budget = data.budgets[0].key;
-        $scope.item.lft = data.def_lft;
+        $scope.defaults = data.defaults;
+
+        if($scope.item.budget === null && $scope.budgets.length > 0){
+            $scope.item.budget = $scope.budgets[0].key;
+            for (var i = 0; i < $scope.budgets.length; i++){
+                if($scope.budgets[i].key === $scope.defaults.budget){
+                    $scope.item.budget = $scope.budgets[i].value;
+                    break;
+                }
+            }
+        }
     });
 
     ConfigService.getConfig().then(function (data) {
@@ -35,11 +61,6 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
 
         CartService.addToCart($scope.item).then(function (data) {
                 $scope.item.status.cart = true;
-                $scope.item.lft = data.order.lft;
-                $scope.item.budget = data.order.budget;
-                $scope.item.selcode = data.order.selcode;
-                $scope.item.ssgnr = data.order.ssgnr;
-                $scope.item.comment = data.order.comment;
 
                 SelectService.deselect($scope.item);
 
@@ -107,20 +128,120 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
         InfoService.openOPAC($scope.item);
     };
 
+    /*
+     * Comment saving
+     */
+
     var comment = '';
 
     this.saveComment = function (){
-        comment = $scope.item.commentField;
+        comment = $scope.item.comment;
     };
 
     this.closeComment = function () {
-        if ($scope.item.commentField === undefined || $scope.item.commentField === '') {
+        if ($scope.item.comment === undefined || $scope.item.comment === '') {
             $scope.CommentCollapsed = true;
         }
 
-        if($scope.item.commentField !== comment){
-            alert('Save needed');
+        if($scope.item.comment !== comment){
+            $scope.saved.comment = false;
+            $scope.loading.comment = true;
+            SaveService.saveComment($scope.item).then(function(){
+                $scope.loading.comment = false;
+                $scope.saved.comment = true;
+            }, function (reason) {
+                Notification.error(reason);
+            });
         }
+    };
+
+    /*
+     * Lieferant saving
+     */
+
+    var lieft = '';
+
+    this.saveLieft = function (){
+        lieft = $scope.item.lft;
+    };
+
+    this.closeLieft = function (){
+
+        if($scope.item.lft !== lieft){
+            $scope.saved.lieft = false;
+            $scope.loading.lieft = true;
+            SaveService.saveLieft($scope.item).then(function(){
+                $scope.loading.lieft = false;
+                $scope.saved.lieft = true;
+            }, function (reason) {
+                Notification.error(reason);
+            });
+        }
+    };
+
+
+    /*
+     * Selcode saving
+     */
+
+    var selcode = '';
+
+    this.saveSelcode = function (){
+        selcode = $scope.item.selcode;
+    };
+
+    this.closeSelcode = function (){
+
+        if($scope.item.selcode !== selcode){
+            $scope.saved.selcode = false;
+            $scope.loading.selcode = true;
+            SaveService.saveSelcode($scope.item).then(function(){
+                $scope.loading.selcode = false;
+                $scope.saved.selcode = true;
+            }, function (reason) {
+                Notification.error(reason);
+            });
+        }
+    };
+
+    /*
+     * SSGNr saving
+     */
+
+    var ssgnr = '';
+
+    this.saveSSGNr = function (){
+        ssgnr = $scope.item.ssgnr;
+    };
+
+    this.closeSSGNr = function (){
+
+        if($scope.item.ssgnr !== ssgnr){
+            $scope.saved.ssgnr = false;
+            $scope.loading.ssgnr = true;
+            SaveService.saveSSGNr($scope.item).then(function(){
+                $scope.loading.ssgnr = false;
+                $scope.saved.ssgnr = true;
+            }, function (reason) {
+                Notification.error(reason);
+            });
+        }
+    };
+
+
+    /*
+     * Budget saving
+     */
+
+    this.saveBudget = function (){
+        $scope.saved.budget = false;
+        $scope.loading.budget = true;
+        SaveService.saveBudget($scope.item).then(function () {
+            $scope.loading.budget = false;
+            $scope.saved.budget = true;
+        }, function (reason) {
+            Notification.error(reason);
+        });
     };
 
 
@@ -201,10 +322,6 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
 
     this.showOrderFields = function () {
         return !($scope.item.status.rejected);
-    };
-
-    this.showInpField = function () {
-        return this.showOrderFields() && !$scope.item.status.cart && !$scope.item.status.done;
     };
 
     this.isRejectable = function () {

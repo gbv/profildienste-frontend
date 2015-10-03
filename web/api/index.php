@@ -78,6 +78,21 @@ $app -> get('/libraries', function() use ($app){
 
 
 /**
+ * Save additional informations for titles
+ */
+$app -> post('/save', $authenticate($app, $auth), function() use ($app, $auth){
+
+  $id = $app->request()->post('id');
+  $type = $app->request()->post('type');
+  $content = $app->request()->post('content');
+
+  $m = new \AJAX\Save($id, $type, $content, $auth);
+  printResponse($m -> getResponse());
+
+});
+
+
+/**
  * Watchlists
  */
 $app -> group('/watchlist', $authenticate($app, $auth), function() use ($app, $auth){
@@ -129,14 +144,8 @@ $app -> group('/cart', $authenticate($app, $auth), function() use ($app, $auth){
   $app->post('/add', function () use ($app, $auth){
 
     $id = $app->request()->post('id');
-    $bdg = $app->request()->post('bdg');
-    $lft = $app->request()->post('lft');
-    $selcode = $app->request()->post('selcode');
-    $ssgnr = $app->request()->post('ssgnr');
-    $comment = $app->request()->post('comment');
 
-    $m = new \AJAX\Cart($id, $lft, $bdg, $selcode, $ssgnr, $comment, $auth);
-
+    $m = new \AJAX\Cart($id, $auth);
     printResponse($m -> getResponse());
   });
 
@@ -175,12 +184,17 @@ $app -> group('/user', $authenticate($app, $auth), function() use ($app, $auth){
 
     $budgets = array();
     foreach ($d['budgets'] as $budget) {
-      $budgets[] = array('key' => $budget['0'], 'value' => $budget['c'], 'default' => ($budget['0'] === $d['defaults']['budget']));
+      $budgets[] = array('key' => $budget['0'], 'value' => $budget['c']);
     }
 
     $data = array(
       'name' => $auth->getName(),
-      'def_lft' => $d['defaults']['lieft'],
+      'defaults' => array(
+        'lft' => $d['defaults']['lieft'],
+        'budget' => $d['defaults']['budget'],
+        'ssgnr' => $d['defaults']['ssgnr'],
+        'selcode' => $d['defaults']['selcode']
+      ),
       'budgets' => $budgets
     );
 

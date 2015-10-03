@@ -49,28 +49,22 @@
     <br>
     <br>
     
-    <form class="form-inline" ng-show="ItemCtrl.showOrderFields()">
+    <form class="form-inline">
       <!-- Lieferant -->
       <span class="text-muted">Lieferant: </span>
-        <input type="text" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" ng-maxlength="7" ng-minlength="1" ng-model="item.lft" ng-show="ItemCtrl.showInpField()">
-      <span ng-hide="ItemCtrl.showInpField()">{{item.lft}}</span>
+        <input type="text" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" ng-model="item.lft" ng-maxlength="7" ng-minlength="1" ng-focus="ItemCtrl.saveLieft()" ng-blur="ItemCtrl.closeLieft()" placeholder="{{defaults.lft}}" ng-disabled="loading.lieft" ng-class="{saved: saved.lieft}">
 
       <!-- Budget -->
       <span class="text-muted">Budget:</span>
-      <select ng-show="ItemCtrl.showInpField()" ng-model="item.budget" class="form-control lft input-sm">
-        <option ng-repeat="budget in budgets" ng-selected="budget.default" value="{{budget.key}}">{{budget.value}}</option>
-      </select>
-      <span ng-hide="ItemCtrl.showInpField()">{{item.budget}}</span>
+      <select ng-model="item.budget" ng-options="budget.key as budget.value for budget in budgets" class="form-control lft input-sm" ng-change="ItemCtrl.saveBudget()" ng-disabled="loading.budget" ng-class="{saved: saved.budget}"></select>
 
       <!-- Selektionscode -->
       <span class="text-muted">Selektionscode: </span>
-      <input type="text" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20" ng-maxlength="20" ng-minlength="0" ng-model="item.selcode" ng-show="ItemCtrl.showInpField()" placeholder="Selektionscode">
-      <span ng-hide="ItemCtrl.showInpField()">{{item.selcode}}</span>
+      <input type="text" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20" ng-maxlength="20" ng-minlength="0" ng-model="item.selcode" ng-focus="ItemCtrl.saveSelcode()" ng-blur="ItemCtrl.closeSelcode()" placeholder="{{defaults.selcode}}" ng-disabled="loading.selcode" ng-class="{saved: saved.selcode}">
 
       <!-- SSG Nummer -->
       <span class="text-muted">SSGs-Nr.: </span>
-      <input type="text" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" ng-maxlength="3" ng-minlength="0" ng-model="item.ssgnr" ng-show="ItemCtrl.showInpField()" placeholder="SSG">
-      <span ng-hide="ItemCtrl.showInpField()">{{item.ssgnr}}</span>
+      <input type="text" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" ng-maxlength="3" ng-minlength="0" ng-model="item.ssgnr" placeholder="{{defaults.ssgnr}}" ng-focus="ItemCtrl.saveSSGNr()" ng-blur="ItemCtrl.closeSSGNr()" ng-disabled="loading.ssgnr" ng-class="{saved: saved.ssgnr}">
 
     </form>
 
@@ -90,19 +84,14 @@
     </div>
 
      <!-- Comments -->
-     <div collapse="CommentCollapsed" ng-show="ItemCtrl.showOrderFields()">
+     <div collapse="CommentCollapsed">
        <br>
        <span class="text-muted">Kommentar: </span><br>
-       <textarea class="form-control cmt-field" rows="3" ng-model="item.commentField" ng-focus="ItemCtrl.saveComment()" ng-blur="ItemCtrl.closeComment()" placeholder="Freitext-Kommentar"></textarea>
+       <textarea class="form-control cmt-field" rows="3" ng-model="item.comment" ng-focus="ItemCtrl.saveComment()" ng-blur="ItemCtrl.closeComment()" placeholder="Freitext-Kommentar" ng-disabled="loading.comment" ng-class="{saved: saved.comment}"></textarea>
      </div>
 
      <br>
      <br>
-
-     <div ng-show="item.status.cart" ng-show="ItemCtrl.showOrderFields()">
-       <span class="text-muted">Kommentar: </span> {{item.comment}}
-     </div>
-
      <br>
      <br>
 
@@ -113,7 +102,7 @@
        Zusätzliche Informationen
      </button>
 
-     <button type="button"  ng-click="CommentCollapsed = false" ng-show="ItemCtrl.showInpField()" class="btn btn-primary btn-sm cmt-btn">
+     <button type="button"  ng-click="CommentCollapsed = false" class="btn btn-primary btn-sm cmt-btn">
        <i class="fa fa-comment"></i> Kommentieren
      </button>
 

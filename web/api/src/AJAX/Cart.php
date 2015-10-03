@@ -22,7 +22,7 @@ class Cart extends AJAXResponse {
      * @param $comment string Kommentar
      * @param AuthToken $auth Token
      */
-    public function __construct($id, $lft, $bdg, $selcode, $ssgnr, $comment, AuthToken $auth) {
+    public function __construct($id, AuthToken $auth) {
 
         $this->resp['content'] = NULL;
         $this->resp['id'] = NULL;
@@ -30,7 +30,7 @@ class Cart extends AJAXResponse {
         $this->resp['order'] = array();
 
         // check if we got all the data we need
-        if ($id === '' || $lft === '' || $bdg === '') {
+        if ($id === '') {
             $this->error('Unvollständige Daten');
             return;
         }
@@ -52,14 +52,6 @@ class Cart extends AJAXResponse {
 
         // prepare part of response
         $this->resp['id'] = $id;
-
-        $this->resp['order'] = array(
-            'lft' => 'UNUSED',
-            'budget' => 'UNUSED',
-            'ssgnr' => 'UNUSED',
-            'selcode' => 'UNUSED',
-            'comment' => 'UNUSED'
-        );
 
         $tit = DB::getTitleByID($id);
 
