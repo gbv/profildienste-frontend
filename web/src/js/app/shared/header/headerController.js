@@ -79,6 +79,12 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
     $scope.total = total;
   });
 
+  $rootScope.$on('watchlistChange', function (ev, data){
+    if ($scope.site === 'manage'){
+      $scope.total = data.length;
+    }
+  });
+
   $scope.loggedIn = false;
 
   LoginService.whenLoggedIn().then(function(data){
