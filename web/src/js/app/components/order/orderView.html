@@ -1,45 +1,97 @@
 <div ng-controller="OrderController as OrderCtrl">
-  <div ng-hide="orderComplete">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <thead>
-              <tr><th>Titel</th><th>Lieferant</th><th>Budget</th><th>Selektionscode</th><th>SSG-Nr.</th><th>GVK-Treffer</th><th>Kommentar</th></tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="order in orderlist">
-                <td>{{order.titel}}</td><td>{{order.lieft}}</td><td>{{order.budget}}</td><td>{{order.selcode}}</td><td>{{order.ssgnr}}</td><td>{{order.gvkt}}</td><td>{{order.comment}}</td>
-              </tr>
-            </tbody>
-          </table>
+    <div ng-hide="orderComplete">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Titel</th>
+                            <th>Lieferant</th>
+                            <th>Budget</th>
+                            <th>Selektionscode</th>
+                            <th>SSG-Nr.</th>
+                            <th>GVK-Treffer</th>
+                            <th>Kommentar</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="order in orderlist">
+                            <td>{{order.titel}}</td>
+                            <!-- Lieferant -->
+                            <td ng-show="order.lieft | notEmpty">{{order.lieft}}</td>
+                            <td ng-hide="order.lieft | notEmpty" class="auto-default">{{defaults.lft}}
+                                <i class="fa fa-question-circle auto-default-help"
+                                   popover-placement="bottom"
+                                   popover-trigger="mouseenter"
+                                   popover="Da keine Angabe<br> gemacht wurde, <br>wurde hier der <br>für Sie hinterlegte <br>Standardwert <br>eingetragen.">
+                                </i>
+                            </td>
+
+                            <!-- Budget -->
+                            <td ng-show="order.budget | notEmpty">{{order.budget}}</td>
+                            <td ng-hide="order.budget | notEmpty" class="auto-default">{{defaults.budget}}
+                                <i class="fa fa-question-circle auto-default-help"
+                                   popover-placement="bottom"
+                                   popover-trigger="mouseenter"
+                                   popover="Da keine Angabe<br> gemacht wurde, <br>wurde hier der <br>für Sie hinterlegte <br>Standardwert <br>eingetragen.">
+                                </i>
+                            </td>
+
+                            <!-- Selcode -->
+                            <td ng-show="order.selcode | notEmpty">{{order.selcode}}</td>
+                            <td ng-hide="order.selcode | notEmpty" class="auto-default">{{defaults.selcode}}
+                                <i class="fa fa-question-circle auto-default-help"
+                                   popover-placement="bottom"
+                                   popover-trigger="mouseenter"
+                                   popover="Da keine Angabe<br> gemacht wurde, <br>wurde hier der <br>für Sie hinterlegte <br>Standardwert <br>eingetragen.">
+                                </i>
+                            </td>
+
+
+                            <!-- SSG-Nr. -->
+                            <td ng-show="order.ssgnr | notEmpty">{{order.ssgnr}}</td>
+                            <td ng-hide="order.ssgnr | notEmpty" class="auto-default">{{defaults.ssgnr}}
+                                <i class="fa fa-question-circle auto-default-help"
+                                   popover-placement="bottom"
+                                   popover-trigger="mouseenter"
+                                   popover="Da keine Angabe<br> gemacht wurde, <br>wurde hier der <br>für Sie hinterlegte <br>Standardwert <br>eingetragen.">
+                                </i>
+                            </td>
+
+                            <td>{{order.gvkt}}</td>
+                            <td>{{order.comment}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-      </div>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 btns-order">
+                <button type="button" class="btn btn-default btn-order btn-lg" ng-click="OrderCtrl.cancel()">
+                    <i class="fa fa-times icon-large"></i> Abbrechen
+                </button>
+                <button type="button" class="btn btn-primary btn-order btn-lg" ng-click="OrderCtrl.order()">
+                    <i class="fa fa-shopping-cart"></i> Bestellen
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 btns-order">
-        <button type="button" class="btn btn-default btn-order btn-lg" ng-click="OrderCtrl.cancel()">
-          <i class="fa fa-times icon-large"></i> Abbrechen
-        </button> 
-        <button type="button" class="btn btn-primary btn-order btn-lg" ng-click="OrderCtrl.order()">
-          <i class="fa fa-shopping-cart"></i> Bestellen
-        </button>
-      </div>
+    <div ng-show="orderComplete">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-pills nav-stacked orders">
+                    <li ng-repeat="order in orderlist"><a href=""><i class="fa fa-caret-right orders-caret"></i>{{order.titel}}</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 btns-order">
+                    <button type="button" class="btn btn-primary btn-order btn-lg" ng-click="OrderCtrl.finish()">
+                        <i class="fa fa-reply"></i> Zurück zur Gesamtübersicht
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-  <div ng-show="orderComplete">
-    <div class="row">
-      <div class="col-md-12">
-      <ul class="nav nav-pills nav-stacked orders">
-        <li ng-repeat="order in orderlist"><a href=""><i class="fa fa-caret-right orders-caret"></i>{{order.titel}}</a></li>
-      </ul>
-    </div>
-    <div class="row">
-      <div class="col-md-6 col-md-offset-3 btns-order">
-        <button type="button" class="btn btn-primary btn-order btn-lg" ng-click="OrderCtrl.finish()">
-          <i class="fa fa-reply"></i> Zurück zur Gesamtübersicht
-        </button>
-      </div>
-    </div>
-  </div>
-</div>

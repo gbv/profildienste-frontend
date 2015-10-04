@@ -41,6 +41,9 @@ class Order {
         $isil = DB::getUserData('isil', $auth);
         $config = Config::$bibliotheken[$isil];
 
+        $d = DB::get(array('_id' => $auth->getID()),'users',array(), true);
+        $defaults = $d['defaults'];
+
         if($config['advancedExport']){
 
           $iln = $config['ILN'];
@@ -60,11 +63,11 @@ class Order {
 
             $output = array(
               'ppn' => $ppn,
-              'budget' => $title->getBdg(),
-              'lieft' => $title->getLft(),
-              'selcode' => $title->getSelcode(),
-              'ssgnr' => $title->getSSGNr(),
-              'comment' => $title->getComment()
+              'budget' => is_null($title->getBdg()) ? $defaults['budget'] : $title->getBdg(),
+              'lieft' => is_null($title->getLft()) ? $defaults['lieft'] : $title->getLft(),
+              'selcode' => is_null($title->getSelcode()) ? $defaults['selcode'] : $title->getSelcode(),
+              'ssgnr' => is_null($title->getSSGNr()) ? $defaults['ssgnr'] : $title->getSSGNr(),
+              'comment' => is_null($title->getComment()) ? '' : $title->getComment()
             );
 
             file_put_contents($dir.$ppn.'.json', json_encode($output, JSON_PRETTY_PRINT));
@@ -94,11 +97,11 @@ class Order {
 
             $output = array(
                 'ppn' => $ppn,
-                'budget' => $title->getBdg(),
-                'lieft' => $title->getLft(),
-                'selcode' => $title->getSelcode(),
-                'ssgnr' => $title->getSSGNr(),
-                'comment' => $title->getComment()
+                'budget' => is_null($title->getBdg()) ? $defaults['budget'] : $title->getBdg(),
+                'lieft' => is_null($title->getLft()) ? $defaults['lieft'] : $title->getLft(),
+                'selcode' => is_null($title->getSelcode()) ? $defaults['selcode'] : $title->getSelcode(),
+                'ssgnr' => is_null($title->getSSGNr()) ? $defaults['ssgnr'] : $title->getSSGNr(),
+                'comment' => is_null($title->getComment()) ? '' : $title->getComment()
             );
 
             file_put_contents($dir.$ppn.'.json', json_encode($output, JSON_PRETTY_PRINT));

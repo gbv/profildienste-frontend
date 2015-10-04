@@ -1,4 +1,7 @@
 <div ng-controller="RejectedController as RejectedCtrl">
+  <div class="alert alert-warning">
+    <b><i class="fa fa-exclamation-triangle"></i></b> Elemente in dieser Ansicht werden nach 30 Tagen automatisch aus Ihrer Ansicht gelöscht.
+  </div>
   <ng-optionbar></ng-optionbar>
   <!-- List -->
   <div infinite-scroll='entries.loadMore()' infinite-scroll-disabled='entries.loading' infinite-scroll-distance='1'>

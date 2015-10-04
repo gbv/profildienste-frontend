@@ -1,4 +1,4 @@
-pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$http', '$rootScope', 'Notification', function($scope, OrderService, $location, $http, $rootScope, Notification) {
+pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$http', '$rootScope', 'Notification', 'UserService', function($scope, OrderService, $location, $http, $rootScope, Notification, UserService) {
 
   $scope.orderComplete = false;
 
@@ -13,6 +13,13 @@ pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$ht
     $rootScope.$broadcast('siteLoading');
     $rootScope.$broadcast('siteLoadingFinished', 0);
 
+  }, function(reason){
+    Notification.error(reason);
+    $location.path('cart');
+  });
+
+  UserService.getUserData().then(function (data) {
+    $scope.defaults = data.defaults;
   }, function(reason){
     Notification.error(reason);
     $location.path('cart');
