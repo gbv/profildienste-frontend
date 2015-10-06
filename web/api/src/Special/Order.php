@@ -53,7 +53,7 @@ class Order {
           $reihen = array();
 
           foreach ($titles as $title){
-            $reihe = $title->get('sachgruppe');
+            $reihe = $title->get('reihe');
             if(!isset($reihen[$reihe])){
               $reihen[$reihe] = $this->tempdir($base).'/';
             }

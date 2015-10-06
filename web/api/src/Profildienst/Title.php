@@ -76,7 +76,8 @@ class Title {
         'preis' => array('091O/28', 'a'),
         'ppn' => array('003@', '0'),
         'gvkt_mak' => array('091O/99', 'y'),
-        'gvkt_ppn' => array('091O/99', 'a')
+        'gvkt_ppn' => array('091O/99', 'a'),
+        'reihe' => array('091O/04', 'd')
     );
 
     /**
