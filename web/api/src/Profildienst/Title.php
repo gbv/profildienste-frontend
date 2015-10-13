@@ -279,6 +279,14 @@ class Title {
     }
 
     /**
+     * @return bool true if the title is done
+     */
+    public function isPending() {
+        return ($this->j['status'] === 'pending');
+    }
+
+
+    /**
      * @return bool true if the title has been rejected
      */
     public function isRejected() {

@@ -12,7 +12,8 @@ use Config\Config;
  * Class Order
  * @package Special
  */
-class Order {
+class Order
+{
 
     /**
      * @var array Response to the client
@@ -24,7 +25,8 @@ class Order {
      *
      * @param AuthToken $auth
      */
-    public function __construct(AuthToken $auth) {
+    public function __construct(AuthToken $auth)
+    {
 
         $this->resp = array('success' => true, 'price' => NULL, 'cart' => NULL, 'watchlist' => NULL, 'errormsg' => '');
 
@@ -41,82 +43,143 @@ class Order {
         $isil = DB::getUserData('isil', $auth);
         $config = Config::$bibliotheken[$isil];
 
-        $d = DB::get(array('_id' => $auth->getID()),'users',array(), true);
+        $d = DB::get(array('_id' => $auth->getID()), 'users', array(), true);
         $defaults = $d['defaults'];
 
-        if($config['advancedExport']){
+        if ($config['advancedExport']) {
 
-          $iln = $config['ILN'];
+            $iln = $config['ILN'];
 
-          $base = $this->tempdir().'/';
+            $base = $this->tempdir() . '/';
 
-          $reihen = array();
+            $reihen = array();
 
-          foreach ($titles as $title){
-            $reihe = $title->get('reihe');
-            if(!isset($reihen[$reihe])){
-              $reihen[$reihe] = $this->tempdir($base).'/';
+            foreach ($titles as $title) {
+                $reihe = $title->get('reihe');
+                if (!isset($reihen[$reihe])) {
+                    $reihen[$reihe] = $this->tempdir($base) . '/';
+                }
+                $dir = $reihen[$reihe];
+
+                $ppn = $title->get('ppn');
+
+                $toUpdate = array();
+
+                $budget = $title->getBdg();
+                if(is_null($budget)){
+                    $budget = $defaults['budget'];
+                    $toUpdate['budget'] = $budget;
+                }
+
+                $lieft = $title->getLft();
+                if(is_null($lieft)){
+                    $lieft = $defaults['lieft'];
+                    $toUpdate['lieft'] = $lieft;
+                }
+
+                $selcode = $title->getSelcode();
+                if(is_null($selcode)){
+                    $selcode = $defaults['selcode'];
+                    $toUpdate['selcode'] = $selcode;
+                }
+
+                $ssgnr = $title->getSSGNr();
+                if(is_null($ssgnr)){
+                    $ssgnr = $defaults['ssgnr'];
+                    $toUpdate['ssgnr'] = $ssgnr;
+                }
+
+                if(count($toUpdate) > 0){
+                    DB::upd(array('_id' => $title->getDirectly('_id')), array('$set' => $toUpdate), 'titles');
+                }
+
+                $output = array(
+                    'ppn' => $ppn,
+                    'budget' => $budget,
+                    'lieft' => $lieft,
+                    'selcode' => $selcode,
+                    'ssgnr' => $ssgnr,
+                    'comment' => is_null($title->getComment()) ? '' : $title->getComment()
+                );
+
+                file_put_contents($dir . $ppn . '.json', json_encode($output, JSON_PRETTY_PRINT));
             }
-            $dir = $reihen[$reihe];
 
-            $ppn = $title->get('ppn');
+            //upload
+            foreach ($reihen as $reihe => $dir) {
+                $rdir = Config::$remote['basedir'] . $iln . $reihe . '/return/';
+                $host = Config::$remote['user'] . '@' . Config::$remote['host'] . ':' . $rdir;
 
-            $output = array(
-              'ppn' => $ppn,
-              'budget' => is_null($title->getBdg()) ? $defaults['budget'] : $title->getBdg(),
-              'lieft' => is_null($title->getLft()) ? $defaults['lieft'] : $title->getLft(),
-              'selcode' => is_null($title->getSelcode()) ? $defaults['selcode'] : $title->getSelcode(),
-              'ssgnr' => is_null($title->getSSGNr()) ? $defaults['ssgnr'] : $title->getSSGNr(),
-              'comment' => is_null($title->getComment()) ? '' : $title->getComment()
-            );
+                exec('rsync -azPi ' . $dir . ' ' . $host . ' 2>&1', $output, $ret);
 
-            file_put_contents($dir.$ppn.'.json', json_encode($output, JSON_PRETTY_PRINT));
-          }
+                if ($ret != 0) {
+                    $this->resp['success'] = false;
+                    $this->resp['errormsg'] = 'Fehler bei der Datenübertragung!';
+                    return;
+                }
 
-          //upload
-          foreach ($reihen as $reihe => $dir){
-            $rdir = Config::$remote['basedir'].$iln.$reihe.'/return/';
-            $host = Config::$remote['user'].'@'.Config::$remote['host'].':'.$rdir;
-
-            exec('rsync -azPi '.$dir.' '.$host.' 2>&1', $output, $ret);
-
-            if($ret != 0){
-              $this->resp['success'] = false;
-              $this->resp['errormsg'] = 'Fehler bei der Datenübertragung!';
-              return;
             }
 
-          }
+        } else {
 
-        }else{
+            $dir = $this->tempdir() . '/';
 
-          $dir = $this->tempdir().'/';
+            foreach ($titles as $title) {
 
-          foreach ($titles as $title){
-            $ppn = $title->get('ppn');
+                $ppn = $title->get('ppn');
 
-            $output = array(
-                'ppn' => $ppn,
-                'budget' => is_null($title->getBdg()) ? $defaults['budget'] : $title->getBdg(),
-                'lieft' => is_null($title->getLft()) ? $defaults['lieft'] : $title->getLft(),
-                'selcode' => is_null($title->getSelcode()) ? $defaults['selcode'] : $title->getSelcode(),
-                'ssgnr' => is_null($title->getSSGNr()) ? $defaults['ssgnr'] : $title->getSSGNr(),
-                'comment' => is_null($title->getComment()) ? '' : $title->getComment()
-            );
+                $toUpdate = array();
 
-            file_put_contents($dir.$ppn.'.json', json_encode($output, JSON_PRETTY_PRINT));
-          }
+                $budget = $title->getBdg();
+                if(is_null($budget)){
+                    $budget = $defaults['budget'];
+                    $toUpdate['budget'] = $budget;
+                }
 
-          $rdir = Config::$remote['basedir'].$config['exportDir'].'/return/';
-          $host = Config::$remote['user'].'@'.Config::$remote['host'].':'.$rdir;
+                $lieft = $title->getLft();
+                if(is_null($lieft)){
+                    $lieft = $defaults['lieft'];
+                    $toUpdate['lieft'] = $lieft;
+                }
 
-          exec('rsync -azPi '.$dir.' '.$host.' 2>&1', $output, $ret);
+                $selcode = $title->getSelcode();
+                if(is_null($selcode)){
+                    $selcode = $defaults['selcode'];
+                    $toUpdate['selcode'] = $selcode;
+                }
 
-          if($ret != 0){
-            $this->resp['success'] = false;
-            $this->resp['errormsg'] = 'Fehler bei der Datenübertragung!';
-            return;
-          }
+                $ssgnr = $title->getSSGNr();
+                if(is_null($ssgnr)){
+                    $ssgnr = $defaults['ssgnr'];
+                    $toUpdate['ssgnr'] = $ssgnr;
+                }
+
+                if(count($toUpdate) > 0){
+                    DB::upd(array('_id' => $title->getDirectly('_id')), array('$set' => $toUpdate), 'titles');
+                }
+
+                $output = array(
+                    'ppn' => $ppn,
+                    'budget' => $budget,
+                    'lieft' => $lieft,
+                    'selcode' => $selcode,
+                    'ssgnr' => $ssgnr,
+                    'comment' => is_null($title->getComment()) ? '' : $title->getComment()
+                );
+
+                file_put_contents($dir . $ppn . '.json', json_encode($output, JSON_PRETTY_PRINT));
+            }
+
+            $rdir = Config::$remote['basedir'] . $config['exportDir'] . '/return/';
+            $host = Config::$remote['user'] . '@' . Config::$remote['host'] . ':' . $rdir;
+
+            exec('rsync -azPi ' . $dir . ' ' . $host . ' 2>&1', $output, $ret);
+
+            if ($ret != 0) {
+                $this->resp['success'] = false;
+                $this->resp['errormsg'] = 'Fehler bei der Datenübertragung!';
+                return;
+            }
 
         }
 
@@ -132,7 +195,7 @@ class Order {
 
         foreach ($titles as $title) {
             $id = $title->getDirectly('_id');
-            DB::upd(array('_id' => $id), array('$set' => array('status' => 'pending')), 'titles');
+            DB::upd(array('_id' => $id), array('$set' => array('status' => 'pending', 'lastStatusChange' => new \MongoDate())), 'titles');
         }
 
         $this->resp['cart'] = 0;
@@ -140,20 +203,21 @@ class Order {
 
 
     }
-    
-    private function tempdir($dir=false) {
-      if($dir !== false){
-        $tempfile=tempnam($dir,'pd_');
-      }else{
-        $tempfile=tempnam(sys_get_temp_dir(),'pd_');
-      }
-      if (file_exists($tempfile)) {
-        unlink($tempfile);
-      }
-      mkdir($tempfile);
-      if (is_dir($tempfile)) {
-         return $tempfile;
-      }
+
+    private function tempdir($dir = false)
+    {
+        if ($dir !== false) {
+            $tempfile = tempnam($dir, 'pd_');
+        } else {
+            $tempfile = tempnam(sys_get_temp_dir(), 'pd_');
+        }
+        if (file_exists($tempfile)) {
+            unlink($tempfile);
+        }
+        mkdir($tempfile);
+        if (is_dir($tempfile)) {
+            return $tempfile;
+        }
     }
 
     /**
@@ -161,7 +225,8 @@ class Order {
      *
      * @return array Response
      */
-    public function getResponse() {
+    public function getResponse()
+    {
         return $this->resp;
     }
 

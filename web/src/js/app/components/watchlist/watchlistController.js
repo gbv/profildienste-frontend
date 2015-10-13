@@ -13,15 +13,6 @@ pdApp.controller('WatchlistController', ['$scope', 'Entries', 'ConfigService', '
     }
 
     $scope.entries = new Entries('watchlist', $routeParams.id, title);
-
-    var config = {
-      hideWatchlist: true,
-      hideCart: false,
-      hideRejected: true,
-      rejectPossible: false
-    };
-
-    ConfigService.setConfig(config);
     ConfigService.setEntries($scope.entries);
     
   });

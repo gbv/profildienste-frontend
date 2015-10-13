@@ -1,4 +1,4 @@
-pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 'CartService', 'UserService', '$modal', 'SelectService', 'LoginService', 'SearchService', '$location', function ($scope, $rootScope, WatchlistService, CartService, UserService, $modal, SelectService, LoginService, SearchService, $location) {
+pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 'CartService', 'UserService', '$modal', 'SelectService', 'LoginService', 'SearchService', '$location', 'PageConfigService', function ($scope, $rootScope, WatchlistService, CartService, UserService, $modal, SelectService, LoginService, SearchService, $location, PageConfigService) {
 
 
     WatchlistService.getWatchlists().then(function (data) {
@@ -32,21 +32,39 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
         });
     };
 
-    $scope.itemsSelected = (SelectService.getSelected().length > 0);
+    $scope.itemsSelected = (SelectService.getSelectedNumber() > 0);
     $scope.showSelMenu = false;
 
     $rootScope.$on('itemSelected', function () {
         $scope.itemsSelected = true;
-        $scope.selNumber = SelectService.getSelected().length;
+        $scope.selNumber = SelectService.getSelectedNumber();
 
         if ($scope.selNumber == 1) {
             $scope.showSelMenu = true;
         }
     });
 
+    $rootScope.$on('viewSelected', function () {
+        $scope.itemsSelected = true;
+        $scope.selNumber = SelectService.getSelectedNumber() + ' (alle)';
+        $scope.showSelMenu = true;
+    });
+
+    $rootScope.$on('allDeselected', function () {
+        $scope.selNumber = 0;
+        $scope.itemsSelected = false;
+        $scope.showSelMenu = false;
+    });
+
+    $rootScope.$on('allSelected', function () {
+        $scope.itemsSelected = true;
+        $scope.selNumber = SelectService.getSelectedNumber();
+        $scope.showSelMenu = true;
+    });
+
     $rootScope.$on('itemDeselected', function () {
 
-        $scope.selNumber = SelectService.getSelected().length;
+        $scope.selNumber = SelectService.getSelectedNumber();
 
         if ($scope.selNumber == 0) {
             $scope.itemsSelected = false;
@@ -56,18 +74,22 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
 
     this.toggleSelMenu = function () {
         $scope.showSelMenu = !$scope.showSelMenu;
-    }
+    };
 
     this.selectAll = function () {
         SelectService.selectAll();
+    };
+
+    this.selectView = function () {
+        SelectService.selectView();
     }
 
     this.deselectAll = function () {
-        SelectService.deselectAll();
+        SelectService.resetSelection();
     }
 
-    this.rejectAll = function () {
-        SelectService.rejectAll();
+    this.selectionInCart = function () {
+        SelectService.selectionInCart();
     }
 
     this.search = function () {
@@ -91,6 +113,11 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
 
     $rootScope.$on('searchViewUnload', function () {
         $scope.searchterm = '';
+    });
+
+    $rootScope.$on('siteChanged', function (ev, site){
+        var s = site.watchlist ? 'watchlist' : site.site;
+        $scope.selection = PageConfigService.getSelectionOptions(s);
     });
 
     var backShown = false;

@@ -5,7 +5,7 @@
     <div class="row">
       <!-- Selektor -->
       <div class="col-md-4">
-        <button type="button" class="btn btn-link pull-left item-select xt-list" ng-show="ItemCtrl.isRejectable()" ng-click="ItemCtrl.toggleSelect()" ng-class="{ itemSelected: item.status.selected}">
+        <button type="button" class="btn btn-link pull-left item-select xt-list" ng-show="selectionEnabled" ng-click="ItemCtrl.toggleSelect()" ng-class="{ itemSelected: item.status.selected}">
           <i class="fa fa-square-o fa-2x" ng-hide="item.status.selected"></i>
           <i class="fa fa-check-square-o fa-2x" ng-show="item.status.selected"></i>
         </button>
@@ -52,19 +52,23 @@
     <form class="form-inline">
       <!-- Lieferant -->
       <span class="text-muted">Lieferant: </span>
-        <input type="text" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" ng-model="item.lft" ng-maxlength="7" ng-minlength="1" ng-focus="ItemCtrl.saveLieft()" ng-blur="ItemCtrl.closeLieft()" placeholder="{{defaults.lft}}" ng-disabled="loading.lieft" ng-class="{saved: saved.lieft}">
+      <input type="text" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" ng-show="ItemCtrl.editOrderInformation()" ng-model="item.lft" ng-maxlength="7" ng-minlength="1" ng-focus="ItemCtrl.saveLieft()" ng-blur="ItemCtrl.closeLieft()" placeholder="{{defaults.lft}}" ng-disabled="loading.lieft" ng-class="{saved: saved.lieft}">
+      <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.lft}}</span>
 
       <!-- Budget -->
       <span class="text-muted">Budget:</span>
-      <select ng-model="item.budget" ng-options="budget.key as budget.value for budget in budgets" class="form-control lft input-sm" ng-change="ItemCtrl.saveBudget()" ng-disabled="loading.budget" ng-class="{saved: saved.budget}"></select>
+      <select ng-model="item.budget" ng-options="budget.key as budget.value for budget in budgets" ng-show="ItemCtrl.editOrderInformation()" class="form-control lft input-sm" ng-change="ItemCtrl.saveBudget()" ng-disabled="loading.budget" ng-class="{saved: saved.budget}"></select>
+      <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.budget}}</span>
 
       <!-- Selektionscode -->
       <span class="text-muted">Selektionscode: </span>
-      <input type="text" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20" ng-maxlength="20" ng-minlength="0" ng-model="item.selcode" ng-focus="ItemCtrl.saveSelcode()" ng-blur="ItemCtrl.closeSelcode()" placeholder="{{defaults.selcode}}" ng-disabled="loading.selcode" ng-class="{saved: saved.selcode}">
+      <input type="text" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20" ng-show="ItemCtrl.editOrderInformation()"  ng-maxlength="20" ng-minlength="0" ng-model="item.selcode" ng-focus="ItemCtrl.saveSelcode()" ng-blur="ItemCtrl.closeSelcode()" placeholder="{{defaults.selcode}}" ng-disabled="loading.selcode" ng-class="{saved: saved.selcode}">
+      <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.selcode}}</span>
 
       <!-- SSG Nummer -->
       <span class="text-muted">SSGs-Nr.: </span>
-      <input type="text" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" ng-maxlength="3" ng-minlength="0" ng-model="item.ssgnr" placeholder="{{defaults.ssgnr}}" ng-focus="ItemCtrl.saveSSGNr()" ng-blur="ItemCtrl.closeSSGNr()" ng-disabled="loading.ssgnr" ng-class="{saved: saved.ssgnr}">
+      <input type="text" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" ng-show="ItemCtrl.editOrderInformation()" ng-maxlength="3" ng-minlength="0" ng-model="item.ssgnr" placeholder="{{defaults.ssgnr}}" ng-focus="ItemCtrl.saveSSGNr()" ng-blur="ItemCtrl.closeSSGNr()" ng-disabled="loading.ssgnr" ng-class="{saved: saved.ssgnr}">
+      <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.ssgnr}}</span>
 
     </form>
 
@@ -84,10 +88,18 @@
     </div>
 
      <!-- Comments -->
+    <div ng-hide="ItemCtrl.editOrderInformation()">
+      <br>
+      <br>
+      <span class="text-muted">Kommentar: </span>
+      <br>
+      <span >{{item.comment}}</span>
+    </div>
      <div collapse="CommentCollapsed">
        <br>
        <span class="text-muted">Kommentar: </span><br>
-       <textarea class="form-control cmt-field" rows="3" ng-model="item.comment" ng-focus="ItemCtrl.saveComment()" ng-blur="ItemCtrl.closeComment()" placeholder="Freitext-Kommentar" ng-disabled="loading.comment" ng-class="{saved: saved.comment}"></textarea>
+       <textarea class="form-control cmt-field" rows="3" ng-show="ItemCtrl.editOrderInformation()" ng-model="item.comment" ng-focus="ItemCtrl.saveComment()" ng-blur="ItemCtrl.closeComment()" placeholder="Freitext-Kommentar" ng-disabled="loading.comment" ng-class="{saved: saved.comment}"></textarea>
+
      </div>
 
      <br>
@@ -102,7 +114,7 @@
        Zusätzliche Informationen
      </button>
 
-     <button type="button"  ng-click="CommentCollapsed = false" class="btn btn-primary btn-sm cmt-btn">
+     <button type="button" ng-show="ItemCtrl.editOrderInformation()"  ng-click="CommentCollapsed = false" class="btn btn-primary btn-sm cmt-btn">
        <i class="fa fa-comment"></i> Kommentieren
      </button>
 
@@ -155,7 +167,8 @@
     <div class="row" class="title-button">
       <div class="col-md-12">
         
-        <span class="text-muted" ng-show="item.status.done">Sie haben diesen Titel bereits bestellt.</span>
+        <span class="text-muted" ng-show="item.status.done">Die Bearbeitung dieses Titels wurde am {{item.status.lastChange.sec * 1000 | date:'dd.MM.yyyy'}} abgeschlossen.</span>
+        <span class="text-muted" ng-show="item.status.pending">Sie haben diesen Titel am {{item.status.lastChange.sec * 1000 | date:'dd.MM.yyyy'}} bestellt.</span>
 
         <div class="btn-group pull-right" ng-show="item.status.rejected">
           <button type="button" class="btn btn-danger" ng-click="ItemCtrl.removeRejected()">

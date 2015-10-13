@@ -32,15 +32,6 @@ pdApp.controller('SearchController', ['$scope', 'SearchService', '$rootScope', '
 
   this.doSearch(); 
 
-  var config = {
-    hideWatchlist: false,
-    hideCart: false,
-    hideRejected: false,
-    rejectPossible: true
-  };
-
-  ConfigService.setConfig(config);
-
   this.showSearch = function (){
     return ($scope.entries !== undefined && !$scope.getStarted && !$scope.entries.error && ($scope.entries.total > 0 || $scope.entries.loading));  
   };

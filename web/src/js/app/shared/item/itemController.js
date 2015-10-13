@@ -23,7 +23,6 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
 
     $scope.item.preis = $sce.trustAsHtml($scope.item.preis);
 
-
     WatchlistService.getWatchlists().then(function (data) {
         $scope.watchlists = data.watchlists;
     });
@@ -44,18 +43,14 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
     });
 
     ConfigService.getConfig().then(function (data) {
-        $scope.config = data.config;
+        $scope.config = data.actionConfig;
+        $scope.selectionEnabled = data.selectionEnabled;
+        $scope.editOrderInformation = data.editOrderInformation;
     });
 
     ConfigService.getEntries().then(function (data) {
         $scope.entries = data.entries;
     });
-
-    $rootScope.$on('selectAll', function () {
-        if (this.isRejectable() && !$scope.item.status.selected) {
-            SelectService.select($scope.item);
-        }
-    }.bind(this));
 
     this.addToCart = function () {
 
@@ -309,30 +304,30 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
     }
 
     this.showNoTopBtn = function () {
-        return $scope.item.status.done || $scope.item.status.rejected;
+        return $scope.item.status.done || $scope.item.status.rejected || $scope.item.status.pending;
     };
 
     this.showCartBtn = function () {
-        return !$scope.item.status.done && !$scope.item.status.rejected && !$scope.item.status.cart;
+        return !$scope.item.status.done && !$scope.item.status.pending  && !$scope.item.status.rejected && !$scope.item.status.cart;
     };
 
     this.showCartBtnRem = function () {
-        return !$scope.item.status.done && !$scope.item.status.rejected && $scope.item.status.cart;
-    };
-
-    this.showOrderFields = function () {
-        return !($scope.item.status.rejected);
+        return !$scope.item.status.done && !$scope.item.status.rejected && !$scope.item.status.pending && $scope.item.status.cart;
     };
 
     this.isRejectable = function () {
-        return !$scope.item.status.rejected && !$scope.item.status.cart && !$scope.item.status.watchlist.watched && !$scope.item.status.done;
+        return !$scope.item.status.rejected && !$scope.item.status.cart && !$scope.item.status.watchlist.watched && !$scope.item.status.done && !$scope.item.status.pending;
     };
 
     this.showWatchlistBtn = function () {
-        return !$scope.item.status.done && !$scope.item.status.rejected && !$scope.item.status.watchlist.watched;
+        return !$scope.item.status.done && !$scope.item.status.pending && !$scope.item.status.rejected && !$scope.item.status.watchlist.watched;
     };
 
     this.showWatchlistRemBtn = function () {
-        return !$scope.item.status.done && !$scope.item.status.rejected && $scope.item.status.watchlist.watched;
+        return !$scope.item.status.done && !$scope.item.status.pending && !$scope.item.status.rejected && $scope.item.status.watchlist.watched;
     };
+
+    this.editOrderInformation = function(){
+        return !($scope.item.status.done || $scope.item.status.pending);
+    }
 }]);

@@ -35,21 +35,6 @@ class Cart extends AJAXResponse {
             return;
         }
 
-        /* needed later
-
-        // insert defaults if needed
-        $defaults = DB::getUserData('defaults', $auth);
-
-        if ($selcode === '') {
-            $selcode = $defaults['selcode'];
-        }
-
-        if ($ssgnr === '') {
-            $ssgnr = $defaults['ssgnr'];
-        }
-
-        */
-
         // prepare part of response
         $this->resp['id'] = $id;
 
@@ -90,7 +75,7 @@ class Cart extends AJAXResponse {
         $this->resp['price'] = $p;
 
 
-        DB::upd(array('_id' => $id), array('$set' => array('status' => 'cart')), 'titles');
+        DB::upd(array('_id' => $id), array('$set' => array('status' => 'cart', 'lastStatusChange' => new \MongoDate())), 'titles');
 
         $this->resp['content'] = DB::getCartSize($auth);
         $this->resp['success'] = true;

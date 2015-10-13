@@ -456,6 +456,8 @@ function convertTitle(Title $t){
       'rejected' => $t -> isRejected(),
       'done' => $t -> isDone(),
       'cart' => $t -> isInCart(),
+      'pending' => $t->isPending(),
+      'lastChange' => ($t->isPending() || $t->isDone()) ? $t->getDirectly('lastStatusChange') : NULL, // only show last status change for pending and done titles
       'selected' => false,
       'watchlist' => array('watched' => $t -> isInWatchlist(), 'id' => $t -> getWlID(), 'name' => $t -> getWlName())
       ) 

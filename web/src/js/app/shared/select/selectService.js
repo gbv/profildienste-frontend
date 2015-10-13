@@ -1,37 +1,84 @@
-pdApp.service('SelectService', ['$rootScope', 'RejectService', 'ConfigService', 'Notification', function ($rootScope, RejectService, ConfigService, Notification) {
+pdApp.service('SelectService', ['$rootScope', 'RejectService', 'Notification', function ($rootScope, RejectService, Notification) {
+
     var selected = [];
 
-    ConfigService.getConfig().then(function (data) {
-        this.config = data.config;
+    var selectView = false;
+    var selectAll = false;
+
+    $rootScope.$on('siteChanged', function (ev, data) {
+        this.resetSelection();
+        this.entries = data.entries;
     }.bind(this));
 
-    ConfigService.getEntries().then(function (data) {
-        this.entries = data.entries;
+    $rootScope.$on('siteLoadingFinished', function (ev, data) {
+        if(selectView){
+            selected = [];
+            for(var i = 0; i < this.entries.items.length; i++){
+                selected.push(this.entries.items[i]);
+            }
+        }
     }.bind(this));
 
     this.getSelected = function () {
         return selected;
     };
 
-    this.selectAll = function () {
-        $rootScope.$broadcast('selectAll');
+    this.viewSelected = function(){
+        return selectView;
     };
 
-    this.deselectAll = function () {
-        var i;
-        for (i = 0; i < selected.length; i++) {
+    this.getSelectedNumber = function(){
+      if(selectView){
+          return this.entries.total;
+      }else{
+          return selected.length;
+      }
+    };
+
+    this.selectAll = function (){
+        this.resetSelection(false);
+        selectView = false;
+        selectAll = true;
+        for(var i = 0; i < this.entries.items.length; i++){
+            this.entries.items[i].status.selected = true;
+            selected.push(this.entries.items[i]);
+        }
+
+        $rootScope.$broadcast('allSelected');
+    };
+
+    this.selectView = function(){
+        this.resetSelection(false);
+        selectAll = false;
+        selectView = true;
+        for(var i = 0; i < this.entries.items.length; i++){
+            this.entries.items[i].status.selected = true;
+            selected.push(this.entries.items[i]);
+        }
+
+        $rootScope.$broadcast('viewSelected');
+    };
+
+
+    this.resetSelection = function(hardReset){
+
+        if(typeof hardReset === 'undefined' && hardReset) {
+            selectView = false;
+            selectAll = false;
+        }
+
+        for(var i = 0; i < selected.length; i++){
             selected[i].status.selected = false;
         }
 
         selected = [];
+        $rootScope.$broadcast('allDeselected');
 
-        if (i > 0) {
-            $rootScope.$broadcast('itemDeselected');
-        }
     };
 
     this.select = function (item) {
-        if (selected.indexOf(item) >= 0) {
+
+        if (item.status.selected) {
             return;
         }
         selected.push(item);
@@ -40,6 +87,7 @@ pdApp.service('SelectService', ['$rootScope', 'RejectService', 'ConfigService', 
     };
 
     this.deselect = function (item) {
+
         var ind = selected.indexOf(item);
         if (ind < 0) {
             return;
@@ -47,9 +95,14 @@ pdApp.service('SelectService', ['$rootScope', 'RejectService', 'ConfigService', 
 
         selected.splice(ind, 1);
         item.status.selected = false;
+        selectView = false;
 
         $rootScope.$broadcast('itemDeselected');
     };
+
+    this.selectionInCart = function(){
+        alert('Im Sel Service!');
+    }
 
     this.rejectAll = function () {
         RejectService.addMultRejected(selected).then(function (data) {
@@ -57,12 +110,12 @@ pdApp.service('SelectService', ['$rootScope', 'RejectService', 'ConfigService', 
             for (var i = 0; i < selected.length; i++) {
                 selected[i].status.rejected = true;
 
-                if (this.config.hideRejected) {
-                    this.entries.removeItem(selected[i]);
-                }
+                //if (this.config.hideRejected) {
+                //    this.entries.removeItem(selected[i]);
+                //}
             }
 
-            this.deselectAll();
+            this.deselectView();
 
         }.bind(this), function (reason) {
             Notification.error(reason);

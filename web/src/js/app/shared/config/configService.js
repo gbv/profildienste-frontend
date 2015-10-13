@@ -1,4 +1,4 @@
-pdApp.service('ConfigService', ['$q', function($q){
+pdApp.service('ConfigService', ['$q', '$rootScope', 'PageConfigService', function($q, $rootScope, PageConfigService){
 
   var config;
   var entries;
@@ -10,9 +10,7 @@ pdApp.service('ConfigService', ['$q', function($q){
       return defConfig.promise;
     }else{
       var def = $q.defer();
-      def.resolve({
-        config: config
-      });
+      def.resolve(config);
       return def.promise;
     }
   };
@@ -20,9 +18,7 @@ pdApp.service('ConfigService', ['$q', function($q){
   this.setConfig = function(c){
     config = c;
 
-    defConfig.resolve({
-      config: config
-    });
+    defConfig.resolve(config);
   };
 
   this.getEntries = function(){
@@ -44,5 +40,18 @@ pdApp.service('ConfigService', ['$q', function($q){
       entries: entries
     });
   };
+
+  $rootScope.$on('siteChanged', function (ev, site){
+
+    var view = site.site;
+
+    if(site.watchlist){
+      view = 'watchlist';
+    }
+
+    this.config = undefined;
+    this.setConfig(PageConfigService.getConfig(view));
+
+  }.bind(this));
 
 }]);

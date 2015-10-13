@@ -1,16 +1,12 @@
 pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigService', '$q', 'SelectService', 'Notification', function ($scope, SettingsService, ConfigService, $q, SelectService, Notification) {
 
     this.selectAll = function () {
-        if ($scope.entries === undefined) {
-            return;
-        }
+        SelectService.selectAll();
+    };
 
-        if (SelectService.getSelected().length === $scope.entries.items.length) {
-            SelectService.deselectAll();
-        } else {
-            SelectService.selectAll();
-        }
-    }
+    this.selectView = function (){
+      SelectService.selectView();
+    };
 
     var p = $q.all([SettingsService.getSortby(), SettingsService.getOrder(), SettingsService.getSelOptions(), ConfigService.getConfig(), ConfigService.getEntries()]);
 
@@ -35,7 +31,7 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
             }
         }
 
-        $scope.showSelectAll = data[3].config.rejectPossible;
+        $scope.showSelectAll = data[3].selectionEnabled;
 
         $scope.entries = data[4].entries;
 

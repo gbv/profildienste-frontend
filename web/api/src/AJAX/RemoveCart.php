@@ -68,7 +68,7 @@ class RemoveCart extends AJAXResponse
 
         $this->resp['price'] = $p;
 
-        DB::upd(array('_id' => $id), array('$set' => array('status' => 'normal')), 'titles');
+        DB::upd(array('_id' => $id), array('$set' => array('status' => 'normal', 'lastStatusChange' => new \MongoDate())), 'titles');
         $this->resp['content'] = DB::getCartSize($auth);
         $this->resp['success'] = true;
 

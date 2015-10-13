@@ -44,7 +44,7 @@ class Reject extends AJAXResponse {
                 return;
             }
 
-            DB::upd(array('_id' => $id), array('$set' => array('status' => 'rejected')), 'titles');
+            DB::upd(array('_id' => $id), array('$set' => array('status' => 'rejected', 'lastStatusChange' => new \MongoDate())), 'titles');
         }
 
         $this->resp['success'] = true;

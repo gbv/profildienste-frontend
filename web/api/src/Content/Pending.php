@@ -23,7 +23,7 @@ class Pending extends Content {
 
         $query = array('$and' => array(array('user' => $auth->getID()), array('status' => 'pending')));
 
-        $t = DB::getTitleList($query, $num, $auth);
+        $t = DB::getTitleList($query, $num, $auth, array('lastStatusChange' => -1));
         $this->titlelist = $t['titlelist'];
         $this->total = $t['total'];
 

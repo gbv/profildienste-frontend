@@ -77,11 +77,14 @@ class DB {
      * @return array
      * @throws \Exception
      */
-    public static function getTitleList($query, $skip, AuthToken $auth) {
+    public static function getTitleList($query, $skip, AuthToken $auth, $sortFields = null) {
         self::init_db();
         $collection = new \MongoCollection(self::$db, 'titles');
         $r = array();
         $cursor = $collection->find($query);
+        if(!is_null($sortFields)){
+            $cursor->sort($sortFields);
+        }
         $cnt = $cursor->count();
         $settings = self::getUserData('settings', $auth);
         if ($settings['order'] == 'asc') {
@@ -89,7 +92,6 @@ class DB {
         } else {
             $o = -1;
         }
-        $sortby = array('erj' => '011@.a', 'wvn' => '006U.0', 'tit' => '021A.a', 'sgr' => '045G.a', 'dbn' => '006L.0', 'per' => '028A.a');
 
         if (!is_null($skip)) {
             $lm = Config::$pagesize;
@@ -97,7 +99,11 @@ class DB {
             $cursor = $cursor->limit($lm);
         }
 
-        $cursor = $cursor->sort(array($sortby[$settings['sortby']] => $o));
+        // only sort the regular way if sortFields has no value
+        if(is_null($sortFields)){
+            $sortby = array('erj' => '011@.a', 'wvn' => '006U.0', 'tit' => '021A.a', 'sgr' => '045G.a', 'dbn' => '006L.0', 'per' => '028A.a');
+            $cursor = $cursor->sort(array($sortby[$settings['sortby']] => $o));
+        }
         foreach ($cursor as $doc) {
             $t = new Title($doc);
             $id = $t->getDirectly('_id');
@@ -183,7 +189,7 @@ class DB {
      * @return array
      * @throws \Exception
      */
-    public static function get($query, $coll, $fields = array(), $findone = false) {
+    public static function get($query, $coll, $fields = array(), $findone = false, $sortFields = null) {
         self::init_db();
         $collection = new \MongoCollection(self::$db, $coll);
         if ($findone) {
@@ -191,6 +197,9 @@ class DB {
             return $c;
         } else {
             $c = $collection->find($query, $fields);
+            if(!is_null($sortFields)){
+                $c->sort($sortFields);
+            }
             $r = array();
             foreach ($c as $doc) {
                 array_push($r, $doc);

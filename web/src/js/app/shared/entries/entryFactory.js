@@ -1,5 +1,5 @@
 // Load the entries
-pdApp.factory('Entries', ['$http', '$modal', '$rootScope', function($http, $modal, $rootScope) {
+pdApp.factory('Entries', ['$http', '$modal', '$rootScope', 'SelectService', function($http, $modal, $rootScope, SelectService) {
 
   // Entry object
   var Entries = function(site, id, title) {
@@ -14,7 +14,8 @@ pdApp.factory('Entries', ['$http', '$modal', '$rootScope', function($http, $moda
 
     $rootScope.$broadcast('siteChanged', {
       site: (title !== undefined) ? title : site,
-      watchlist: (id !== undefined)
+      watchlist: (id !== undefined),
+      entries: this
     });
   };
 
@@ -36,7 +37,11 @@ pdApp.factory('Entries', ['$http', '$modal', '$rootScope', function($http, $moda
     $http.get(url).success(function(data) {
       if(data.success){
         var items = data.data;
+
+        var selectAll = SelectService.viewSelected();
+
         for (var i = 0; i < items.length; i++) {
+          items[i].status.selected = selectAll;
           this.items.push(items[i]);
         }
         this.page++;

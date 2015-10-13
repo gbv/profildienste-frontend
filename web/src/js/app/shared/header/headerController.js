@@ -1,4 +1,4 @@
-pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$location','$http', 'Notification', function($scope, $rootScope, LoginService, $location, $http, Notification) {
+pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$location','$http', 'Notification', 'PageConfigService', function($scope, $rootScope, LoginService, $location, $http, Notification, PageConfigService) {
   $scope.title = '';
   $scope.icon = '';
   $scope.site = 'main';
@@ -6,60 +6,18 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
   $scope.loading = true;
   $scope.total = 0;
 
-  var titles = {
-    overview : {
-      title: 'Gesamtübersicht Neuerscheinungen',
-      icon: 'fa-home'
-    },
-    cart: {
-      title: 'Warenkorb',
-      icon: 'fa-shopping-cart'
-    },
-    pending: {
-      title: 'In Bearbeitung',
-      icon: 'fa-tasks'
-    },
-    rejected: {
-      title: 'Abgelehnt',
-      icon: 'fa-minus-circle'
-    },
-    done: {
-      title: 'Bearbeitet',
-      icon: 'fa-check'
-    },
-    manage: {
-      title: 'Verwaltung Ihrer Merklisten',
-      icon: 'fa-star'
-    },
-    order: {
-      title: 'Bestätigung',
-      icon: 'fa-shopping-cart'
-    },
-    ordered: {
-      title: 'Vorgang erfolgreich abgeschlossen',
-      icon: 'fa-check'
-    },
-    search: {
-      title: 'Suche',
-      icon: 'fa-search'
-    }
-  };
-
   $rootScope.$on('siteChanged', function (ev, site){
 
     $scope.site = site.site;
 
     if(!site.watchlist){
-
-      var title = titles[site.site];
-
-      $scope.title = title.title;
-      $scope.icon = title.icon;
+      $scope.title = PageConfigService.getTitle(site.site);
+      $scope.icon = PageConfigService.getIcon(site.site);
 
     }else{
 
       $scope.title = site.site;
-      $scope.icon = 'fa-star';
+      $scope.icon = PageConfigService.getIcon('watchlist');
 
     }
 

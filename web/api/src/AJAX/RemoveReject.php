@@ -42,7 +42,7 @@ class RemoveReject extends AJAXResponse {
             return;
         }
 
-        DB::upd(array('_id' => $id), array('$set' => array('status' => 'normal')), 'titles');
+        DB::upd(array('_id' => $id), array('$set' => array('status' => 'normal', 'lastStatusChange' => new \MongoDate())), 'titles');
 
         $this->resp['success'] = true;
     }
