@@ -216,11 +216,12 @@ class DB {
      * @param $coll string Name of collection
      * @throws \Exception
      */
-    public static function upd($cond, $data, $coll) {
+    public static function upd($cond, $data, $coll, $opt = null) {
         self::init_db();
         $collection = new \MongoCollection(self::$db, $coll);
         try {
-            $collection->update($cond, $data, self::$opt);
+            $options = is_null($opt) ? self::$opt : $opt;
+            return $collection->update($cond, $data, $options);
         } catch (\MongoCursorException $mce) {
             die('Error: ' . $mce);
         }

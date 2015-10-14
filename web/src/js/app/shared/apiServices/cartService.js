@@ -34,20 +34,23 @@ pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', funct
     }
   };
 
-  this.addToCart = function(item){
+  this.addToCart = function(data, view){
 
     var def = $q.defer();
+
+    var items = data;
+    if(data.constructor !== Array){
+      items = [data.id];
+    }
+
+    var v = (view === undefined) ? '' : view;
 
     $http({
       method: 'POST',
       url: '/api/cart/add',
       data: $.param({
-        id: item.id, 
-        bdg: item.budget,
-        lft: item.lft,
-        selcode: item.selcode, 
-        ssgnr: item.ssgnr, 
-        comment: item.commentField
+        id: items,
+        view: v
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(json){

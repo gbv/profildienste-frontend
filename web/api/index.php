@@ -144,8 +144,9 @@ $app -> group('/cart', $authenticate($app, $auth), function() use ($app, $auth){
   $app->post('/add', function () use ($app, $auth){
 
     $id = $app->request()->post('id');
+    $view = $app->request()->post('view');
 
-    $m = new \AJAX\Cart($id, $auth);
+    $m = new \AJAX\Cart($id, $view, $auth);
     printResponse($m -> getResponse());
   });
 

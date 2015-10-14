@@ -1,45 +1,58 @@
-pdApp.service('SelectService', ['$rootScope', 'RejectService', 'Notification', function ($rootScope, RejectService, Notification) {
+pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService', 'CartService', function ($rootScope, Notification, PageConfigService, CartService) {
 
     var selected = [];
 
     var selectView = false;
     var selectAll = false;
 
+    var loading = false;
+
     $rootScope.$on('siteChanged', function (ev, data) {
         this.resetSelection();
         this.entries = data.entries;
+        this.config = PageConfigService.getConfig(data.site);
+        console.log(this.config);
     }.bind(this));
 
     $rootScope.$on('siteLoadingFinished', function (ev, data) {
-        if(selectView){
+        if (selectView) {
             selected = [];
-            for(var i = 0; i < this.entries.items.length; i++){
+            for (var i = 0; i < this.entries.items.length; i++) {
                 selected.push(this.entries.items[i]);
             }
         }
+    }.bind(this));
+
+    $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
+       this.resetSelection();
     }.bind(this));
 
     this.getSelected = function () {
         return selected;
     };
 
-    this.viewSelected = function(){
+    this.viewSelected = function () {
         return selectView;
     };
 
-    this.getSelectedNumber = function(){
-      if(selectView){
-          return this.entries.total;
-      }else{
-          return selected.length;
-      }
+    this.getSelectedNumber = function () {
+        if (selectView) {
+            return this.entries.total;
+        } else {
+            return selected.length;
+        }
     };
 
-    this.selectAll = function (){
+    this.selectAll = function () {
+
+        if (this.loading) {
+            return;
+        }
+
         this.resetSelection(false);
         selectView = false;
         selectAll = true;
-        for(var i = 0; i < this.entries.items.length; i++){
+        for (var i = 0; i < this.entries.items.length; i++) {
             this.entries.items[i].status.selected = true;
             selected.push(this.entries.items[i]);
         }
@@ -47,11 +60,16 @@ pdApp.service('SelectService', ['$rootScope', 'RejectService', 'Notification', f
         $rootScope.$broadcast('allSelected');
     };
 
-    this.selectView = function(){
+    this.selectView = function () {
+
+        if (this.loading) {
+            return;
+        }
+
         this.resetSelection(false);
         selectAll = false;
         selectView = true;
-        for(var i = 0; i < this.entries.items.length; i++){
+        for (var i = 0; i < this.entries.items.length; i++) {
             this.entries.items[i].status.selected = true;
             selected.push(this.entries.items[i]);
         }
@@ -60,14 +78,18 @@ pdApp.service('SelectService', ['$rootScope', 'RejectService', 'Notification', f
     };
 
 
-    this.resetSelection = function(hardReset){
+    this.resetSelection = function (hardReset) {
 
-        if(typeof hardReset === 'undefined' && hardReset) {
+        if (this.loading) {
+            return;
+        }
+
+        if (typeof hardReset === 'undefined' || hardReset) {
             selectView = false;
             selectAll = false;
         }
 
-        for(var i = 0; i < selected.length; i++){
+        for (var i = 0; i < selected.length; i++) {
             selected[i].status.selected = false;
         }
 
@@ -78,6 +100,10 @@ pdApp.service('SelectService', ['$rootScope', 'RejectService', 'Notification', f
 
     this.select = function (item) {
 
+        if (this.loading) {
+            return;
+        }
+
         if (item.status.selected) {
             return;
         }
@@ -87,6 +113,10 @@ pdApp.service('SelectService', ['$rootScope', 'RejectService', 'Notification', f
     };
 
     this.deselect = function (item) {
+
+        if (this.loading) {
+            return;
+        }
 
         var ind = selected.indexOf(item);
         if (ind < 0) {
@@ -100,26 +130,46 @@ pdApp.service('SelectService', ['$rootScope', 'RejectService', 'Notification', f
         $rootScope.$broadcast('itemDeselected');
     };
 
-    this.selectionInCart = function(){
-        alert('Im Sel Service!');
-    }
+    this.getSelectionIds = function () {
+        var ids = [];
+        for (var i = 0; i < selected.length; i++) {
+            ids.push(selected[i].id);
+        }
+        return ids;
+    };
 
-    this.rejectAll = function () {
-        RejectService.addMultRejected(selected).then(function (data) {
+    this.selectionInCart = function (site) {
 
-            for (var i = 0; i < selected.length; i++) {
-                selected[i].status.rejected = true;
+        var s = '';
+        var ids = [];
+        if(selectView){
+            s = site;
+        }else{
+            ids = this.getSelectionIds();
+        }
 
-                //if (this.config.hideRejected) {
-                //    this.entries.removeItem(selected[i]);
-                //}
+        this.loading = true;
+        CartService.addToCart(ids, s).then(function(){
+
+            for(var i = 0; i < selected.length; i++){
+                selected[i].status.selected = false;
+                if(this.config.actionConfig.hideCart && !selectView){
+                    this.entries.removeItem(selected[i]);
+                }
             }
 
-            this.deselectView();
+            if(this.config.actionConfig.hideCart && selectView){
+                this.entries.items = [];
+                this.entries.loadMore();
+            }
 
-        }.bind(this), function (reason) {
+            this.loading = false;
+            this.resetSelection();
+        }.bind(this), function(reason){
             Notification.error(reason);
-        });
-    }.bind(this);
+            this.loading = false;
+        }.bind(this));
+    };
+
 
 }]);

@@ -89,7 +89,7 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
     }
 
     this.selectionInCart = function () {
-        SelectService.selectionInCart();
+        SelectService.selectionInCart($scope.site);
     }
 
     this.search = function () {
@@ -116,8 +116,8 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
     });
 
     $rootScope.$on('siteChanged', function (ev, site){
-        var s = site.watchlist ? 'watchlist' : site.site;
-        $scope.selection = PageConfigService.getSelectionOptions(s);
+        $scope.site = site.watchlist ? 'watchlist' : site.site;
+        $scope.selection = PageConfigService.getSelectionOptions($scope.site);
     });
 
     var backShown = false;
