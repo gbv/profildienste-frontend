@@ -1,4 +1,4 @@
-pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService', 'CartService', function ($rootScope, Notification, PageConfigService, CartService) {
+pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService', 'CartService', 'RejectService', function ($rootScope, Notification, PageConfigService, CartService, RejectService) {
 
     var selected = [];
 
@@ -202,6 +202,78 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
             Notification.error(reason);
             this.loading = false;
         }.bind(this));
+    };
+
+    this.selectionReject = function (site){
+
+        var s = '';
+        var ids = [];
+        if(selectView){
+            s = site;
+        }else{
+            ids = this.getSelectionIds();
+        }
+
+        this.loading = true;
+        RejectService.addRejected(ids, s).then(function(){
+
+                for(var i = 0; i < selected.length; i++){
+                    selected[i].status.selected = false;
+                    if(this.config.actionConfig.hideRejected && !selectView){
+                        this.entries.removeItem(selected[i]);
+                    }
+                }
+
+                if(this.config.actionConfig.hideRejected && selectView){
+                    this.entries.items = [];
+                    this.entries.loadMore();
+                }
+
+                this.loading = false;
+                this.resetSelection();
+
+        }.bind(this),
+        function(reason){
+            Notification.error(reason);
+            this.loading = false;
+        }.bind(this));
+
+    };
+
+    this.selectionRemoveReject = function (site){
+
+        var s = '';
+        var ids = [];
+        if(selectView){
+            s = site;
+        }else{
+            ids = this.getSelectionIds();
+        }
+
+        this.loading = true;
+        RejectService.removeRejected(ids, s).then(function(){
+
+                for(var i = 0; i < selected.length; i++){
+                    selected[i].status.selected = false;
+                    if(this.config.actionConfig.hideRejected && !selectView){
+                        this.entries.removeItem(selected[i]);
+                    }
+                }
+
+                if(this.config.actionConfig.hideRejected && selectView){
+                    this.entries.items = [];
+                    this.entries.loadMore();
+                }
+
+                this.loading = false;
+                this.resetSelection();
+
+            }.bind(this),
+            function(reason){
+                Notification.error(reason);
+                this.loading = false;
+            }.bind(this));
+
     };
 
 

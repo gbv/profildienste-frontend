@@ -2,8 +2,8 @@
 
 namespace AJAX;
 
+use AJAX\Changers\CollectionStatusChanger;
 use Middleware\AuthToken;
-use Profildienst\DB;
 
 /**
  * Rejects one or multiple titles.
@@ -19,32 +19,15 @@ class Reject extends AJAXResponse {
      * @param array $ids The IDs
      * @param AuthToken $auth Token
      */
-    public function __construct($ids, AuthToken $auth) {
+    public function __construct($ids, $view, AuthToken $auth) {
 
-        $this->resp['id'] = array();
+        $this->resp['ids'] = array();
 
-        if ($ids == '') {
-            $this->error('Unvollständige Daten');
+        try{
+            CollectionStatusChanger::handleCollection($ids, $view, 'rejected', $auth);
+        }catch(\Exception $e){
+            $this->error($e->getMessage());
             return;
-        }
-
-        $this->resp['id'] = $ids;
-
-        foreach ($ids as $id) {
-
-            $title = DB::getTitleByID($id);
-
-            if($title->getUser() !== $auth->getID()){
-                $this->error('Sie haben keine Berechtigung diesen Titel zu bearbeiten.');
-                return;
-            }
-
-            if ($title->getStatus() !== 'normal' || $title->isInWatchlist()) {
-                $this->error('Sie können keinen Titel ausblenden, der sich in einer Merkliste oder im Warenkorb befindet!');
-                return;
-            }
-
-            DB::upd(array('_id' => $id), array('$set' => array('status' => 'rejected', 'lastStatusChange' => new \MongoDate())), 'titles');
         }
 
         $this->resp['success'] = true;

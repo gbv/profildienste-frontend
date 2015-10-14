@@ -160,16 +160,18 @@ $app -> group('/reject',  $authenticate($app, $auth), function() use ($app, $aut
 
   $app->post('/remove', function () use ($app, $auth){
     $id = $app->request()->post('id');
+    $view = $app->request()->post('view');
 
-    $m = new \AJAX\RemoveReject($id, $auth);
+    $m = new \AJAX\RemoveReject($id, $view, $auth);
     printResponse($m -> getResponse());
   });
 
 
   $app->post('/add', function () use ($app, $auth){
     $id = $app->request()->post('id');
+    $view = $app->request()->post('view');
 
-    $m = new \AJAX\Reject($id, $auth);
+    $m = new \AJAX\Reject($id, $view, $auth);
     printResponse($m -> getResponse());
   });
 

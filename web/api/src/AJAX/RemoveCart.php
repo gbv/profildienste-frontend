@@ -85,6 +85,9 @@ class RemoveCart extends AJAXResponse
             }
 
             $p['price'] = $p['price'] - $pr;
+            if($p['price'] < 0){
+                $p['price'] = 0;
+            }
         }
 
         //update the total price for the whole cart

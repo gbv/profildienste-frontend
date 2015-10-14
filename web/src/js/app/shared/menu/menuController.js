@@ -96,6 +96,14 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
         SelectService.selectionRemoveFromCart($scope.site);
     };
 
+    this.selectionReject = function () {
+        SelectService.selectionReject($scope.site);
+    };
+
+    this.selectionRemoveReject = function (){
+        SelectService.selectionRemoveReject($scope.site);
+    }
+
     this.search = function () {
         SearchService.setSearchterm($scope.searchterm);
         $location.path('search');

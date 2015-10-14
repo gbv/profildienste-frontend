@@ -3,7 +3,7 @@
 namespace AJAX;
 
 use Middleware\AuthToken;
-use Profildienst\DB;
+use AJAX\Changers\CollectionStatusChanger;
 
 /**
  * Removes a title from the rejected list.
@@ -19,30 +19,16 @@ class RemoveReject extends AJAXResponse {
      * @param $id string ID of the title
      * @param AuthToken $auth Token
      */
-    public function __construct($id, AuthToken $auth) {
+    public function __construct($ids, $view, AuthToken $auth) {
 
-        $this->resp['id'] = NULL;
+        $this->resp['id'] = array();
 
-        if ($id === '') {
-            $this->error('Unvollständige Daten');
+        try{
+            CollectionStatusChanger::handleCollection($ids, $view, 'normal', $auth);
+        }catch(\Exception $e){
+            $this->error($e->getMessage());
             return;
         }
-
-        $this->resp['id'] = $id;
-
-        $title = DB::getTitleByID($id);
-
-        if($title->getUser() !== $auth->getID()){
-            $this->error('Sie haben keine Berechtigung diesen Titel zu bearbeiten.');
-            return;
-        }
-
-        if ($title->getStatus() !== 'rejected') {
-            $this->error('Dieser Titel wurde nicht abgelehnt!');
-            return;
-        }
-
-        DB::upd(array('_id' => $id), array('$set' => array('status' => 'normal', 'lastStatusChange' => new \MongoDate())), 'titles');
 
         $this->resp['success'] = true;
     }

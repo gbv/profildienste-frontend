@@ -1,61 +1,63 @@
-pdApp.service('RejectService', ['$http', '$rootScope', '$q', function($http, $rootScope, $q) {
+pdApp.service('RejectService', ['$http', '$rootScope', '$q', function ($http, $rootScope, $q) {
 
-  this.addRejected = function(item){
-    return this.addMultRejected([item]);    
-  }.bind(this);
+    this.addRejected = function (data, view) {
 
-  this.addMultRejected = function(items){
+        var def = $q.defer();
 
-    var ids = [];
-    for(var i=0; i < items.length; i++){
-      ids.push(items[i].id);
-    }
+        var items = data;
+        if (data.constructor !== Array) {
+            items = [data.id];
+        }
 
-    if(ids.length == 0){
-      return;
-    }
+        var v = (view === undefined) ? '' : view;
 
-    var def = $q.defer();
+        $http({
+            method: 'POST',
+            url: '/api/reject/add',
+            data: $.param({
+                id: items,
+                view: v
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function (json) {
+            if (!json.success) {
+                def.reject(json.errormsg);
+            } else {
+                def.resolve();
+            }
+        }.bind(this));
 
-    $http({
-      method: 'POST',
-      url: '/api/reject/add',
-      data: $.param({
-        id: ids
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
-        def.reject(json.errormsg);
-      }else{
-        def.resolve();
-      }
-    }.bind(this));
+        return def.promise;
+    };
 
-    return def.promise;
-  };
+    this.removeRejected = function (data, view) {
 
-  this.removeRejected = function(item){
+        var def = $q.defer();
 
-    var def = $q.defer();
+        var items = data;
+        if (data.constructor !== Array) {
+            items = [data.id];
+        }
 
-    $http({
-      method: 'POST',
-      url: '/api/reject/remove',
-      data: $.param({
-        id: item.id
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
-        def.reject(json.errormsg);
-      }else{
-        def.resolve();
-      }
-    }.bind(this));
+        var v = (view === undefined) ? '' : view;
 
-    return def.promise;
-  };
+        $http({
+            method: 'POST',
+            url: '/api/reject/remove',
+            data: $.param({
+                id: items,
+                view: v
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function (json) {
+            if (!json.success) {
+                def.reject(json.errormsg);
+            } else {
+                def.resolve();
+            }
+        }.bind(this));
 
+        return def.promise;
+    };
 
 }]);

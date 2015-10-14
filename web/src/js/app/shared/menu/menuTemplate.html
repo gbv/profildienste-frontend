@@ -63,8 +63,8 @@
                         <li ng-show="selection.removeCart"><a href="" ng-click="MenuCtrl.selectionRemoveFromCart()"><i class="fa fa-times fa-fw"></i> Aus Warenkorb entfernen</a></li>
                         <li ng-show="selection.watchlist"><a><i class="fa fa-star fa-fw"></i> In Merkliste</a></li>
                         <li ng-show="selection.removeWatchlist"><a><i class="fa fa-times fa-fw"></i> Aus Merkliste entfernen</a></li>
-                        <li ng-show="selection.reject"><a><i class="fa fa-minus-circle fa-fw"></i> Ablehnen</a></li>
-                        <li ng-show="selection.removeReject"><a><i class="fa fa-plus-circle fa-fw"></i> Wieder aufnehmen</a></li>
+                        <li ng-show="selection.reject"><a href="" ng-click="MenuCtrl.selectionReject()"><i class="fa fa-minus-circle fa-fw"></i> Ablehnen</a></li>
+                        <li ng-show="selection.removeReject"><a href="" ng-click="MenuCtrl.selectionRemoveReject()"><i class="fa fa-plus-circle fa-fw"></i> Wieder aufnehmen</a></li>
                     </ul>
                 </li>
                 <li>
