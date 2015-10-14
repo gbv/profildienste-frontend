@@ -4,6 +4,7 @@ namespace AJAX;
 
 use Middleware\AuthToken;
 use Profildienst\DB;
+use AJAX\Changers\CollectionStatusChanger;
 
 /**
  * Removes a title from the cart.
@@ -18,57 +19,87 @@ class RemoveCart extends AJAXResponse
      * Removes a title from the cart.
      *
      * @param $id
+     * @param $view
      * @param AuthToken $auth Token
      */
-    public function __construct($id, AuthToken $auth)
-    {
-
+    public function __construct($ids, $view, AuthToken $auth){
 
         $this->resp['content'] = NULL;
-        $this->resp['id'] = NULL;
+        $this->resp['ids'] = NULL;
         $this->resp['price'] = array();
 
-        if ($id === '') {
+        // check if we got all the data we need
+        if ($view === '' && (is_null($ids) || !is_array($ids) || count($ids) === 0)) {
             $this->error('Unvollständige Daten');
             return;
         }
 
-        $this->resp['id'] = $id;
+        if($view !== '' && $view === 'overview'){
+            $view = 'normal';
+        }
 
-        $tit = DB::getTitleByID($id);
+        // prepare part of response
+        $this->resp['ids'] = $ids;
 
-        if ($tit->getUser() !== $auth->getID()) {
-            $this->error('Sie haben keine Berechtigung diesen Titel zu bearbeiten.');
+        $query = array(
+            '$and' => array(
+                array('user' => $auth->getID()),
+                array('_id' => array('$in' => $ids))
+            )
+        );
+
+        // change query if we want to update a whole view
+        if($view !== ''){
+            $query = array(
+                '$and' => array(
+                    array('user' => $auth->getID()),
+                    array('status' => $view)
+                )
+            );
+        }
+
+        $t = DB::getTitleList($query, NULL, $auth);
+
+        if($t['total'] === 0){
+            $this->error('Keine passenden Titel gefunden!');
             return;
         }
 
-        if ($tit->getStatus() !== 'cart') {
-            $this->error('Dieser Titel befindet sich nicht im Warenkorb!');
-            return;
-        }
-
+        $titles = $t['titlelist']->getTitles();
 
         $p = DB::getUserData('price', $auth);
-        $pr = $tit->getEURPrice();
+        $mean = DB::get(array('_id' => 'mean'), 'data', array(), true);
 
-        if (is_null($pr)) {
-            // price was unknown
-            $p['est'] = $p['est'] - 1;
+        foreach($titles as $tit){
 
-            $mean = DB::get(array('_id' => 'mean'), 'data', array(), true);
-            $pr = $mean['value'];
+            $pr = $tit->getEURPrice();
 
-        } else {
-            // price was known
-            $p['known'] = $p['known'] - 1;
+            if (is_null($pr)) {
+                // price was unknown
+                $p['est'] = $p['est'] - 1;
+                $pr = $mean['value'];
+
+            } else {
+                // price was known
+                $p['known'] = $p['known'] - 1;
+            }
+
+            $p['price'] = $p['price'] - $pr;
         }
 
-        $p['price'] = $p['price'] - $pr;
+        //update the total price for the whole cart
         DB::upd(array('_id' => $auth->getID()), array('$set' => array('price' => $p)), 'users');
 
+        // insert updated price into response
+        $p['price'] = number_format($p['price'], 2, '.', '');
         $this->resp['price'] = $p;
 
-        DB::upd(array('_id' => $id), array('$set' => array('status' => 'normal', 'lastStatusChange' => new \MongoDate())), 'titles');
+        if($view === ''){
+            CollectionStatusChanger::changeStatusOfCollection($ids, 'normal', $auth);
+        }else{
+            CollectionStatusChanger::changeStatusOfView($view, 'normal', $auth);
+        }
+
         $this->resp['content'] = DB::getCartSize($auth);
         $this->resp['success'] = true;
 

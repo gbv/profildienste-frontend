@@ -171,5 +171,38 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
         }.bind(this));
     };
 
+    this.selectionRemoveFromCart = function (site) {
+
+        var s = '';
+        var ids = [];
+        if(selectView){
+            s = site;
+        }else{
+            ids = this.getSelectionIds();
+        }
+
+        this.loading = true;
+        CartService.removeFromCart(ids, s).then(function(){
+
+            for(var i = 0; i < selected.length; i++){
+                selected[i].status.selected = false;
+                if(this.config.actionConfig.hideCart && !selectView){
+                    this.entries.removeItem(selected[i]);
+                }
+            }
+
+            if(this.config.actionConfig.hideCart && selectView){
+                this.entries.items = [];
+                this.entries.loadMore();
+            }
+
+            this.loading = false;
+            this.resetSelection();
+        }.bind(this), function(reason){
+            Notification.error(reason);
+            this.loading = false;
+        }.bind(this));
+    };
+
 
 }]);

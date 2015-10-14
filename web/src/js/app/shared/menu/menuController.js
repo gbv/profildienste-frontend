@@ -82,20 +82,24 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
 
     this.selectView = function () {
         SelectService.selectView();
-    }
+    };
 
     this.deselectAll = function () {
         SelectService.resetSelection();
-    }
+    };
 
     this.selectionInCart = function () {
         SelectService.selectionInCart($scope.site);
-    }
+    };
+
+    this.selectionRemoveFromCart = function () {
+        SelectService.selectionRemoveFromCart($scope.site);
+    };
 
     this.search = function () {
         SearchService.setSearchterm($scope.searchterm);
         $location.path('search');
-    }
+    };
 
     $scope.loggedIn = false;
 

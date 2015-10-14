@@ -60,7 +60,7 @@
                     <ul class="dropdown-menu">
                         <li class="dropdown-header">Ausgewählte Titel...</li>
                         <li ng-show="selection.cart"><a href="" ng-click="MenuCtrl.selectionInCart()"><i class="fa fa-shopping-cart fa-fw"></i> In Warenkorb</a></li>
-                        <li ng-show="selection.removeCart"><a><i class="fa fa-times fa-fw"></i> Aus Warenkorb entfernen</a></li>
+                        <li ng-show="selection.removeCart"><a href="" ng-click="MenuCtrl.selectionRemoveFromCart()"><i class="fa fa-times fa-fw"></i> Aus Warenkorb entfernen</a></li>
                         <li ng-show="selection.watchlist"><a><i class="fa fa-star fa-fw"></i> In Merkliste</a></li>
                         <li ng-show="selection.removeWatchlist"><a><i class="fa fa-times fa-fw"></i> Aus Merkliste entfernen</a></li>
                         <li ng-show="selection.reject"><a><i class="fa fa-minus-circle fa-fw"></i> Ablehnen</a></li>

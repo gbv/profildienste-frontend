@@ -71,14 +71,24 @@ pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', funct
   };
 
 
-  this.removeFromCart = function(item){
+  this.removeFromCart = function(data, view){
 
     var def = $q.defer();
+
+    var items = data;
+    if(data.constructor !== Array){
+      items = [data.id];
+    }
+
+    var v = (view === undefined) ? '' : view;
 
     $http({
       method: 'POST',
       url: '/api/cart/remove',
-      data: $.param({id: item.id}),
+      data: $.param({
+        id: items,
+        view: v
+      }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function(json){
       if(!json.success){
