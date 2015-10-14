@@ -193,6 +193,7 @@ $app -> group('/user', $authenticate($app, $auth), function() use ($app, $auth){
 
     $data = array(
       'name' => $auth->getName(),
+      'motd' => Config::$motd,
       'defaults' => array(
         'lft' => $d['defaults']['lieft'],
         'budget' => $d['defaults']['budget'],

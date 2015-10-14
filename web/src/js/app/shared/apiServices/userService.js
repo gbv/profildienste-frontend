@@ -2,6 +2,8 @@ pdApp.service('UserService', ['$http', '$q', 'LoginService', function ($http, $q
 
     var defUser = $q.defer();
 
+    var motdSeen = false;
+
     LoginService.whenLoggedIn().then(function (data) {
 
         // Get name and budgets
@@ -12,6 +14,7 @@ pdApp.service('UserService', ['$http', '$q', 'LoginService', function ($http, $q
 
                 defUser.resolve({
                     name: json.data.name,
+                    motd: json.data.motd,
                     defaults: json.data.defaults,
                     budgets: json.data.budgets,
                     show: {
@@ -38,5 +41,13 @@ pdApp.service('UserService', ['$http', '$q', 'LoginService', function ($http, $q
     this.getUserData = function () {
         return defUser.promise;
     };
+
+    this.setMOTDSeen = function () {
+        this.motdSeen = true;
+    }
+
+    this.getMOTDSeen = function () {
+        return this.motdSeen;
+    }
 
 }]);

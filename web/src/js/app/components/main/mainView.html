@@ -1,5 +1,14 @@
 <div ng-controller="MainController">
 
+    <div ng-controller="MOTDController as MOTDCtrl">
+        <div ng-show="MOTDCtrl.showMOTD()" class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="MOTDCtrl.closeMOTD()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <b><i class="fa fa-info-circle"></i></b> {{motd}}
+        </div>
+    </div>
+
     <ng-optionbar></ng-optionbar>
     <!-- List -->
     <div infinite-scroll='entries.loadMore()' infinite-scroll-disabled='entries.loading' infinite-scroll-distance='1'>
