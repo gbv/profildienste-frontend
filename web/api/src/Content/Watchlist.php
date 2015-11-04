@@ -27,8 +27,6 @@ class Watchlist extends Content {
         $watchlists = $data['watchlist'];
 
         if (isset($watchlists[$id])) {
-
-            $list = $watchlists[$id]['list'];
             $query = array('$and' => array(array('user' => $auth->getID()), array('watchlist' => $id)));
             $t = DB::getTitleList($query, $num, $auth);
             $this->titlelist = $t['titlelist'];

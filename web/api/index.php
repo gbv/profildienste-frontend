@@ -216,7 +216,6 @@ $app -> group('/user', $authenticate($app, $auth), function() use ($app, $auth){
 
     $wl = array();
     foreach($wl_order as $index){
-      $watchlists[$index]['count'] = count($watchlists[$index]['list']);
       $wl[] = array('id' => $watchlists[$index]['id'], 'name' => $watchlists[$index]['name'], 'count' => DB::getWatchlistSize($watchlists[$index]['id'], $auth));
     }
 
