@@ -99,7 +99,8 @@ class Order
                     'lieft' => $lieft,
                     'selcode' => $selcode,
                     'ssgnr' => $ssgnr,
-                    'comment' => is_null($title->getComment()) ? '' : $title->getComment()
+                    'comment' => is_null($title->getComment()) ? '' : $title->getComment(),
+                    'user' => $auth->getID()
                 );
 
                 file_put_contents($dir . $ppn . '.json', json_encode($output, JSON_PRETTY_PRINT));
@@ -164,7 +165,8 @@ class Order
                     'lieft' => $lieft,
                     'selcode' => $selcode,
                     'ssgnr' => $ssgnr,
-                    'comment' => is_null($title->getComment()) ? '' : $title->getComment()
+                    'comment' => is_null($title->getComment()) ? '' : $title->getComment(),
+                    'user' => $auth->getID()
                 );
 
                 file_put_contents($dir . $ppn . '.json', json_encode($output, JSON_PRETTY_PRINT));
