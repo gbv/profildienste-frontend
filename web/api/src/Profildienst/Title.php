@@ -77,7 +77,11 @@ class Title {
         'ppn' => array('003@', '0'),
         'gvkt_mak' => array('091O/99', 'y'),
         'gvkt_ppn' => array('091O/99', 'a'),
-        'reihe' => array('091O/04', 'd')
+        'reihe' => array('091O/04', 'd'),
+        'gehoert_zu_1' => array('036E', 'a'),
+        'gehoert_zu_2' => array('036E/01', 'a'),
+        'gehoert_zu_3' => array('036C', 'a'),
+        'gehoert_zu_4' => array('036C/01', 'a')
     );
 
     /**

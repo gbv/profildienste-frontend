@@ -24,11 +24,14 @@
     <h3>{{item.untertitel}}</h3>
     <br>
     <br>
-    <span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span> {{item.verlag}} <span class="text-muted">)</span>
+    <span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span> {{item.verlag}}<span ng-show="item.ort | notEmpty">, {{item.ort}}</span><span class="text-muted">)</span>
     <br>
-    <span class="text-muted">Umfang: </span> {{item.umfang}} 
+    <span class="text-muted">Umfang: </span> {{item.umfang}}
+    <span ng-show="item.ill_angabe | notEmpty">
+      <span class="text-muted">, </span>{{item.ill_angabe}}
+    </span>
     <span ng-show="item.format | notEmpty">
-      <span class="text-muted">(</span>{{item.format}}<span class="text-muted">)</span>
+      <span class="text-muted">, </span>{{item.format}}
     </span>
     <br>
     <br>
@@ -75,8 +78,13 @@
     <div collapse="bibInfCollapsed">
         <br>
         <span class="text-muted">Erscheinungsjahr: </span> {{item.ersch_jahr}} <br><br>
+        <span ng-show="item.gehoert_zu | notEmpty">
+          <span class="text-muted">Gehört zu: </span> {{item.gehoert_zu}}<br><br>
+        </span>
         <span class="text-muted">Gattung: </span> {{item.gattung}} <br><br>
-        <span class="text-muted">DNB-Nummer: </span> {{item.dnbnum}} <br>
+        <span ng-show="item.dnb_link | notEmpty">
+          <span class="text-muted">DNB-Link: </span> <a href="{{item.dnb_link}}" target="_blank"><i class="fa fa-external-link"></i> {{item.dnb_link}}</a><br><br>
+        </span>
         <span class="text-muted">WV: </span> {{item.wvdnb}} <br><br>
         <span class="text-muted">DNB Sachgruppe: </span> {{item.sachgruppe}} <br><br>
         <span class="text-muted">Zugeordnete Fachreferenten: </span>

@@ -431,7 +431,9 @@ function convertTitle(Title $t){
     'verfasser' => $t -> get('verfasser'),
     'ersch_termin' => $t -> get('voraus_ersch_termin'),
     'verlag' => $t -> get('verlag'),
+    'ort' => $t->get('ort'),
     'umfang' => $t->get('umfang'),
+    'ill_angabe' => $t->get('illustrations_angabe'),
     'format' => $t->get('format'),
 
     'preis' => $t->get('lieferbedingungen_preis'),
@@ -478,6 +480,14 @@ function convertTitle(Title $t){
   }
   $r['isbn'] = $isbn;
 
+  //Merge the different "Gehoert zu" fields into one
+  $r['gehoert_zu'] = trim(join('', array($t->get('gehoert_zu_1'), $t->get('gehoert_zu_2'), $t->get('gehoert_zu_3'), $t->get('gehoert_zu_4'))));
+
+  // Craft DNB Link
+
+  if(!is_null($t->get('dnb_nummer'))){
+    $r['dnb_link'] = 'http://d-nb.info/'.$t->get('dnb_nummer');
+  }
   return $r;
 }
 

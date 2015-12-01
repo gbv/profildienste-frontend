@@ -18,7 +18,7 @@ pdApp.config(['NotificationProvider', function(NotificationProvider) {
 
 pdApp.filter('notEmpty', function(){
     return function(val){
-        return val !== undefined && val !== null;
+        return val !== undefined && val !== null && val !== '';
     };
 });
 
