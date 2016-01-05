@@ -19,7 +19,7 @@ pdApp.config(['$routeProvider', '$locationProvider',
         $routeProvider.
             when('/main', {
                 templateUrl: '/dist/html/mainView.html',
-                requireLogin: {checkAuth: checkAuth}
+                resolve: {checkAuth: checkAuth}
             }).
             when('/cart', {
                 templateUrl: '/dist/html/cartView.html',
