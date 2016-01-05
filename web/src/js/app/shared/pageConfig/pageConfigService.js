@@ -13,7 +13,7 @@ pdApp.service('PageConfigService', ['Notification', function (Notification) {
             selection: {
                 cart: true,
                 removeCart: false,
-                watchlist: false,   //eigentlich true,
+                watchlist: false,   //actually true when implemented
                 removeWatchlist: false,
                 reject: true,
                 removeReject: false
@@ -31,7 +31,7 @@ pdApp.service('PageConfigService', ['Notification', function (Notification) {
             selection: {
                 cart: false,
                 removeCart: true,
-                watchlist: false,   //eigentlich true,
+                watchlist: false,   //actually true when implemented
                 removeWatchlist: false,
                 reject: false,
                 removeReject: false

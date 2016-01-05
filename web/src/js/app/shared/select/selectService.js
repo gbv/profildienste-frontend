@@ -11,7 +11,6 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
         this.resetSelection();
         this.entries = data.entries;
         this.config = PageConfigService.getConfig(data.site);
-        console.log(this.config);
     }.bind(this));
 
     $rootScope.$on('siteLoadingFinished', function (ev, data) {
