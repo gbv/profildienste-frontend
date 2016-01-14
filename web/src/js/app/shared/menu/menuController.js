@@ -1,4 +1,4 @@
-pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 'CartService', 'UserService', '$modal', 'SelectService', 'LoginService', 'SearchService', '$location', 'PageConfigService', function ($scope, $rootScope, WatchlistService, CartService, UserService, $modal, SelectService, LoginService, SearchService, $location, PageConfigService) {
+pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 'CartService', 'UserService', '$uibModal', 'SelectService', 'LoginService', 'SearchService', '$location', 'PageConfigService', function ($scope, $rootScope, WatchlistService, CartService, UserService, $uibModal, SelectService, LoginService, SearchService, $location, PageConfigService) {
 
 
     WatchlistService.getWatchlists().then(function (data) {

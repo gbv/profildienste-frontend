@@ -1,11 +1,11 @@
-@import "colors.less";
+@import 'colors';
 
 .pd-sel a {
-  color: @text-col;
+  color: $text-col;
 }
 
 .pd-sel-caret {
-  color: @primary;
+  color: $primary;
   margin-right: 10px;
 }
 

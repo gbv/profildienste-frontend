@@ -1,4 +1,4 @@
-pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartService', '$modal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', 'Notification', 'SaveService', function ($scope, $sce, WatchlistService, CartService, $modal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout, Notification, SaveService) {
+pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartService', '$uibModal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', 'Notification', 'SaveService', function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout, Notification, SaveService) {
 
     $scope.bibInfCollapsed = true;
     $scope.addInfCollapsed = true;
@@ -291,7 +291,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
 
     this.showCover = function () {
 
-        $modal.open({
+        $uibModal.open({
             templateUrl: 'coverModal.html',
             controller: 'CoverModalCtrl',
             resolve: {

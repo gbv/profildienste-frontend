@@ -1,5 +1,5 @@
 // Load the entries
-pdApp.factory('Entries', ['$http', '$modal', '$rootScope', 'SelectService', function($http, $modal, $rootScope, SelectService) {
+pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', function($http, $uibModal, $rootScope, SelectService) {
 
   // Entry object
   var Entries = function(site, id, title) {

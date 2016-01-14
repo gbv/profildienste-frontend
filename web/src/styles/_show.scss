@@ -1,19 +1,19 @@
-@import "colors.less";
+@import 'colors';
 
 .pd-brand {
   display: inline-block;
-  border-right: 1px solid @secondary !important;
+  border-right: 1px solid $secondary !important;
   margin-right: 5px !important;
 }
 
 .dropdown .badge {
-  color: @navbar-link-col;
-  background-color: @wl-dd-badge-col;
+  color: $navbar-link-col;
+  background-color: $wl-dd-badge-col;
   margin-left: 3px;
 }
 
 .shop-options li {
-  border-left: 1px solid @secondary;
+  border-left: 1px solid $secondary;
 }
 
 .shop-options .dropdown-menu li {
@@ -54,12 +54,12 @@
 }
 
 .title-box h3 {
-  color: @secondary;
+  color: $secondary;
 }
 
 .price {
   float: right;
-  color: @secondary;
+  color: $secondary;
   font-size: 16px;
   max-height: 100px;
   min-height: 50px;
@@ -103,7 +103,7 @@
 }
 
 .btn-inverse {
-  color: @text-col;
+  color: $text-col;
   background-color: #ebebeb;
   border-color: #cccccc;
 }
@@ -113,7 +113,7 @@
 .btn-inverse:active,
 .btn-inverse.active,
 .open .dropdown-toggle.btn-inverse {
-  color: @text-col;
+  color: $text-col;
   background-color: #c9c9c9;
   border-color: #adadad;
 }
@@ -126,33 +126,34 @@
 
 .search-lbl {
   background-color: transparent;
-  border: 1px solid @secondary;
-  color: @navbar-link-col !important;
+  border: 1px solid $secondary;
+  color: $navbar-link-col !important;
+  width: 1% !important;
 }
 
 #search-field {
-  border: 1px solid @secondary;
+  border: 1px solid $secondary;
   margin-right: 5px;
 }
 
 .sep-right {
-  border-right: 1px solid @secondary;
+  border-right: 1px solid $secondary;
 }
 
 .navbar-inverse .navbar-nav > li > a,
 .navbar-inverse .navbar-nav > li > a:hover {
-  color: @text-col;
+  color: $text-col;
 }
 
 .navbar-inverse .navbar-nav > .dropdown > a .caret,
 .navbar-inverse .navbar-nav > .dropdown > a .caret:hover,
 .navbar-inverse .navbar-nav > .dropdown > a .caret:active {
-  border-top-color: @text-col;
-  border-bottom-color: @text-col;
+  border-top-color: $text-col;
+  border-bottom-color: $text-col;
 }
 
 .navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
-  color: @text-col;
+  color: $text-col;
   background-color: transparent;
 }
 
@@ -175,11 +176,11 @@
 }
 
 .orders a {
-  color: @text-col;
+  color: $text-col;
 }
 
 .orders-caret {
-  color: @primary;
+  color: $primary;
   margin-right: 10px;
 }
 
@@ -211,7 +212,7 @@
 
 .cover {
   display: inline-block;
-  border: 1px solid @primary;
+  border: 1px solid $primary;
   margin-top: 8px;
   margin-left: -12px;
 }
@@ -225,12 +226,12 @@
 }
 
 #btn-sel-all-bar {
-  color: @primary;
+  color: $primary;
 }
 
 #estprice, #price_known, #price_est {
   font-weight: bold;
-  color: @primary;
+  color: $primary;
 }
 
 #price-inf {
@@ -243,11 +244,11 @@
 }
 
 .selected {
-  background-color: @selected;
+  background-color: $selected;
 }
 
 .btn-selected {
-  color: @secondary;
+  color: $secondary;
 }
 
 .title-price {
@@ -257,6 +258,7 @@
 
 .search-inp-group {
   padding-right: 5px;
+  display: table !important;
 }
 
 .search-form-group {
@@ -329,26 +331,26 @@
 }
 
 #back{
-  color: @navbar-back-color;
+  color: $navbar-back-color;
 }
 
 .item-select{
-  color: @select-color !important;
+  color: $select-color !important;
   outline: 0 !important;
 }
 
 .item-remove{
-  color: @remove-color !important;
+  color: $remove-color !important;
 }
 
 .itemSelected{
-  color: @primary !important;
+  color: $primary !important;
 }
 
 
 @keyframes saved {
   0% {background-color: transparent}
-  50% {background-color: @save-success-color}
+  50% {background-color: $save-success-color}
   100% {background-color:transparent}
 }
 
@@ -358,13 +360,13 @@
 }
 
 .auto-default{
-  color: @autodefault-color;
+  color: $autodefault-color;
 }
 
 .auto-default-help{
   font-size:10px;
   vertical-align: super;
-  color: @primary;
+  color: $primary;
 }
 
 .title-content{

@@ -1,112 +1,118 @@
-var gulp = require('gulp'),
-    autoprefixer = require('gulp-autoprefixer'),
-    less = require('gulp-less'),
-    minifycss = require('gulp-minify-css'),
-    uglify = require('gulp-uglify'),
-    rename = require('gulp-rename'),
-    concat = require('gulp-concat'),
-    path = require('path'),
-    notify = require('gulp-notify'),
-    copy = require('gulp-copy'),
-    del = require('del');
+// gulp
+var gulp = require('gulp');
+
+// plugins
+var jshint = require('gulp-jshint');
+var uglify = require('gulp-uglify');
+var runSequence = require('run-sequence');
+var sass = require('gulp-sass');
+var rimraf = require('rimraf');
+var autoprefixer = require('gulp-autoprefixer');
+var es = require('event-stream');
+var	concat = require('gulp-concat');
+var gulpFilter = require('gulp-filter');
+var mainBowerFiles = require('main-bower-files');
+var order = require('gulp-order');
+var ngHtml2Js = require("gulp-ng-html2js");
+var htmlmin = require("gulp-htmlmin");
+var cssnano = require('gulp-cssnano');
+
+var srcDir = 'src';
+var distDir = 'dist';
+
 
 var vendor_css = [
   'bower_components/fontawesome/css/font-awesome.css',
   'bower_components/angular-ui-notification/dist/angular-ui-notification.min.css'
 ];
 
-gulp.task('vendorcss', function() {
-  return gulp.src(vendor_css)
-    .pipe(concat('vendor.css'))
-    .pipe(gulp.dest('dist/css/'))
-    .pipe(rename({suffix: '.min'}))
-    .pipe(minifycss())
-    .pipe(gulp.dest('dist/css/'))
-    .pipe(notify({ message: 'Vendor CSS compiled!'}));
+gulp.task('styles', function() {
+
+  var vendorFiles = gulp.src(vendor_css);
+
+  var appFiles = gulp.src(srcDir+'/styles/**/*.scss')
+      .pipe(sass(
+          {
+            outputStyle: 'compressed',
+            includePaths: ['bower_components/bootstrap-sass/assets/stylesheets']
+          }
+      ).on('error', sass.logError));
+
+  return es.concat(vendorFiles, appFiles)
+      .pipe(concat('./bundle.css'))
+      .pipe(autoprefixer())
+      .pipe(cssnano())
+      .pipe(gulp.dest(distDir+'/css'));
 });
 
-gulp.task('fa-font', function() {
-  return gulp.src('bower_components/fontawesome/fonts/**.*') .pipe(gulp.dest('dist/fonts')); 
+gulp.task('scripts', function () {
+
+  // Script vendor files
+  var jsFilter = gulpFilter('*.js');
+  var vendorFiles = gulp.src(mainBowerFiles(['**/*.js', '!bower_components/jquery/dist/jquery.js']).concat(['bower_components/jquery/dist/jquery.js']))
+      .pipe(jsFilter)
+      .pipe(concat('vendor.js'));
+
+  // App files
+  var appFiles = gulp.src(srcDir+'/js/**/*.js')
+      //.pipe(jshint())
+      //.pipe(jshint.reporter('default'))
+      .pipe(order([
+        srcDir+'/js/app.module.js',
+        srcDir+'/js/app.route.js',
+        '*'
+      ]))
+      .pipe(concat('app.js'));
+
+  // Partials
+  var partials = gulp.src(srcDir+'/js/**/*.html')
+      .pipe(htmlmin({collapseWhitespace: true}))
+      .pipe(ngHtml2Js({
+        moduleName: 'Profildienst',
+        prefix: '/dist/html/'
+      }))
+      .pipe(concat('partials.js'));
+
+  return es.concat(vendorFiles, appFiles, partials)
+      .pipe(order([
+        'vendor.js',
+        'app.js',
+        'partials.js'
+      ]))
+      .pipe(concat('bundle.js'))
+      .pipe(uglify())
+      .pipe(gulp.dest(distDir+'/js'));
 });
 
-gulp.task('less', function() {
-  return gulp.src('src/less/*.less')
-    .pipe(less({
-      paths: [path.join(__dirname, 'bower_components', 'bootstrap', 'less')]
-    }))
-    .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
-    .pipe(concat('main.css'))
-    .pipe(gulp.dest('dist/css/'))
-    .pipe(rename({suffix: '.min'}))
-    .pipe(minifycss())
-    .pipe(gulp.dest('dist/css/'))
-    .pipe(notify({ message: 'LESS compiled!'}));
+gulp.task('lint', function() {
+  gulp.src([srcDir+'/js/**/*.js', '!./bower_components/**'])
+      .pipe(jshint())
+      .pipe(jshint.reporter('default'))
+      .pipe(jshint.reporter('fail'));
 });
 
-var vendor = [
-  'bower_components/jquery/dist/jquery.min.js',
-
-  'bower_components/jquery-ui/ui/minified/core.min.js',
-  'bower_components/jquery-ui/ui/minified/widget.min.js',
-  'bower_components/jquery-ui/ui/minified/mouse.min.js',
-  'bower_components/jquery-ui/ui/minified/sortable.min.js',
-
-  'bower_components/angular/angular.min.js',
-
-  'bower_components/angular-ui-sortable/sortable.min.js',
-
-  'bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
-
-  'bower_components/angular-route/angular-route.min.js',
-
-  'bower_components/bootstrap/dist/js/bootstrap.min.js',
-
-  'bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js',
-
-  'bower_components/angular-ui-notification/dist/angular-ui-notification.min.js'
-];
-
-gulp.task('js', function() {
-  return gulp.src('src/js/**/*.js')
-    .pipe(concat('main.js'))
-    .pipe(gulp.dest('dist/js/'))
-    .pipe(rename({suffix: '.min'}))
-    .pipe(uglify())
-    .pipe(gulp.dest('dist/js/'))
-    .pipe(notify({ message: 'JavaScript compiled!'}));
+gulp.task('clean', function (cb) {
+  rimraf(distDir, cb);
 });
 
-gulp.task('partials', function() {
-
-  return gulp.src('src/js/**/*.html')
-    .pipe(copy('dist/html', {prefix: 1000}))
-    .pipe(notify({ message: 'Partials copied'}));
+gulp.task('copy-index', function () {
+  gulp.src(srcDir+'/index.html')
+      .pipe(htmlmin({collapseWhitespace: true}))
+      .pipe(gulp.dest(distDir));
 });
 
-gulp.task('vendorjs', function() {
-  return gulp.src(vendor)
-    .pipe(concat('vendor.js'))
-    .pipe(gulp.dest('dist/js/'))
-    .pipe(rename({suffix: '.min'}))
-    .pipe(uglify())
-    .pipe(gulp.dest('dist/js/'))
-    .pipe(notify({ message: 'Vendor JS compiled!'}));
+gulp.task('copy-config', function () {
+  gulp.src(srcDir+'/config.json')
+      .pipe(gulp.dest(distDir));
 });
 
-gulp.task('clean', function(callback) {
-    del(['dist/'], callback);
+gulp.task('build', function() {
+  runSequence(
+      ['clean'],
+      ['lint', 'styles', 'scripts', 'copy-config', 'copy-index']
+  );
 });
 
-gulp.task('build', ['clean'] ,function(){
-  gulp.start('less', 'js', 'partials', 'vendorjs' ,'vendorcss', 'fa-font');
-});
-
-gulp.task('default', ['clean'], function() {
-  gulp.start('build');
-
-  gulp.watch('src/less/**/*.less', ['less']);
-
-  gulp.watch('src/js/**/*.js', ['js']);
-
-  gulp.watch('src/js/**/*.html', ['partials']);
-});
+gulp.task('default',
+    ['clean', 'build']
+);
