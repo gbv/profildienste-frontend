@@ -1,6 +1,8 @@
-pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$http', '$rootScope', 'Notification', 'UserService', function($scope, OrderService, $location, $http, $rootScope, Notification, UserService) {
+pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$http', '$rootScope', 'Notification', 'UserService', '$sce', function($scope, OrderService, $location, $http, $rootScope, Notification, UserService, $sce) {
 
   $scope.orderComplete = false;
+
+  $scope.defaultValueHelpText = $sce.trustAsHtml('Da keine Angabe<br> gemacht wurde, <br>wurde hier der <br>für Sie hinterlegte <br>Standardwert <br>eingetragen.');
 
   OrderService.getOrderlist().then(function (data){
     $scope.orderlist = data.orderlist;

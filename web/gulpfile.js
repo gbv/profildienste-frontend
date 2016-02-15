@@ -69,7 +69,11 @@ gulp.task('scripts', function () {
       .pipe(htmlmin({collapseWhitespace: true}))
       .pipe(ngHtml2Js({
         moduleName: 'Profildienst',
-        prefix: '/dist/html/'
+        prefix: '',
+        rename: function (templateUrl, templateFile){
+          return templateUrl.replace(/app\/(components|shared)/, '');
+        },
+        declareModule: false
       }))
       .pipe(concat('partials.js'));
 
@@ -85,10 +89,15 @@ gulp.task('scripts', function () {
 });
 
 gulp.task('lint', function() {
-  gulp.src([srcDir+'/js/**/*.js', '!./bower_components/**'])
-      .pipe(jshint())
-      .pipe(jshint.reporter('default'))
-      .pipe(jshint.reporter('fail'));
+    gulp.src([srcDir+'/js/**/*.js', '!./bower_components/**'])
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'))
+        .pipe(jshint.reporter('fail'));
+});
+
+gulp.task('fonts', function(){
+    gulp.src('bower_components/fontawesome/fonts/**.*')
+         .pipe(gulp.dest(distDir+'/fonts'));
 });
 
 gulp.task('clean', function (cb) {
@@ -101,15 +110,10 @@ gulp.task('copy-index', function () {
       .pipe(gulp.dest(distDir));
 });
 
-gulp.task('copy-config', function () {
-  gulp.src(srcDir+'/config.json')
-      .pipe(gulp.dest(distDir));
-});
-
 gulp.task('build', function() {
   runSequence(
       ['clean'],
-      ['lint', 'styles', 'scripts', 'copy-config', 'copy-index']
+      ['lint', 'styles', 'scripts', 'fonts', 'copy-index']
   );
 });
 

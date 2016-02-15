@@ -5,7 +5,7 @@ pdApp.config(['$routeProvider', '$locationProvider',
         var checkAuth = function ($location, $q, $window, LogoutService) {
             var deferred = $q.defer();
             if (!$window.sessionStorage.token) {
-                deferred.reject()
+                deferred.reject();
                 $location.path('/');
                 LogoutService.destroySession('Bitte melden Sie sich an um fortzufahren.');
             } else {
@@ -18,50 +18,50 @@ pdApp.config(['$routeProvider', '$locationProvider',
         // Routes
         $routeProvider.
             when('/main', {
-                templateUrl: '/dist/html/mainView.html',
+                templateUrl: '/main/mainView.html',
                 resolve: {checkAuth: checkAuth}
             }).
             when('/cart', {
-                templateUrl: '/dist/html/cartView.html',
+                templateUrl: '/cart/cartView.html',
                 resolve: {checkAuth: checkAuth}
             }).
             when('/watchlist/:id', {
-                templateUrl: '/dist/html/watchlistView.html',
+                templateUrl: '/watchlist/watchlistView.html',
                 resolve: {checkAuth: checkAuth}
             }).
             when('/rejected', {
-                templateUrl: '/dist/html/rejectedView.html',
+                templateUrl: '/rejected/rejectedView.html',
                 resolve: {checkAuth: checkAuth}
             }).
             when('/pending', {
-                templateUrl: '/dist/html/pendingView.html',
+                templateUrl: '/pending/pendingView.html',
                 resolve: {checkAuth: checkAuth}
             }).
             when('/done', {
-                templateUrl: '/dist/html/doneView.html',
+                templateUrl: '/done/doneView.html',
                 resolve: {checkAuth: checkAuth}
             }).
             when('/manage', {
-                templateUrl: '/dist/html/manageView.html',
+                templateUrl: '/manage/manageView.html',
                 resolve: {checkAuth: checkAuth}
             }).
             when('/login/:isil', {
-                templateUrl: '/dist/html/loginView.html'
+                templateUrl: '/login/loginView.html'
             }).
             when('/logout', {
-                templateUrl: '/dist/html/logoutView.html',
+                templateUrl: '/logout/logoutView.html',
                 resolve: {checkAuth: checkAuth}
             }).
             when('/search', {
-                templateUrl: '/dist/html/searchView.html',
+                templateUrl: '/search/searchView.html',
                 resolve: {checkAuth: checkAuth}
             }).
             when('/order', {
-                templateUrl: '/dist/html/orderView.html',
+                templateUrl: '/order/orderView.html',
                 resolve: {checkAuth: checkAuth}
             }).
             when('/', {
-                templateUrl: '/dist/html/landingView.html'
+                templateUrl: '/landing/landingView.html'
             }).
             otherwise({
                 redirectTo: '/'
