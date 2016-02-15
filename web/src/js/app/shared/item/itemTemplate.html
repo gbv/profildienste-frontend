@@ -75,7 +75,7 @@
 
     </form>
 
-    <div collapse="bibInfCollapsed">
+    <div uib-collapse="bibInfCollapsed">
         <br>
         <span class="text-muted">Erscheinungsjahr: </span> {{item.ersch_jahr}} <br><br>
         <span ng-show="item.gehoert_zu | notEmpty">
@@ -103,7 +103,7 @@
       <br>
       <span >{{item.comment}}</span>
     </div>
-     <div collapse="CommentCollapsed">
+     <div uib-collapse="CommentCollapsed">
        <br>
        <span class="text-muted">Kommentar: </span><br>
        <textarea class="form-control cmt-field" rows="3" ng-show="ItemCtrl.editOrderInformation()" ng-model="item.comment" ng-focus="ItemCtrl.saveComment()" ng-blur="ItemCtrl.closeComment()" placeholder="Freitext-Kommentar" ng-disabled="loading.comment" ng-class="{saved: saved.comment}"></textarea>
