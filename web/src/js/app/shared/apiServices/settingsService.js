@@ -104,6 +104,6 @@ pdApp.service('SettingsService', ['$http', '$rootScope', '$q', 'LoginService', f
     }.bind(this));
 
     return def.promise;
-  }
+  };
 
 }]);

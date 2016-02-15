@@ -44,6 +44,6 @@ pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams',
       $scope.error = true;
       $scope.errorMessage = error;
     });
-  }
+  };
   
 }]);

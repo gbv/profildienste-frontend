@@ -16,7 +16,7 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
         $scope.order = data[1].order;
 
         $scope.selected_sorter_key = data[2].sort;
-        for (var i = 0; i < data[0].sortby.length; i++) {
+        for (i = 0; i < data[0].sortby.length; i++) {
             if (data[0].sortby[i].key === data[2].sort) {
                 $scope.selected_sorter = data[0].sortby[i].value;
                 break;
@@ -24,7 +24,7 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
         }
 
         $scope.selected_order_key = data[2].order;
-        for (var i = 0; i < data[1].order.length; i++) {
+        for (i = 0; i < data[1].order.length; i++) {
             if (data[1].order[i].key === data[2].order) {
                 $scope.selected_order = data[1].order[i].value;
                 break;
@@ -62,7 +62,7 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
             Notification.error(reason);
         });
 
-    }
+    };
 
     this.setOrder = function (order) {
 

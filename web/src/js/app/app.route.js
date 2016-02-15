@@ -9,7 +9,7 @@ pdApp.config(['$routeProvider', '$locationProvider',
                 $location.path('/');
                 LogoutService.destroySession('Bitte melden Sie sich an um fortzufahren.');
             } else {
-                deferred.resolve()
+                deferred.resolve();
             }
             return deferred.promise;
         };

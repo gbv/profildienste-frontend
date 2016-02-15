@@ -44,10 +44,10 @@ pdApp.service('UserService', ['$http', '$q', 'LoginService', function ($http, $q
 
     this.setMOTDSeen = function () {
         this.motdSeen = true;
-    }
+    };
 
     this.getMOTDSeen = function () {
         return this.motdSeen;
-    }
+    };
 
 }]);

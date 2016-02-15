@@ -47,10 +47,10 @@ pdApp.controller('ManageWatchlistController', ['$scope', 'WatchlistService', '$l
 
   this.disableDefault = function(){
     return $scope.default_watchlist == $scope.watchlist.id;
-  }
+  };
 
   this.open = function(){
     $location.path('watchlist/'+$scope.watchlist.id);
-  }
+  };
 
 }]);

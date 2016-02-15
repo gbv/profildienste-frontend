@@ -13,7 +13,7 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
 
     CartService.getCart().then(function (data) {
         $scope.cart = data.cart;
-        $scope.price = data.price
+        $scope.price = data.price;
     });
 
     $rootScope.$on('cartChange', function (e, cart, price) {
@@ -67,7 +67,7 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
 
         $scope.selNumber = SelectService.getSelectedNumber();
 
-        if ($scope.selNumber == 0) {
+        if ($scope.selNumber === 0) {
             $scope.itemsSelected = false;
             $scope.showSelMenu = false;
         }
@@ -103,7 +103,7 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
 
     this.selectionRemoveReject = function (){
         SelectService.selectionRemoveReject($scope.site);
-    }
+    };
 
     this.search = function () {
         SearchService.setSearchterm($scope.searchterm);

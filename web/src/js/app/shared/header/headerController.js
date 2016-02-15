@@ -106,7 +106,7 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
 
   this.showSearchGettingStarted = function(){
     return (!$scope.loading && $scope.site === 'search' && $scope.total === -2);
-  }
+  };
 
   this.showError = function(){
     return ($scope.total === -1);

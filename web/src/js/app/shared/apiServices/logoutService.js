@@ -18,9 +18,10 @@ pdApp.service('LogoutService', ['$window', '$rootScope', function($window, $root
     var tmp = hasInfo;
     hasInfo = false;
     return tmp;
-  }
+  };
 
   this.getInfo = function(){
     return info;
-  }
+  };
+
 }]);

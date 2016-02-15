@@ -12,7 +12,7 @@ pdApp.controller('LandingController', ['$scope', 'LibraryService', '$location', 
 
   $scope.openLogin = function (isil){
     $location.path('login/'+isil);
-  }
+  };
 
 
   $scope.hasInfo = LogoutService.hasInfo();

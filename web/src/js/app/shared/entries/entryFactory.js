@@ -28,10 +28,11 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', f
 
     this.loading = true;
     $rootScope.$broadcast('siteLoading');
+    var url;
     if(this.id === undefined){
-      var url = '/api/get/'+this.site+'/page/'+this.page;
+      url = '/api/get/'+this.site+'/page/'+this.page;
     }else{
-      var url = '/api/get/'+this.site+'/'+this.id+'/page/'+this.page;
+      url = '/api/get/'+this.site+'/'+this.id+'/page/'+this.page;
     }
     
     $http.get(url).success(function(data) {
@@ -78,11 +79,11 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', f
     this.total--;
     $rootScope.$broadcast('totalChanged', this.total);
 
-    if(this.items.length == 0){
+    if(this.items.length === 0){
       this.page--;
       this.loadMore();
     }
-  }
+  };
 
   // resets the loader
   Entries.prototype.reset = function(url) {
@@ -93,7 +94,7 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', f
     this.items = [];
     this.more = true;
     this.loadMore();
-  }
+  };
 
   return Entries;
 }]);

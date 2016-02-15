@@ -125,7 +125,7 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
       }else{
 
         if(type === 'upd-name'){
-          for(var i=0; i < this.data.watchlists.length; i++){
+          for(i=0; i < this.data.watchlists.length; i++){
             if(this.data.watchlists[i].id == json.id){
               this.data.watchlists[i].name = content;
               break;
@@ -142,7 +142,7 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
         }
 
         if(type === 'remove'){
-          for(var i=0; i < this.data.watchlists.length; i++){
+          for(i=0; i < this.data.watchlists.length; i++){
             if(this.data.watchlists[i].id == json.id){
               this.data.watchlists.splice(i, 1);
               break;

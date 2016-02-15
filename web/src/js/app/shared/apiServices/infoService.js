@@ -44,6 +44,6 @@ pdApp.service('InfoService', ['$http', '$q', 'Notification', function($http, $q,
     }).error(function(reason){
       def.reject(reason);
     });
-  }
+  };
 
 }]);

@@ -10,6 +10,6 @@ pdApp.controller('MOTDController', ['$scope', 'UserService', '$q', function($sco
 
     this.closeMOTD = function(){
         UserService.setMOTDSeen();
-    }
+    };
 
 }]);

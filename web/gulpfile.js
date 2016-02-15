@@ -55,8 +55,8 @@ gulp.task('scripts', function () {
 
   // App files
   var appFiles = gulp.src(srcDir+'/js/**/*.js')
-      //.pipe(jshint())
-      //.pipe(jshint.reporter('default'))
+      .pipe(jshint())
+      .pipe(jshint.reporter('default'))
       .pipe(order([
         srcDir+'/js/app.module.js',
         srcDir+'/js/app.route.js',

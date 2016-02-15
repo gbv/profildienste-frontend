@@ -2,7 +2,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
 
     $scope.bibInfCollapsed = true;
     $scope.addInfCollapsed = true;
-    $scope.CommentCollapsed = ($scope.item.comment == null || $scope.item.comment == '');
+    $scope.CommentCollapsed = ($scope.item.comment === null || $scope.item.comment === '');
 
     $scope.loading = {
       comment: false,
@@ -83,7 +83,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
             function (reason) {
                 Notification.error(reason);
             });
-    }
+    };
 
     this.removeFromWL = function () {
         WatchlistService.removeFromWatchlist($scope.item).then(function (data) {
@@ -96,7 +96,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
             function (reason) {
                 Notification.error(reason);
             });
-    }
+    };
 
     this.removeFromCart = function () {
         CartService.removeFromCart($scope.item).then(function (data) {
@@ -109,7 +109,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
             function (reason) {
                 Notification.error(reason);
             });
-    }
+    };
 
     this.toggleSelect = function () {
         if ($scope.item.status.selected) {
@@ -275,7 +275,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
         }, function (reason) {
             Notification.error(reason);
         });
-    }
+    };
 
     this.removeRejected = function () {
         RejectService.removeRejected($scope.item).then(function (data) {
@@ -287,7 +287,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
         }, function (reason) {
             Notification.error(reason);
         });
-    }
+    };
 
     this.showCover = function () {
 
@@ -301,7 +301,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
             }
         });
 
-    }
+    };
 
     this.showNoTopBtn = function () {
         return $scope.item.status.done || $scope.item.status.rejected || $scope.item.status.pending;
@@ -329,5 +329,6 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
 
     this.editOrderInformation = function(){
         return !($scope.item.status.done || $scope.item.status.pending);
-    }
+    };
+
 }]);
