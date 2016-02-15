@@ -1,5 +1,6 @@
 pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 'CartService', 'UserService', '$uibModal', 'SelectService', 'LoginService', 'SearchService', '$location', 'PageConfigService', function ($scope, $rootScope, WatchlistService, CartService, UserService, $uibModal, SelectService, LoginService, SearchService, $location, PageConfigService) {
 
+    $scope.pricePopover = '/menu/pricePopover.html';
 
     WatchlistService.getWatchlists().then(function (data) {
         $scope.watchlists = data.watchlists;
