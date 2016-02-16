@@ -27,7 +27,7 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
 
   this.openHelp = function () {
 
-    $modal.open({
+    $uibModal.open({
       templateUrl: '/assets/html/help.html',
       controller: 'HelpController'
     });
