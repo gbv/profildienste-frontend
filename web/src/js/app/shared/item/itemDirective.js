@@ -1,4 +1,4 @@
-pdApp.directive('ngItem', function() {
+pdApp.directive('ngItem', function () {
   return {
     restrict: 'E',
     templateUrl: '/item/itemTemplate.html'

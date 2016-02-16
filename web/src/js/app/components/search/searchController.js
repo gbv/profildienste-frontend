@@ -1,27 +1,27 @@
-pdApp.controller('SearchController', ['$scope', 'SearchService', '$rootScope', 'Entries', 'ConfigService', function($scope, SearchService, $rootScope, Entries, ConfigService) {
+pdApp.controller('SearchController', ['$scope', 'SearchService', '$rootScope', 'Entries', 'ConfigService', function ($scope, SearchService, $rootScope, Entries, ConfigService) {
 
   $rootScope.$broadcast('siteChanged', {
     site: 'search',
     watchlist: false
   });
 
-  this.doSearch = function (){
+  this.doSearch = function () {
 
     $scope.searchterm = SearchService.getSearchterm();
 
     $scope.getStarted = false;
-    if($scope.searchterm === undefined || $scope.searchterm === ''){
+    if ($scope.searchterm === undefined || $scope.searchterm === '') {
       $scope.getStarted = true;
-    }else{
+    } else {
       $scope.getStarted = false;
     }
 
     $rootScope.$broadcast('siteLoading');
-    if(!$scope.getStarted) {
+    if (!$scope.getStarted) {
       $scope.entries = new Entries('search/' + window.encodeURIComponent($scope.searchterm), undefined, 'search');
       ConfigService.setEntries($scope.entries);
       $scope.entries.loadMore();
-    }else{
+    } else {
       $rootScope.$broadcast('siteLoadingFinished', -2);
     }
   };
@@ -30,17 +30,17 @@ pdApp.controller('SearchController', ['$scope', 'SearchService', '$rootScope', '
     this.doSearch();
   }.bind(this));
 
-  this.doSearch(); 
+  this.doSearch();
 
-  this.showSearch = function (){
-    return ($scope.entries !== undefined && !$scope.getStarted && !$scope.entries.error && ($scope.entries.total > 0 || $scope.entries.loading));  
+  this.showSearch = function () {
+    return ($scope.entries !== undefined && !$scope.getStarted && !$scope.entries.error && ($scope.entries.total > 0 || $scope.entries.loading));
   };
 
-  this.showNoHits = function(){
-    return ($scope.entries !== undefined && $scope.entries.total === 0  && !$scope.entries.error && !$scope.getStarted && !$scope.entries.loading);
+  this.showNoHits = function () {
+    return ($scope.entries !== undefined && $scope.entries.total === 0 && !$scope.entries.error && !$scope.getStarted && !$scope.entries.loading);
   };
 
-  $scope.$on('$locationChangeStart', function(event){
+  $scope.$on('$locationChangeStart', function (event) {
     $rootScope.$broadcast('searchViewUnload');
   });
 

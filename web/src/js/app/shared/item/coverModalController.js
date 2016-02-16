@@ -1,9 +1,9 @@
-pdApp.controller('CoverModalCtrl', ['$scope', '$modalInstance', 'cover', function ($scope, $modalInstance, cover) {
+pdApp.controller('CoverModalCtrl', ['$scope', '$uibModalInstance', 'cover', function ($scope, $uibModalInstance, cover) {
 
   $scope.cover = cover;
 
   $scope.close = function () {
-    $modalInstance.close();
+    $uibModalInstance.close();
   };
 
 }]);

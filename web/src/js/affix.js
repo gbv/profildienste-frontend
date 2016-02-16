@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    $('#header-fixed').affix({
-        offset: {
-            top: 10
-        }
-    });
+  $('#header-fixed').affix({
+    offset: {
+      top: 10
+    }
+  });
 });

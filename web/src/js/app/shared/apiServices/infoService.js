@@ -1,6 +1,6 @@
-pdApp.service('InfoService', ['$http', '$q', 'Notification', function($http, $q, Notification) {
+pdApp.service('InfoService', ['$http', '$q', 'Notification', function ($http, $q, Notification) {
 
-  this.getAddInf = function(item){
+  this.getAddInf = function (item) {
 
     var def = $q.defer();
 
@@ -9,23 +9,23 @@ pdApp.service('InfoService', ['$http', '$q', 'Notification', function($http, $q,
       url: '/api/info',
       data: $.param({id: item.id}),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
+    }).success(function (json) {
+      if (!json.success) {
         def.reject(json.errormsg);
-      }else{
+      } else {
         def.resolve({
           type: json.type,
           content: json.content
         });
       }
-    }).error(function(reason){
+    }).error(function (reason) {
       def.reject(reason);
     });
 
     return def.promise;
   };
 
-  this.openOPAC = function(item){
+  this.openOPAC = function (item) {
 
     $http({
       method: 'POST',
@@ -35,13 +35,13 @@ pdApp.service('InfoService', ['$http', '$q', 'Notification', function($http, $q,
         verfasser: item.verfasser
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
+    }).success(function (json) {
+      if (!json.success) {
         Notification.error('Es wurde kein OPAC Katalog für Ihre Bibliothek hinterlegt.');
-      }else{
+      } else {
         window.open(json.data.url, '_blank');
       }
-    }).error(function(reason){
+    }).error(function (reason) {
       def.reject(reason);
     });
   };

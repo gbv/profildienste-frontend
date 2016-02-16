@@ -1,18 +1,18 @@
-pdApp.service('SettingsService', ['$http', '$rootScope', '$q', 'LoginService', function($http, $rootScope, $q, LoginService) {
+pdApp.service('SettingsService', ['$http', '$rootScope', '$q', 'LoginService', function ($http, $rootScope, $q, LoginService) {
 
   var defSort = $q.defer();
   var defOrder = $q.defer();
 
   var defSelOptions = $q.defer();
 
-  LoginService.whenLoggedIn().then(function(data){
+  LoginService.whenLoggedIn().then(function (data) {
 
     // all available settings
-    $http.get('/api/settings').success(function(json){
-      if(!json.success){
+    $http.get('/api/settings').success(function (json) {
+      if (!json.success) {
         defSort.reject(json.message);
         defOrder.reject(json.message);
-      }else{
+      } else {
 
         defSort.resolve({
           sortby: json.data.sortby
@@ -23,17 +23,17 @@ pdApp.service('SettingsService', ['$http', '$rootScope', '$q', 'LoginService', f
         });
 
       }
-    }).error(function(reason){
+    }).error(function (reason) {
       defSort.reject(reason);
       defOrder.reject(reason);
     });
 
 
     // user specific settings
-    $http.get('/api/user/settings').success(function(json){
-      if(!json.success){
+    $http.get('/api/user/settings').success(function (json) {
+      if (!json.success) {
         defSelOptions.reject(json.message);
-      }else{
+      } else {
 
         this.data = json.data;
 
@@ -43,27 +43,27 @@ pdApp.service('SettingsService', ['$http', '$rootScope', '$q', 'LoginService', f
         });
 
       }
-    }.bind(this)).error(function(reason){
+    }.bind(this)).error(function (reason) {
       defSelOptions.reject(reason);
     });
 
   }.bind(this));
 
-  this.getOrder = function(){
+  this.getOrder = function () {
 
     return defOrder.promise;
   };
 
-  this.getSortby = function(){
+  this.getSortby = function () {
 
     return defSort.promise;
   };
 
 
-  this.getSelOptions = function(){
-    if(this.data === undefined){
+  this.getSelOptions = function () {
+    if (this.data === undefined) {
       return defSelOptions.promise;
-    }else{
+    } else {
       var d = $q.defer();
       d.resolve({
         sort: this.data.settings.sortby,
@@ -73,7 +73,7 @@ pdApp.service('SettingsService', ['$http', '$rootScope', '$q', 'LoginService', f
     }
   };
 
-  this.changeSetting = function(type, value){
+  this.changeSetting = function (type, value) {
 
     var def = $q.defer();
 
@@ -85,18 +85,18 @@ pdApp.service('SettingsService', ['$http', '$rootScope', '$q', 'LoginService', f
         value: value
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
+    }).success(function (json) {
+      if (!json.success) {
         def.reject(json.errormsg);
-      }else{
+      } else {
         def.resolve({
           type: json.type,
           value: json.value
         });
 
-        if(type === 'sortby'){
+        if (type === 'sortby') {
           this.data.settings.sortby = value;
-        }else if(type === 'order'){
+        } else if (type === 'order') {
           this.data.settings.order = value;
         }
 

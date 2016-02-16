@@ -1,30 +1,30 @@
-pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', function($http, $rootScope, $q, LoginService) {
+pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', function ($http, $rootScope, $q, LoginService) {
 
   var defWatchlists = $q.defer();
 
-  LoginService.whenLoggedIn().then(function(data){
-    $http.get('/api/user/watchlists').success(function(json){
-      if(!json.success){
+  LoginService.whenLoggedIn().then(function (data) {
+    $http.get('/api/user/watchlists').success(function (json) {
+      if (!json.success) {
         defWatchlists.reject(json.message);
-      }else{
+      } else {
 
         this.data = json.data;
-        
+
         defWatchlists.resolve({
           watchlists: json.data.watchlists,
           def_wl: json.data.def_wl
         });
 
       }
-    }.bind(this)).error(function(reason){
+    }.bind(this)).error(function (reason) {
       defWatchlists.reject(reason);
     });
   }.bind(this));
 
-  this.getWatchlists = function(){
-    if(this.data === undefined){
+  this.getWatchlists = function () {
+    if (this.data === undefined) {
       return defWatchlists.promise;
-    }else{
+    } else {
       var d = $q.defer();
       d.resolve({
         watchlists: this.data.watchlists,
@@ -35,7 +35,7 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
     }
   };
 
-  this.removeFromWatchlist = function(item){
+  this.removeFromWatchlist = function (item) {
 
     var def = $q.defer();
 
@@ -44,13 +44,13 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
       url: '/api/watchlist/remove',
       data: $.param({id: item.id, wl: item.status.watchlist.id}),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
+    }).success(function (json) {
+      if (!json.success) {
         def.reject(json.errormsg);
-      }else{
+      } else {
 
-        for(var i=0; i < this.data.watchlists.length; i++){
-          if(this.data.watchlists[i].id == item.status.watchlist.id){
+        for (var i = 0; i < this.data.watchlists.length; i++) {
+          if (this.data.watchlists[i].id == item.status.watchlist.id) {
             this.data.watchlists[i].count = json.content;
             $rootScope.$broadcast('watchlistChange', this.data.watchlists);
             break;
@@ -66,9 +66,9 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
   };
 
 
-  this.addToWatchlist = function(item, wl){
+  this.addToWatchlist = function (item, wl) {
 
-    if(wl === undefined){
+    if (wl === undefined) {
       wl = this.data.def_wl;
     }
 
@@ -79,14 +79,14 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
       url: '/api/watchlist/add',
       data: $.param({id: item.id, wl: wl}),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
+    }).success(function (json) {
+      if (!json.success) {
         def.reject(json.errormsg);
-      }else{
+      } else {
 
         var name;
-        for(var i=0; i < this.data.watchlists.length; i++){
-          if(this.data.watchlists[i].id == wl){
+        for (var i = 0; i < this.data.watchlists.length; i++) {
+          if (this.data.watchlists[i].id == wl) {
             this.data.watchlists[i].count = json.content;
             name = this.data.watchlists[i].name;
             $rootScope.$broadcast('watchlistChange', this.data.watchlists);
@@ -106,7 +106,7 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
     return def.promise;
   };
 
-  this.manageWatchlist = function(wlId, type, content){
+  this.manageWatchlist = function (wlId, type, content) {
 
     var def = $q.defer();
 
@@ -119,21 +119,21 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
         content: content
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
+    }).success(function (json) {
+      if (!json.success) {
         def.reject(json.errormsg);
-      }else{
+      } else {
 
-        if(type === 'upd-name'){
-          for(i=0; i < this.data.watchlists.length; i++){
-            if(this.data.watchlists[i].id == json.id){
+        if (type === 'upd-name') {
+          for (i = 0; i < this.data.watchlists.length; i++) {
+            if (this.data.watchlists[i].id == json.id) {
               this.data.watchlists[i].name = content;
               break;
             }
           }
         }
 
-        if(type === 'add-wl'){
+        if (type === 'add-wl') {
           var wl = {};
           wl.name = content;
           wl.id = json.id;
@@ -141,16 +141,16 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
           this.data.watchlists.push(wl);
         }
 
-        if(type === 'remove'){
-          for(i=0; i < this.data.watchlists.length; i++){
-            if(this.data.watchlists[i].id == json.id){
+        if (type === 'remove') {
+          for (i = 0; i < this.data.watchlists.length; i++) {
+            if (this.data.watchlists[i].id == json.id) {
               this.data.watchlists.splice(i, 1);
               break;
             }
           }
         }
 
-        if(type === 'def'){
+        if (type === 'def') {
           this.data.def_wl = json.id;
           $rootScope.$broadcast('defaultWatchlistChange', json.id);
         }

@@ -110,13 +110,18 @@ gulp.task('copy-index', function () {
       .pipe(gulp.dest(distDir));
 });
 
+gulp.task('copy-assets', function () {
+    gulp.src('assets/**/*')
+        .pipe(gulp.dest(distDir));
+});
+
 gulp.task('build', function() {
   runSequence(
       ['clean'],
-      ['lint', 'styles', 'scripts', 'fonts', 'copy-index']
+      ['lint', 'styles', 'scripts', 'fonts', 'copy-index', 'copy-assets']
   );
 });
 
 gulp.task('default',
-    ['clean', 'build']
+    ['build']
 );

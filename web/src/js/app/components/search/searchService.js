@@ -1,13 +1,13 @@
-pdApp.service('SearchService', ['$rootScope', function($rootScope){
+pdApp.service('SearchService', ['$rootScope', function ($rootScope) {
 
   var searchterm;
 
-  this.setSearchterm = function(term){
+  this.setSearchterm = function (term) {
     searchterm = term;
     $rootScope.$broadcast('search');
   };
 
-  this.getSearchterm = function(){
+  this.getSearchterm = function () {
     return searchterm;
   };
 

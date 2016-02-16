@@ -1,8 +1,8 @@
 // Load the entries
-pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', function($http, $uibModal, $rootScope, SelectService) {
+pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', function ($http, $uibModal, $rootScope, SelectService) {
 
   // Entry object
-  var Entries = function(site, id, title) {
+  var Entries = function (site, id, title) {
     this.items = [];
     this.loading = false;
     this.page = 0;
@@ -20,23 +20,23 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', f
   };
 
   // loads more entries from the server
-  Entries.prototype.loadMore = function() {
+  Entries.prototype.loadMore = function () {
 
-    if (!this.more || this.loading){
+    if (!this.more || this.loading) {
       return;
     }
 
     this.loading = true;
     $rootScope.$broadcast('siteLoading');
     var url;
-    if(this.id === undefined){
-      url = '/api/get/'+this.site+'/page/'+this.page;
-    }else{
-      url = '/api/get/'+this.site+'/'+this.id+'/page/'+this.page;
+    if (this.id === undefined) {
+      url = '/api/get/' + this.site + '/page/' + this.page;
+    } else {
+      url = '/api/get/' + this.site + '/' + this.id + '/page/' + this.page;
     }
-    
-    $http.get(url).success(function(data) {
-      if(data.success){
+
+    $http.get(url).success(function (data) {
+      if (data.success) {
         var items = data.data;
 
         var selectAll = SelectService.viewSelected();
@@ -50,13 +50,13 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', f
         this.more = data.more;
         this.total = data.total;
         $rootScope.$broadcast('siteLoadingFinished', data.total);
-      }else{
+      } else {
         this.error = true;
         this.errorMessage = data.message;
         $rootScope.$broadcast('siteLoadingFinished', -1);
       }
-      
-    }.bind(this)).error(function(data, status, headers, config) {
+
+    }.bind(this)).error(function (data, status, headers, config) {
 
       $modal.open({
         templateUrl: 'errorModal.html',
@@ -68,9 +68,9 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', f
   };
 
   // removes a given item from the item collection
-  Entries.prototype.removeItem = function(item) {
-    for(var i = 0; i < this.items.length; i++){
-      if(this.items[i] === item){
+  Entries.prototype.removeItem = function (item) {
+    for (var i = 0; i < this.items.length; i++) {
+      if (this.items[i] === item) {
         this.items.splice(i, 1);
         break;
       }
@@ -79,15 +79,15 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', f
     this.total--;
     $rootScope.$broadcast('totalChanged', this.total);
 
-    if(this.items.length === 0){
+    if (this.items.length === 0) {
       this.page--;
       this.loadMore();
     }
   };
 
   // resets the loader
-  Entries.prototype.reset = function(url) {
-    if(url !== undefined){
+  Entries.prototype.reset = function (url) {
+    if (url !== undefined) {
       this.url = url;
     }
     this.page = 0;

@@ -1,30 +1,30 @@
-pdApp.service('ConfigService', ['$q', '$rootScope', 'PageConfigService', function($q, $rootScope, PageConfigService){
+pdApp.service('ConfigService', ['$q', '$rootScope', 'PageConfigService', function ($q, $rootScope, PageConfigService) {
 
   var config;
   var entries;
   var defConfig = $q.defer();
   var defEntries = $q.defer();
 
-  this.getConfig = function(){
-    if(config === undefined){
+  this.getConfig = function () {
+    if (config === undefined) {
       return defConfig.promise;
-    }else{
+    } else {
       var def = $q.defer();
       def.resolve(config);
       return def.promise;
     }
   };
 
-  this.setConfig = function(c){
+  this.setConfig = function (c) {
     config = c;
 
     defConfig.resolve(config);
   };
 
-  this.getEntries = function(){
-    if(entries === undefined){
+  this.getEntries = function () {
+    if (entries === undefined) {
       return defEntries.promise;
-    }else{
+    } else {
       var def = $q.defer();
       def.resolve({
         entries: entries
@@ -33,19 +33,19 @@ pdApp.service('ConfigService', ['$q', '$rootScope', 'PageConfigService', functio
     }
   };
 
-  this.setEntries = function(e){
+  this.setEntries = function (e) {
     entries = e;
-    
+
     defEntries.resolve({
       entries: entries
     });
   };
 
-  $rootScope.$on('siteChanged', function (ev, site){
+  $rootScope.$on('siteChanged', function (ev, site) {
 
     var view = site.site;
 
-    if(site.watchlist){
+    if (site.watchlist) {
       view = 'watchlist';
     }
 

@@ -1,4 +1,4 @@
-pdApp.service('OrderService', ['$http', '$q', 'LoginService', function($http, $q, LoginService) {
+pdApp.service('OrderService', ['$http', '$q', 'LoginService', function ($http, $q, LoginService) {
 
   var defOrder;
 
@@ -20,7 +20,7 @@ pdApp.service('OrderService', ['$http', '$q', 'LoginService', function($http, $q
     }.bind(this));
   };
 
-  this.getOrderlist = function(){
+  this.getOrderlist = function () {
     loadOrderlist();
     return defOrder.promise;
   };
