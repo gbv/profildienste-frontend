@@ -1,49 +1,49 @@
-pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams', '$location', 'LoginService', 'Notification', function($scope, LibraryService, $routeParams, $location, LoginService, Notification) {
+pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams', '$location', 'LoginService', 'Notification', function ($scope, LibraryService, $routeParams, $location, LoginService, Notification) {
 
-  LibraryService.getLibraries().then(function(data){
-    for(var i=0; i < data.libs.length; i++){
-      if(data.libs[i].isil == $routeParams.isil){
+  LibraryService.getLibraries().then(function (data) {
+    for (var i = 0; i < data.libs.length; i++) {
+      if (data.libs[i].isil == $routeParams.isil) {
         $scope.library = data.libs[i];
         break;
       }
     }
 
-    if($scope.library === undefined){
+    if ($scope.library === undefined) {
       $location.path('/');
     }
-    
-  }, function(reason){
+
+  }, function (reason) {
     Notification.error(reason);
   });
 
   $scope.userValid = true;
   $scope.passValid = true;
 
-  this.submitLogin = function(){
+  this.submitLogin = function () {
 
 
-    if($scope.user === undefined){
+    if ($scope.user === undefined) {
       $scope.userValid = false;
-    }else{
+    } else {
       $scope.userValid = true;
     }
 
-    if($scope.pass === undefined || $scope.pass.trim() === ''){
+    if ($scope.pass === undefined || $scope.pass.trim() === '') {
       $scope.passValid = false;
-    }else{
+    } else {
       $scope.passValid = true;
     }
 
-    if(!$scope.userValid || !$scope.passValid){
+    if (!$scope.userValid || !$scope.passValid) {
       return;
     }
 
-    LoginService.performLogin($scope.user, $scope.pass).then(function(data){
+    LoginService.performLogin($scope.user, $scope.pass).then(function (data) {
       $location.path('/main');
-    }, function(error){
+    }, function (error) {
       $scope.error = true;
       $scope.errorMessage = error;
     });
-  }
-  
+  };
+
 }]);

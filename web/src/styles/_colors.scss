@@ -1,0 +1,24 @@
+$primary: #ff6600;
+$secondary: darken($primary, 10%);
+$muted: lighten(#000, 46.7%);
+$text-col: #333;
+
+$wl-dd-badge-col: $text-col;
+
+$option-menu-bg: #f8f8f8;
+$option-menu-border: darken($option-menu-bg, 10%);
+
+$navbar-link-col: #ffffff;
+$navbar-link-hover-col: $secondary;
+
+$selected: lighten($primary, 45%);
+
+$navbar-back-color: #615c5c;
+
+$remove-color: #AD2B2B;
+
+$select-color: #c9c9c9;
+
+$save-success-color: beige;
+
+$autodefault-color: #999;

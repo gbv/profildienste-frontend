@@ -1,12 +1,12 @@
-pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', function($http, $rootScope, $q, LoginService) {
+pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', function ($http, $rootScope, $q, LoginService) {
 
   var defCart = $q.defer();
 
-  LoginService.whenLoggedIn().then(function(data){
-    $http.get('/api/user/cart').success(function(json){
-      if(!json.success){
+  LoginService.whenLoggedIn().then(function (data) {
+    $http.get('/api/user/cart').success(function (json) {
+      if (!json.success) {
         defCart.reject(json.message);
-      }else{
+      } else {
 
         this.data = json.data;
 
@@ -16,15 +16,15 @@ pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', funct
         });
 
       }
-    }.bind(this)).error(function(reason){
+    }.bind(this)).error(function (reason) {
       defCart.reject(reason);
     });
   }.bind(this));
 
-  this.getCart = function(){
-    if(this.data === undefined){
+  this.getCart = function () {
+    if (this.data === undefined) {
       return defCart.promise;
-    }else{
+    } else {
       var d = $q.defer();
       d.resolve({
         cart: this.data.cart,
@@ -34,12 +34,12 @@ pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', funct
     }
   };
 
-  this.addToCart = function(data, view){
+  this.addToCart = function (data, view) {
 
     var def = $q.defer();
 
     var items = data;
-    if(data.constructor !== Array){
+    if (data.constructor !== Array) {
       items = [data.id];
     }
 
@@ -53,10 +53,10 @@ pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', funct
         view: v
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
+    }).success(function (json) {
+      if (!json.success) {
         def.reject(json.errormsg);
-      }else{
+      } else {
 
         def.resolve({
           order: json.order
@@ -71,12 +71,12 @@ pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', funct
   };
 
 
-  this.removeFromCart = function(data, view){
+  this.removeFromCart = function (data, view) {
 
     var def = $q.defer();
 
     var items = data;
-    if(data.constructor !== Array){
+    if (data.constructor !== Array) {
       items = [data.id];
     }
 
@@ -90,14 +90,14 @@ pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', funct
         view: v
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
+    }).success(function (json) {
+      if (!json.success) {
         def.reject(json.errormsg);
-      }else{
+      } else {
 
         this.data.cart = json.content;
         this.data.price = json.price;
-      
+
         $rootScope.$broadcast('cartChange', this.data.cart, this.data.price);
 
         def.resolve();

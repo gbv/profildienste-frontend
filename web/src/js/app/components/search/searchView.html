@@ -1,60 +1,66 @@
 <div ng-controller="SearchController as SearchCtrl">
 
-  <div ng-show="entries.error">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="alert alert-danger">{{entries.errorMessage}}</div>
-      </div>
+    <div ng-show="entries.error">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger">{{entries.errorMessage}}</div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div ng-show="SearchCtrl.showNoHits()">
-    <div class="row">
-      <div class="col-md-12">
-        Vorschläge:
-        <br>
-        <ul>
-          <li>Prüfen Sie, ob der Suchbegriff korrekt ist</li>
-          <li>Versuchen Sie es mit einem anderen Begriff erneut</li>
-        </ul>
-      </div>
+    <div ng-show="SearchCtrl.showNoHits()">
+        <div class="row">
+            <div class="col-md-12">
+                Vorschläge:
+                <br>
+                <ul>
+                    <li>Prüfen Sie, ob der Suchbegriff korrekt ist</li>
+                    <li>Versuchen Sie es mit einem anderen Begriff erneut</li>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div ng-show="getStarted">
-    <div class="row">
-      <div class="col-md-12">
-        <p> Hier können Sie gezielt nach Titeln suchen.<br><br>
-        Sie können eine Suche starten, indem Sie in das Textfeld in der Menüleiste Ihre Suchanfrage eingeben und anschließend auf <code>Enter</code> drücken.
-        </p>
-        <br>
-        <p> Bitte beachten Sie bei ihrer Suchanfrage folgendes:
-          <ul>
-            <li> Ihre Suchanfrage muss dem Format <code>Schlüssel Suchbegriff</code> entsprechen. Weitere Informationen hierzu erhalten Sie in der Hilfe.</li>
-            <li> Es wird nicht zwischen Groß- und Kleinschreibung unterschieden</li>
-            <li> Suchergebnisse enthalten alle Treffer, die Ihrer Suchanfrage genügen - unabhängig davon, ob Sie diese ausgeblendet haben.</li>
-          </ul>
-        </p>
-      </div>
+    <div ng-show="getStarted">
+        <div class="row">
+            <div class="col-md-12">
+                <p> Hier können Sie gezielt nach Titeln suchen.<br><br>
+                    Sie können eine Suche starten, indem Sie in das Textfeld in der Menüleiste Ihre Suchanfrage eingeben
+                    und anschließend auf <code>Enter</code> drücken.
+                </p>
+                <br>
+                <p> Bitte beachten Sie bei ihrer Suchanfrage folgendes:
+                <ul>
+                    <li> Ihre Suchanfrage muss dem Format <code>Schlüssel Suchbegriff</code> entsprechen. Weitere
+                        Informationen hierzu erhalten Sie in der Hilfe.
+                    </li>
+                    <li> Es wird nicht zwischen Groß- und Kleinschreibung unterschieden</li>
+                    <li> Suchergebnisse enthalten alle Treffer, die Ihrer Suchanfrage genügen - unabhängig davon, ob Sie
+                        diese ausgeblendet haben.
+                    </li>
+                </ul>
+                </p>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div ng-show="SearchCtrl.showSearch()">
-    <ng-optionbar></ng-optionbar>
-    <!-- List -->
-    <div infinite-scroll='entries.loadMore()' infinite-scroll-disabled='entries.loading' infinite-scroll-distance='1'>
-      <ng-item ng-repeat="item in entries.items"></ng-item>
+    <div ng-show="SearchCtrl.showSearch()">
+        <ng-optionbar></ng-optionbar>
+        <!-- List -->
+        <div infinite-scroll='entries.loadMore()' infinite-scroll-disabled='entries.loading'
+             infinite-scroll-distance='1'>
+            <ng-item ng-repeat="item in entries.items"></ng-item>
+        </div>
+        <!-- End of list -->
+        <div class="row" ng-show="entries.loading">
+            <div class="col-xs-2 col-xs-offset-5 entry-follow">
+                <h3><i class="fa fa-spinner fa-spin"></i> Laden...</h3>
+            </div>
+        </div>
+        <div class="row" ng-hide="entries.more">
+            <div class="col-xs-4 col-xs-offset-4 entry-follow">
+                <h3> Keine weiteren Titel in dieser Ansicht.</h3>
+            </div>
+        </div>
     </div>
-    <!-- End of list -->
-    <div class="row" ng-show="entries.loading">
-      <div class="col-xs-2 col-xs-offset-5 entry-follow">
-        <h3><i class="fa fa-spinner fa-spin"></i> Laden...</h3>
-      </div>
-    </div>
-    <div class="row" ng-hide="entries.more">
-      <div class="col-xs-4 col-xs-offset-4 entry-follow">
-        <h3> Keine weiteren Titel in dieser Ansicht.</h3>
-      </div>
-    </div>
-  </div>
 </div>

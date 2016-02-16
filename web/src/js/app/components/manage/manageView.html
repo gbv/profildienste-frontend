@@ -1,68 +1,81 @@
 <div ng-controller="ManageController as ManageCtrl">
-  <div class="row controls">
-    <div class="col-md-12">
-      <h2>Neue Merkliste erstellen</h2>
-      <p>Bitte geben Sie den Namen der Merkliste ein, die Sie erstellen wollen und klicken Sie anschließend auf Hinzufügen.</p>
-      <div class="navbar navbar-inverse" role="navigation">
-        <ul class="nav navbar-nav">
-          <p class="navbar-text">Name der neuen Liste:</p>
-        </ul>
-        <form class="navbar-form navbar-left">
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Name" ng-model="newName">
-          </div>
-          <button type="button" class="btn btn-default" ng-click="ManageCtrl.addNewWatchlist()"><i class="fa fa-plus"></i> Hinzufügen</button>
-        </form>
-      </div>
+    <div class="row controls">
+        <div class="col-md-12">
+            <h2>Neue Merkliste erstellen</h2>
+            <p>Bitte geben Sie den Namen der Merkliste ein, die Sie erstellen wollen und klicken Sie anschließend auf
+                Hinzufügen.</p>
+            <div class="navbar navbar-inverse" role="navigation">
+                <ul class="nav navbar-nav">
+                    <p class="navbar-text">Name der neuen Liste:</p>
+                </ul>
+                <form class="navbar-form navbar-left">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Name" ng-model="newName">
+                    </div>
+                    <button type="button" class="btn btn-default" ng-click="ManageCtrl.addNewWatchlist()"><i
+                            class="fa fa-plus"></i> Hinzufügen
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <h2>Ihre Merklisten</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Ihre Merklisten</h2>
+        </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <p>Sie können die Reihenfolge Ihrer Merklisten durch Klicken und Verschieben auf die entsprechende Merkliste ändern. Eine Änderung
-        der Reihenfolge hat Auswirkungen auf die Anzeige der Merklisten in den Auwahlmenüs. So können Sie häufig verwendete Merklisten in den Vordergrund rücken.
-      </p>
+    <div class="row">
+        <div class="col-md-12">
+            <p>Sie können die Reihenfolge Ihrer Merklisten durch Klicken und Verschieben auf die entsprechende Merkliste
+                ändern. Eine Änderung
+                der Reihenfolge hat Auswirkungen auf die Anzeige der Merklisten in den Auwahlmenüs. So können Sie häufig
+                verwendete Merklisten in den Vordergrund rücken.
+            </p>
+        </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-8 col-md-offset-2">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
 
-    <!-- START  -->
+            <!-- START  -->
 
-    <ul ui-sortable ng-model="items">
-      <li ng-repeat="item in items">{{ item }}</li>
-    </ul>
+            <ul ui-sortable ng-model="items">
+                <li ng-repeat="item in items">{{ item }}</li>
+            </ul>
 
-    <!-- END  -->
+            <!-- END  -->
 
-      <table class="table">
-        <thead>
-          <tr><th colspan="2"><h3>Merklisten</h3></th></tr>
-        </thead>
-        <tbody ui-sortable="sortableOptions" ng-model="watchlists">
-          <tr ng-repeat="watchlist in watchlists" ng-controller="ManageWatchlistController as ManageWLCtrl" class="active">
-            <td>
-              <div class="col-md-6">
-                <p class="form-control-static" ng-hide="editMode">{{name}}</p>
-                <input type="text" class="form-control input-sm" ng-model="name" ng-show="editMode">
-              </div>
-              <button class="btn btn-default" ng-click="ManageWLCtrl.edit()" ng-hide="editMode"><i class="fa fa-pencil"></i></button>
-              <button class="btn btn-default" ng-click="ManageWLCtrl.save()" ng-show="editMode"><i class="fa fa-check"></i></button>
-            </td>
-            <td>
-              <div class="pull-right">
-                <button class="btn btn-default" ng-click="ManageWLCtrl.open()"><i class="fa fa-eye"></i></button>
-                <button class="btn btn-default" ng-click="ManageWLCtrl.setAsDefault()" ng-disabled="ManageWLCtrl.disableDefault()"><i class="fa fa-bookmark"></i></button>
-                <button class="btn btn-default" ng-click="ManageWLCtrl.delete()" ng-disabled="ManageWLCtrl.disableDelete()"><i class="fa fa-times"></i></button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th colspan="2"><h3>Merklisten</h3></th>
+                </tr>
+                </thead>
+                <tbody ui-sortable="sortableOptions" ng-model="watchlists">
+                <tr ng-repeat="watchlist in watchlists" ng-controller="ManageWatchlistController as ManageWLCtrl"
+                    class="active">
+                    <td>
+                        <div class="col-md-6">
+                            <p class="form-control-static" ng-hide="editMode">{{name}}</p>
+                            <input type="text" class="form-control input-sm" ng-model="name" ng-show="editMode">
+                        </div>
+                        <button class="btn btn-default" ng-click="ManageWLCtrl.edit()" ng-hide="editMode"><i
+                                class="fa fa-pencil"></i></button>
+                        <button class="btn btn-default" ng-click="ManageWLCtrl.save()" ng-show="editMode"><i
+                                class="fa fa-check"></i></button>
+                    </td>
+                    <td>
+                        <div class="pull-right">
+                            <button class="btn btn-default" ng-click="ManageWLCtrl.open()"><i class="fa fa-eye"></i>
+                            </button>
+                            <button class="btn btn-default" ng-click="ManageWLCtrl.setAsDefault()"
+                                    ng-disabled="ManageWLCtrl.disableDefault()"><i class="fa fa-bookmark"></i></button>
+                            <button class="btn btn-default" ng-click="ManageWLCtrl.delete()"
+                                    ng-disabled="ManageWLCtrl.disableDelete()"><i class="fa fa-times"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-  </div>
 </div>

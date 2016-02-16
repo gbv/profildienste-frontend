@@ -1,14 +1,14 @@
-pdApp.service('LoginService', ['$http', '$window', '$q', '$rootScope', function($http, $window, $q, $rootScope) {
+pdApp.service('LoginService', ['$http', '$window', '$q', '$rootScope', function ($http, $window, $q, $rootScope) {
 
   var defLogin = $q.defer();
 
-  if($window.sessionStorage.token){
+  if ($window.sessionStorage.token) {
     $rootScope.$broadcast('userLogin');
   }
 
-  this.performLogin = function(user, pass){
+  this.performLogin = function (user, pass) {
 
-    if($window.sessionStorage.token){
+    if ($window.sessionStorage.token) {
       return;
     }
 
@@ -22,19 +22,19 @@ pdApp.service('LoginService', ['$http', '$window', '$q', '$rootScope', function(
         pass: pass
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function(json){
-      if(!json.success){
+    }).success(function (json) {
+      if (!json.success) {
         login.reject(json.message);
-      }else{
+      } else {
 
         defLogin.resolve();
         login.resolve();
 
-        $window.sessionStorage.setItem('token',json.token);
+        $window.sessionStorage.setItem('token', json.token);
 
         $rootScope.$broadcast('userLogin');
       }
-    }).error(function(reason){
+    }).error(function (reason) {
       $scope.error = true;
       $scope.errorMessage = reason;
     });
@@ -43,16 +43,16 @@ pdApp.service('LoginService', ['$http', '$window', '$q', '$rootScope', function(
 
   };
 
-  this.whenLoggedIn = function(){
+  this.whenLoggedIn = function () {
 
-    if($window.sessionStorage.token){
+    if ($window.sessionStorage.token) {
       defLogin.resolve();
     }
 
     return defLogin.promise;
   };
 
-  this.destroySession = function(reason){
+  this.destroySession = function (reason) {
     $scope.hasInfo = true;
     $scope.info = reason;
     $window.sessionStorage.removeItem('token');

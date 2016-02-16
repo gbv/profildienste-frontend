@@ -59,28 +59,27 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li class="dropdown-header">Ausgewählte Titel...</li>
-                        <li ng-show="selection.cart"><a href="" ng-click="MenuCtrl.selectionInCart()"><i class="fa fa-shopping-cart fa-fw"></i> In Warenkorb</a></li>
-                        <li ng-show="selection.removeCart"><a href="" ng-click="MenuCtrl.selectionRemoveFromCart()"><i class="fa fa-times fa-fw"></i> Aus Warenkorb entfernen</a></li>
+                        <li ng-show="selection.cart"><a href="" ng-click="MenuCtrl.selectionInCart()"><i
+                                class="fa fa-shopping-cart fa-fw"></i> In Warenkorb</a></li>
+                        <li ng-show="selection.removeCart"><a href="" ng-click="MenuCtrl.selectionRemoveFromCart()"><i
+                                class="fa fa-times fa-fw"></i> Aus Warenkorb entfernen</a></li>
                         <li ng-show="selection.watchlist"><a><i class="fa fa-star fa-fw"></i> In Merkliste</a></li>
-                        <li ng-show="selection.removeWatchlist"><a><i class="fa fa-times fa-fw"></i> Aus Merkliste entfernen</a></li>
-                        <li ng-show="selection.reject"><a href="" ng-click="MenuCtrl.selectionReject()"><i class="fa fa-minus-circle fa-fw"></i> Ablehnen</a></li>
-                        <li ng-show="selection.removeReject"><a href="" ng-click="MenuCtrl.selectionRemoveReject()"><i class="fa fa-plus-circle fa-fw"></i> Wieder aufnehmen</a></li>
+                        <li ng-show="selection.removeWatchlist"><a><i class="fa fa-times fa-fw"></i> Aus Merkliste
+                            entfernen</a></li>
+                        <li ng-show="selection.reject"><a href="" ng-click="MenuCtrl.selectionReject()"><i
+                                class="fa fa-minus-circle fa-fw"></i> Ablehnen</a></li>
+                        <li ng-show="selection.removeReject"><a href="" ng-click="MenuCtrl.selectionRemoveReject()"><i
+                                class="fa fa-plus-circle fa-fw"></i> Wieder aufnehmen</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="/cart"
                        ng-hide="showSelMenu"
                        popover-placement="bottom"
-                       popover="
-              <span class='text-muted'>Schätzpreis:</span><br>
-              <span id='estprice'>{{price.price | currency:'EUR '}}</span><br><br>
-              <span class='text-muted'>Details:</span><br>
-              <span id='price_known'>{{price.known}}</span> bekannt<br>
-              <span id='price_est'>{{price.est}}</span> geschätzt
-            "
+                       uib-popover-template="pricePopover"
                        popover-trigger="mouseenter"
                        popover-title="Preisangaben"
-                            >
+                    >
                         <i class="fa fa-shopping-cart fa-lg"></i> Warenkorb <span class="badge">{{cart}}</span>
                     </a>
                 </li>

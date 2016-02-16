@@ -1,46 +1,49 @@
 <!-- -->
 <div class="row title-box" ng-class="{selected: item.status.selected}" ng-controller="ItemController as ItemCtrl">
-  <!-- Linke Seite -->
-  <div class="col-md-2">
-    <div class="row">
-      <!-- Selektor -->
-      <div class="col-md-4">
-        <button type="button" class="btn btn-link pull-left item-select xt-list" ng-show="selectionEnabled" ng-click="ItemCtrl.toggleSelect()" ng-class="{ itemSelected: item.status.selected}">
-          <i class="fa fa-square-o fa-2x" ng-hide="item.status.selected"></i>
-          <i class="fa fa-check-square-o fa-2x" ng-show="item.status.selected"></i>
-        </button>
-      </div>
-      <!-- Cover -->
-      <div class="col-md-8">
-        <img ng-show="item.hasCover" ng-src="{{item.cover_md}}" class="cover cover-lg" ng-click="ItemCtrl.showCover()">
-        <img ng-hide="item.hasCover" ng-src="{{item.cover_md}}" class="cover">
-      </div>
+    <!-- Linke Seite -->
+    <div class="col-md-2">
+        <div class="row">
+            <!-- Selektor -->
+            <div class="col-md-4">
+                <button type="button" class="btn btn-link pull-left item-select xt-list" ng-show="selectionEnabled"
+                        ng-click="ItemCtrl.toggleSelect()" ng-class="{ itemSelected: item.status.selected}">
+                    <i class="fa fa-square-o fa-2x" ng-hide="item.status.selected"></i>
+                    <i class="fa fa-check-square-o fa-2x" ng-show="item.status.selected"></i>
+                </button>
+            </div>
+            <!-- Cover -->
+            <div class="col-md-8">
+                <img ng-show="item.hasCover" ng-src="{{item.cover_md}}" class="cover cover-lg"
+                     ng-click="ItemCtrl.showCover()">
+                <img ng-hide="item.hasCover" ng-src="{{item.cover_md}}" class="cover">
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="col-md-7 title-content">
-    <!-- Start Mitte -->
-    <h2>{{item.titel}}</h2>
-    <br>
-    <h3>{{item.untertitel}}</h3>
-    <br>
-    <br>
-    <span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span> {{item.verlag}}<span ng-show="item.ort | notEmpty">, {{item.ort}}</span><span class="text-muted">)</span>
-    <br>
-    <span class="text-muted">Umfang: </span> {{item.umfang}}
+    <div class="col-md-7 title-content">
+        <!-- Start Mitte -->
+        <h2>{{item.titel}}</h2>
+        <br>
+        <h3>{{item.untertitel}}</h3>
+        <br>
+        <br>
+        <span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span> {{item.verlag}}<span
+            ng-show="item.ort | notEmpty">, {{item.ort}}</span><span class="text-muted">)</span>
+        <br>
+        <span class="text-muted">Umfang: </span> {{item.umfang}}
     <span ng-show="item.ill_angabe | notEmpty">
       <span class="text-muted">, </span>{{item.ill_angabe}}
     </span>
     <span ng-show="item.format | notEmpty">
       <span class="text-muted">, </span>{{item.format}}
     </span>
-    <br>
-    <br>
-    <span class="text-muted">ISBN: </span> {{item.isbn}} <br>
-    <br>
-    <span class="text-muted">erscheint: </span> {{item.ersch_termin}} <br>
-    <br>
+        <br>
+        <br>
+        <span class="text-muted">ISBN: </span> {{item.isbn}} <br>
+        <br>
+        <span class="text-muted">erscheint: </span> {{item.ersch_termin}} <br>
+        <br>
 
-    <span class="text-muted">GVK-Treffer: </span>{{item.mak}}
+        <span class="text-muted">GVK-Treffer: </span>{{item.mak}}
     <span ng-show="item.ilns | notEmpty">
       <span class="text-muted">(ILNs: </span>{{item.ilns}}
       <span ng-show="item.ppn">
@@ -49,171 +52,192 @@
       <span class="text-muted">)</span>
     </span>
 
-    <br>
-    <br>
-    
-    <form class="form-inline">
-      <!-- Lieferant -->
-      <span class="text-muted">Lieferant: </span>
-      <input type="text" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7" ng-show="ItemCtrl.editOrderInformation()" ng-model="item.lft" ng-maxlength="7" ng-minlength="1" ng-focus="ItemCtrl.saveLieft()" ng-blur="ItemCtrl.closeLieft()" placeholder="{{defaults.lft}}" ng-disabled="loading.lieft" ng-class="{saved: saved.lieft}">
-      <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.lft}}</span>
-
-      <!-- Budget -->
-      <span class="text-muted">Budget:</span>
-      <select ng-model="item.budget" ng-options="budget.key as budget.value for budget in budgets" ng-show="ItemCtrl.editOrderInformation()" class="form-control lft input-sm" ng-change="ItemCtrl.saveBudget()" ng-disabled="loading.budget" ng-class="{saved: saved.budget}"></select>
-      <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.budget}}</span>
-
-      <!-- Selektionscode -->
-      <span class="text-muted">Selektionscode: </span>
-      <input type="text" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20" ng-show="ItemCtrl.editOrderInformation()"  ng-maxlength="20" ng-minlength="0" ng-model="item.selcode" ng-focus="ItemCtrl.saveSelcode()" ng-blur="ItemCtrl.closeSelcode()" placeholder="{{defaults.selcode}}" ng-disabled="loading.selcode" ng-class="{saved: saved.selcode}">
-      <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.selcode}}</span>
-
-      <!-- SSG Nummer -->
-      <span class="text-muted">SSGs-Nr.: </span>
-      <input type="text" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3" ng-show="ItemCtrl.editOrderInformation()" ng-maxlength="3" ng-minlength="0" ng-model="item.ssgnr" placeholder="{{defaults.ssgnr}}" ng-focus="ItemCtrl.saveSSGNr()" ng-blur="ItemCtrl.closeSSGNr()" ng-disabled="loading.ssgnr" ng-class="{saved: saved.ssgnr}">
-      <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.ssgnr}}</span>
-
-    </form>
-
-    <div collapse="bibInfCollapsed">
         <br>
-        <span class="text-muted">Erscheinungsjahr: </span> {{item.ersch_jahr}} <br><br>
+        <br>
+
+        <form class="form-inline">
+            <!-- Lieferant -->
+            <span class="text-muted">Lieferant: </span>
+            <input type="text" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7"
+                   ng-show="ItemCtrl.editOrderInformation()" ng-model="item.lft" ng-maxlength="7" ng-minlength="1"
+                   ng-focus="ItemCtrl.saveLieft()" ng-blur="ItemCtrl.closeLieft()" placeholder="{{defaults.lft}}"
+                   ng-disabled="loading.lieft" ng-class="{saved: saved.lieft}">
+            <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.lft}}</span>
+
+            <!-- Budget -->
+            <span class="text-muted">Budget:</span>
+            <select ng-model="item.budget" ng-options="budget.key as budget.value for budget in budgets"
+                    ng-show="ItemCtrl.editOrderInformation()" class="form-control lft input-sm"
+                    ng-change="ItemCtrl.saveBudget()" ng-disabled="loading.budget"
+                    ng-class="{saved: saved.budget}"></select>
+            <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.budget}}</span>
+
+            <!-- Selektionscode -->
+            <span class="text-muted">Selektionscode: </span>
+            <input type="text" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20"
+                   ng-show="ItemCtrl.editOrderInformation()" ng-maxlength="20" ng-minlength="0" ng-model="item.selcode"
+                   ng-focus="ItemCtrl.saveSelcode()" ng-blur="ItemCtrl.closeSelcode()"
+                   placeholder="{{defaults.selcode}}" ng-disabled="loading.selcode" ng-class="{saved: saved.selcode}">
+            <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.selcode}}</span>
+
+            <!-- SSG Nummer -->
+            <span class="text-muted">SSGs-Nr.: </span>
+            <input type="text" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3"
+                   ng-show="ItemCtrl.editOrderInformation()" ng-maxlength="3" ng-minlength="0" ng-model="item.ssgnr"
+                   placeholder="{{defaults.ssgnr}}" ng-focus="ItemCtrl.saveSSGNr()" ng-blur="ItemCtrl.closeSSGNr()"
+                   ng-disabled="loading.ssgnr" ng-class="{saved: saved.ssgnr}">
+            <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.ssgnr}}</span>
+
+        </form>
+
+        <div uib-collapse="bibInfCollapsed">
+            <br>
+            <span class="text-muted">Erscheinungsjahr: </span> {{item.ersch_jahr}} <br><br>
         <span ng-show="item.gehoert_zu | notEmpty">
           <span class="text-muted">Gehört zu: </span> {{item.gehoert_zu}}<br><br>
         </span>
-        <span class="text-muted">Gattung: </span> {{item.gattung}} <br><br>
+            <span class="text-muted">Gattung: </span> {{item.gattung}} <br><br>
         <span ng-show="item.dnb_link | notEmpty">
-          <span class="text-muted">DNB-Link: </span> <a href="{{item.dnb_link}}" target="_blank"><i class="fa fa-external-link"></i> {{item.dnb_link}}</a><br><br>
+          <span class="text-muted">DNB-Link: </span> <a href="{{item.dnb_link}}" target="_blank"><i
+                class="fa fa-external-link"></i> {{item.dnb_link}}</a><br><br>
         </span>
-        <span class="text-muted">WV: </span> {{item.wvdnb}} <br><br>
-        <span class="text-muted">DNB Sachgruppe: </span> {{item.sachgruppe}} <br><br>
-        <span class="text-muted">Zugeordnete Fachreferenten: </span>
+            <span class="text-muted">WV: </span> {{item.wvdnb}} <br><br>
+            <span class="text-muted">DNB Sachgruppe: </span> {{item.sachgruppe}} <br><br>
+            <span class="text-muted">Zugeordnete Fachreferenten: </span>
         <span ng-repeat="person in item.zugeordnet">
           {{person}}{{$last ? '' : ', '}}
         </span>
+            <br>
+            <br>
+        </div>
+
+        <!-- Comments -->
+        <div ng-hide="ItemCtrl.editOrderInformation()">
+            <br>
+            <br>
+            <span class="text-muted">Kommentar: </span>
+            <br>
+            <span>{{item.comment}}</span>
+        </div>
+        <div uib-collapse="CommentCollapsed">
+            <br>
+            <span class="text-muted">Kommentar: </span><br>
+            <textarea class="form-control cmt-field" rows="3" ng-show="ItemCtrl.editOrderInformation()"
+                      ng-model="item.comment" ng-focus="ItemCtrl.saveComment()" ng-blur="ItemCtrl.closeComment()"
+                      placeholder="Freitext-Kommentar" ng-disabled="loading.comment"
+                      ng-class="{saved: saved.comment}"></textarea>
+
+        </div>
+
         <br>
         <br>
-    </div>
+        <br>
+        <br>
 
-     <!-- Comments -->
-    <div ng-hide="ItemCtrl.editOrderInformation()">
-      <br>
-      <br>
-      <span class="text-muted">Kommentar: </span>
-      <br>
-      <span >{{item.comment}}</span>
-    </div>
-     <div collapse="CommentCollapsed">
-       <br>
-       <span class="text-muted">Kommentar: </span><br>
-       <textarea class="form-control cmt-field" rows="3" ng-show="ItemCtrl.editOrderInformation()" ng-model="item.comment" ng-focus="ItemCtrl.saveComment()" ng-blur="ItemCtrl.closeComment()" placeholder="Freitext-Kommentar" ng-disabled="loading.comment" ng-class="{saved: saved.comment}"></textarea>
-
-     </div>
-
-     <br>
-     <br>
-     <br>
-     <br>
-
-     <!-- Buttons -->
-     <button type="button" ng-click="bibInfCollapsed = !bibInfCollapsed" class="btn btn-primary btn-sm add-bib-inf">
-       <i class="fa fa-plus-square-o" ng-show="bibInfCollapsed"></i>
-       <i class="fa fa-minus-square-o" ng-hide="bibInfCollapsed"></i>
-       Zusätzliche Informationen
-     </button>
-
-     <button type="button" ng-show="ItemCtrl.editOrderInformation()"  ng-click="CommentCollapsed = false" class="btn btn-primary btn-sm cmt-btn">
-       <i class="fa fa-comment"></i> Kommentieren
-     </button>
-
-     <button type="button" class="btn btn-primary btn-sm btn-opac" ng-click="ItemCtrl.openOPAC()">
-       <i class="fa fa-external-link"></i> OPAC Suche
-     </button>
-
-     <button type="button" class="btn btn-primary btn-sm add-inf" ng-show="item.addInfURL | notEmpty" ng-click="ItemCtrl.getAddInf()">
-       <i class="fa fa-plus-square-o" ng-show="addInfCollapsed"></i>
-       <i class="fa fa-minus-square-o" ng-hide="addInfCollapsed"></i>
-       Verlagsmeldung
-     </button>
-
-     <br>
-     <br>
-
-     <div class="well well-lg" ng-bind-html="addInf" collapse="addInfCollapsed" ng-show="addInf | notEmpty"></div>
-    <!-- End Mitte -->
-  </div>
-  <div class="col-md-3 title-content">
-    <!-- Preisinformationen -->
-    <div class="row title-price">
-      <div class="col-md-12">
-        <span class="price" ng-bind-html="item.preis" ng-show="item.preis | notEmpty">{{item.preis}}</span>
-        <span class="text-muted" ng-show="item.preis_kom | notEmpty">{{item.preis_kom}}</span>
-      </div>
-    </div>
-    <!-- Button 1 -->
-    <div class="row title-button">
-      <div class="col-md-12">
-
-        <div class="btn-group pull-right" ng-show="ItemCtrl.showCartBtnRem()">
-          <button type="button" class="btn btn-success" disabled="disabled">
-            <i class="fa fa-check"></i> Im Warenkorb
-          </button>
-          <button type="button" class="btn btn-default" ng-click="ItemCtrl.removeFromCart()">
-            <i class="fa fa-times"></i>
-          </button>
-        </div>
-
-        <div class="btn-group pull-right" ng-show="ItemCtrl.showCartBtn()">
-          <button type="button" class="btn btn-success" ng-click="ItemCtrl.addToCart()">
-            <i class="fa fa-shopping-cart"></i> Warenkorb
-          </button>
-        </div>
-
-      </div>
-    </div>
-    <!-- Button 2 -->
-    <div class="row" class="title-button">
-      <div class="col-md-12">
-        
-        <span class="text-muted" ng-show="item.status.done">Die Bearbeitung dieses Titels wurde am {{item.status.lastChange.sec * 1000 | date:'dd.MM.yyyy'}} abgeschlossen.</span>
-        <span class="text-muted" ng-show="item.status.pending">Sie haben diesen Titel am {{item.status.lastChange.sec * 1000 | date:'dd.MM.yyyy'}} bestellt.</span>
-
-        <div class="btn-group pull-right" ng-show="item.status.rejected">
-          <button type="button" class="btn btn-danger" ng-click="ItemCtrl.removeRejected()">
-            <i class="fa fa-plus-circle"></i> Wieder aufnehmen
-          </button>
-        </div>
-
-        <div class="btn-group pull-right" dropdown ng-show="ItemCtrl.showWatchlistBtn()">
-          <button type="button" class="btn btn-warning" ng-click="ItemCtrl.addToWL()"><i class="fa fa-star fa-lg"></i> Merkliste</button>
-          <button type="button" class="btn btn-warning dropdown-toggle" dropdown-toggle>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu pull-right">
-            <li ng-repeat="wl in watchlists" ng-click="ItemCtrl.addToWL(wl.id)">
-              <a href="">{{wl.name}}</a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="btn-group pull-right" ng-show="ItemCtrl.showWatchlistRemBtn()">
-          <button type="button" class="btn btn-warning disabled">
-            <i class="fa fa-check"></i> In „ {{item.status.watchlist.name}} “
-          </button>
-          <button type="button" class="btn btn-default" ng-click="ItemCtrl.removeFromWL()">
-            <i class="fa fa-times"></i>
-          </button>
-        </div>
-
-      </div>
-    </div>
-    <!-- Ablehnen Button -->
-    <div class="row" class="title-button">
-      <div class="col-md-12">
-        <button type="button" class="btn btn-link pull-right item-remove" ng-show="ItemCtrl.isRejectable()" ng-click="ItemCtrl.addRejected()">
-          <i class="fa fa-minus-circle fa-lg"></i> Ablehnen
+        <!-- Buttons -->
+        <button type="button" ng-click="bibInfCollapsed = !bibInfCollapsed" class="btn btn-primary btn-sm add-bib-inf">
+            <i class="fa fa-plus-square-o" ng-show="bibInfCollapsed"></i>
+            <i class="fa fa-minus-square-o" ng-hide="bibInfCollapsed"></i>
+            Zusätzliche Informationen
         </button>
-      </div>
+
+        <button type="button" ng-show="ItemCtrl.editOrderInformation()" ng-click="CommentCollapsed = false"
+                class="btn btn-primary btn-sm cmt-btn">
+            <i class="fa fa-comment"></i> Kommentieren
+        </button>
+
+        <button type="button" class="btn btn-primary btn-sm btn-opac" ng-click="ItemCtrl.openOPAC()">
+            <i class="fa fa-external-link"></i> OPAC Suche
+        </button>
+
+        <button type="button" class="btn btn-primary btn-sm add-inf" ng-show="item.addInfURL | notEmpty"
+                ng-click="ItemCtrl.getAddInf()">
+            <i class="fa fa-plus-square-o" ng-show="addInfCollapsed"></i>
+            <i class="fa fa-minus-square-o" ng-hide="addInfCollapsed"></i>
+            Verlagsmeldung
+        </button>
+
+        <br>
+        <br>
+
+        <div class="well well-lg" ng-bind-html="addInf" collapse="addInfCollapsed" ng-show="addInf | notEmpty"></div>
+        <!-- End Mitte -->
     </div>
-  </div>
+    <div class="col-md-3 title-content">
+        <!-- Preisinformationen -->
+        <div class="row title-price">
+            <div class="col-md-12">
+                <span class="price" ng-bind-html="item.preis" ng-show="item.preis | notEmpty">{{item.preis}}</span>
+                <span class="text-muted" ng-show="item.preis_kom | notEmpty">{{item.preis_kom}}</span>
+            </div>
+        </div>
+        <!-- Button 1 -->
+        <div class="row title-button">
+            <div class="col-md-12">
+
+                <div class="btn-group pull-right" ng-show="ItemCtrl.showCartBtnRem()">
+                    <button type="button" class="btn btn-success" disabled="disabled">
+                        <i class="fa fa-check"></i> Im Warenkorb
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="ItemCtrl.removeFromCart()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="btn-group pull-right" ng-show="ItemCtrl.showCartBtn()">
+                    <button type="button" class="btn btn-success" ng-click="ItemCtrl.addToCart()">
+                        <i class="fa fa-shopping-cart"></i> Warenkorb
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <!-- Button 2 -->
+        <div class="row" class="title-button">
+            <div class="col-md-12">
+
+                <span class="text-muted" ng-show="item.status.done">Die Bearbeitung dieses Titels wurde am {{item.status.lastChange.sec * 1000 | date:'dd.MM.yyyy'}} abgeschlossen.</span>
+                <span class="text-muted" ng-show="item.status.pending">Sie haben diesen Titel am {{item.status.lastChange.sec * 1000 | date:'dd.MM.yyyy'}} bestellt.</span>
+
+                <div class="btn-group pull-right" ng-show="item.status.rejected">
+                    <button type="button" class="btn btn-danger" ng-click="ItemCtrl.removeRejected()">
+                        <i class="fa fa-plus-circle"></i> Wieder aufnehmen
+                    </button>
+                </div>
+
+                <div class="btn-group pull-right" dropdown ng-show="ItemCtrl.showWatchlistBtn()">
+                    <button type="button" class="btn btn-warning" ng-click="ItemCtrl.addToWL()"><i
+                            class="fa fa-star fa-lg"></i> Merkliste
+                    </button>
+                    <button type="button" class="btn btn-warning dropdown-toggle" dropdown-toggle>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right">
+                        <li ng-repeat="wl in watchlists" ng-click="ItemCtrl.addToWL(wl.id)">
+                            <a href="">{{wl.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="btn-group pull-right" ng-show="ItemCtrl.showWatchlistRemBtn()">
+                    <button type="button" class="btn btn-warning disabled">
+                        <i class="fa fa-check"></i> In „ {{item.status.watchlist.name}} “
+                    </button>
+                    <button type="button" class="btn btn-default" ng-click="ItemCtrl.removeFromWL()">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <!-- Ablehnen Button -->
+        <div class="row" class="title-button">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-link pull-right item-remove" ng-show="ItemCtrl.isRejectable()"
+                        ng-click="ItemCtrl.addRejected()">
+                    <i class="fa fa-minus-circle fa-lg"></i> Ablehnen
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

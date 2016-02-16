@@ -1,6 +1,6 @@
 pdApp.directive('ngOptionbar', function () {
-    return {
-        restrict: 'E',
-        templateUrl: '/dist/html/optionbarTemplate.html'
-    };
+  return {
+    restrict: 'E',
+    templateUrl: '/optionbar/optionbarTemplate.html'
+  };
 });

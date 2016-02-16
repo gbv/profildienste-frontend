@@ -1,11 +1,11 @@
-pdApp.service('LogoutService', ['$window', '$rootScope', function($window, $rootScope) {
+pdApp.service('LogoutService', ['$window', '$rootScope', function ($window, $rootScope) {
 
   var hasInfo = false;
   var info;
 
-  this.destroySession = function(reason){
+  this.destroySession = function (reason) {
 
-    if(reason !== undefined){
+    if (reason !== undefined) {
       hasInfo = true;
       info = reason;
     }
@@ -14,13 +14,14 @@ pdApp.service('LogoutService', ['$window', '$rootScope', function($window, $root
     $rootScope.$broadcast('userLogout');
   };
 
-  this.hasInfo = function(){
+  this.hasInfo = function () {
     var tmp = hasInfo;
     hasInfo = false;
     return tmp;
-  }
+  };
 
-  this.getInfo = function(){
+  this.getInfo = function () {
     return info;
-  }
+  };
+
 }]);

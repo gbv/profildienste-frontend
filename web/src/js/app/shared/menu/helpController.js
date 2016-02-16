@@ -1,7 +1,7 @@
-pdApp.controller('HelpController', ['$scope', '$modalInstance', function($scope, $modalInstance) {
+pdApp.controller('HelpController', ['$scope', '$uibModalInstance', function ($scope, $uibModalInstance) {
 
   $scope.cancel = function () {
-    $modalInstance.close();
+    $uibModalInstance.close();
   };
 
 }]);

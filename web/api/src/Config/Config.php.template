@@ -28,7 +28,7 @@ class Config {
   public static $maintenance_mode = false;
   public static $motd = 'Das ist eine Testnachricht!';
 
-  public static $no_cover_path = '/assets/img/no-cover.png';
+  public static $no_cover_path = '/img/no-cover.png';
 
   // Path to the export directory
   public static $export_dir='export';
