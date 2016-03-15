@@ -119,10 +119,10 @@
             <br>
             <span>{{item.comment}}</span>
         </div>
-        <div uib-collapse="CommentCollapsed">
+        <div uib-collapse="CommentCollapsed" ng-show="ItemCtrl.editOrderInformation()">
             <br>
             <span class="text-muted">Kommentar: </span><br>
-            <textarea class="form-control cmt-field" rows="3" ng-show="ItemCtrl.editOrderInformation()"
+            <textarea class="form-control cmt-field" rows="3"
                       ng-model="item.comment" ng-focus="ItemCtrl.saveComment()" ng-blur="ItemCtrl.closeComment()"
                       placeholder="Freitext-Kommentar" ng-disabled="loading.comment"
                       ng-class="{saved: saved.comment}"></textarea>
