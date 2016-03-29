@@ -1,5 +1,35 @@
 <div ng-controller="SearchController as SearchCtrl">
 
+    <div ng-controller="AdvancedSearchController as AdvSearchCtrl">
+        <uib-accordion>
+            <uib-accordion-group is-open="advancedSearchOpen" panel-class="advanced-search-panel">
+                <uib-accordion-heading>
+                    <i class="fa" ng-class="{'fa-chevron-down': status.open, 'fa-chevron-right': !status.open}"></i> Erweiterte Suche
+                </uib-accordion-heading>
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1">
+                        <p>
+                            Alle eingegebenen Suchkriterien werden implizit mit <code>UND</code> verknüpft. Kriterien, die sich auf dasselbe Feld beziehen, werden mit <code>ODER</code> konkateniert.
+                        </p>
+                    </div>
+                </div>
+                <ng-advancedsearchrow ng-repeat="criterium in criteria"></ng-advancedsearchrow>
+                <div class="row advanced-search-menu">
+                    <div class="col-md-4 col-md-offset-1">
+                        <button type="button" class="btn btn-primary" ng-click="AdvSearchCtrl.addCriterium()">
+                            <i class="fa fa-plus"></i> Weiteres Kriterium hinzufügen
+                        </button>
+                    </div>
+                    <div class="col-md-2 col-md-offset-4">
+                        <button type="button" class="btn btn-primary pull-right" ng-click="AdvSearchCtrl.startSearch()">
+                            <i class="fa fa-search"></i> Suchen
+                        </button>
+                    </div>
+                </div>
+            </uib-accordion-group>
+        </uib-accordion>
+    </div>
+
     <div ng-show="entries.error">
         <div class="row">
             <div class="col-md-12">
@@ -17,29 +47,6 @@
                     <li>Prüfen Sie, ob der Suchbegriff korrekt ist</li>
                     <li>Versuchen Sie es mit einem anderen Begriff erneut</li>
                 </ul>
-            </div>
-        </div>
-    </div>
-
-    <div ng-show="getStarted">
-        <div class="row">
-            <div class="col-md-12">
-                <p> Hier können Sie gezielt nach Titeln suchen.<br><br>
-                    Sie können eine Suche starten, indem Sie in das Textfeld in der Menüleiste Ihre Suchanfrage eingeben
-                    und anschließend auf <code>Enter</code> drücken.
-                </p>
-                <br>
-                <p> Bitte beachten Sie bei ihrer Suchanfrage folgendes:
-                <ul>
-                    <li> Ihre Suchanfrage muss dem Format <code>Schlüssel Suchbegriff</code> entsprechen. Weitere
-                        Informationen hierzu erhalten Sie in der Hilfe.
-                    </li>
-                    <li> Es wird nicht zwischen Groß- und Kleinschreibung unterschieden</li>
-                    <li> Suchergebnisse enthalten alle Treffer, die Ihrer Suchanfrage genügen - unabhängig davon, ob Sie
-                        diese ausgeblendet haben.
-                    </li>
-                </ul>
-                </p>
             </div>
         </div>
     </div>

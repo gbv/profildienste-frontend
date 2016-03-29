@@ -9,21 +9,19 @@ pdApp.controller('SearchController', ['$scope', 'SearchService', '$rootScope', '
 
     $scope.searchterm = SearchService.getSearchterm();
 
-    $scope.getStarted = false;
+    $scope.advancedSearchOpen = false;
     if ($scope.searchterm === undefined || $scope.searchterm === '') {
-      $scope.getStarted = true;
+      $scope.advancedSearchOpen = true;
+      $rootScope.$broadcast('siteLoadingFinished', -2);
+      return;
     } else {
-      $scope.getStarted = false;
+      $scope.advancedSearchOpen = false;
     }
 
     $rootScope.$broadcast('siteLoading');
-    if (!$scope.getStarted) {
       $scope.entries = new Entries('search/' + window.encodeURIComponent($scope.searchterm), undefined, 'search');
       ConfigService.setEntries($scope.entries);
       $scope.entries.loadMore();
-    } else {
-      $rootScope.$broadcast('siteLoadingFinished', -2);
-    }
   };
 
   $rootScope.$on('search', function (e) {

@@ -22,8 +22,9 @@ var distDir = 'dist';
 
 
 var vendor_css = [
-  'bower_components/fontawesome/css/font-awesome.css',
-  'bower_components/angular-ui-notification/dist/angular-ui-notification.min.css'
+  'bower_components/fontawesome/css/font-awesome.min.css',
+  'bower_components/angular-ui-notification/dist/angular-ui-notification.min.css',
+  'bower_components/bootstrap-select/dist/css/bootstrap-select.min.css'
 ];
 
 gulp.task('styles', function () {
@@ -34,7 +35,9 @@ gulp.task('styles', function () {
     .pipe(sass(
       {
         outputStyle:  'compressed',
-        includePaths: ['bower_components/bootstrap-sass/assets/stylesheets']
+        includePaths: [
+          'bower_components/bootstrap-sass/assets/stylesheets'
+        ]
       }
     ).on('error', sass.logError));
 

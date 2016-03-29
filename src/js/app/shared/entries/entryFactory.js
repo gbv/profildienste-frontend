@@ -58,7 +58,7 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', f
 
     }.bind(this)).error(function (data, status, headers, config) {
 
-      $modal.open({
+      $uibModal.open({
         templateUrl: 'errorModal.html',
         controller: 'ErrorModalCtrl',
         keyboard: false
