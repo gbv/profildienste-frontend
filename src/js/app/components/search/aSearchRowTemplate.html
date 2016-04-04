@@ -1,19 +1,19 @@
 <div class="row advanced-search-row">
     <div class="col-md-2 col-md-offset-1">
-        <select name="select" ng-model="criterium.field" class="form-control">
+        <select name="select" ng-model="criterion.field" class="form-control">
             <option ng-repeat="field in searchable_fields" value="{{field.value}}">{{field.name}}</option>
         </select>
     </div>
     <div class="col-md-2">
-        <select name="select" ng-model="criterium.mode" class="form-control">
+        <select name="select" ng-model="criterion.mode" class="form-control">
             <option ng-repeat="mode in search_modes" value="{{mode.value}}">{{mode.name}}</option>
         </select>
     </div>
     <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="Suchkriterium" ng-model="criterium.value">
+        <input type="text" class="form-control" placeholder="Suchkriterium" ng-model="criterion.value">
     </div>
     <div class="col-md-1" ng-hide="$first">
-        <button type="button" class="btn btn-danger" ng-click="AdvSearchCtrl.deleteCriterium($index)">
+        <button type="button" class="btn btn-danger" ng-click="AdvSearchCtrl.deleteCriterion($index)">
             <i class="fa fa-times"></i>
         </button>
     </div>

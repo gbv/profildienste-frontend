@@ -2,6 +2,7 @@ pdApp.service('SearchService', ['$http', '$q', 'LoginService', '$rootScope', fun
 
   var defSearchConfig = $q.defer();
   var searchterm;
+  var searchType;
 
   LoginService.whenLoggedIn().then(function (data) {
 
@@ -22,13 +23,18 @@ pdApp.service('SearchService', ['$http', '$q', 'LoginService', '$rootScope', fun
     return defSearchConfig.promise;
   };
 
-  this.setSearchterm = function (term) {
+  this.setSearchterm = function (term, type) {
     searchterm = term;
+    searchType = type;
     $rootScope.$broadcast('search');
   };
 
   this.getSearchterm = function () {
     return searchterm;
+  };
+
+  this.getSearchType = function () {
+    return searchType;
   };
 
 }]);

@@ -136,18 +136,18 @@ pdApp.service('PageConfigService', ['Notification', function (Notification) {
     search: {
       title: 'Suche',
       icon: 'fa-search',
-      enableSelection: false,
+      enableSelection: true,
       actionConfig: {
-        hideWatchlist: false,
-        hideCart: false,
-        hideRejected: false
+        hideWatchlist: true,
+        hideCart: true,
+        hideRejected: true
       },
       selection: {
-        cart: false,
+        cart: true,
         removeCart: false,
         watchlist: false,
         removeWatchlist: false,
-        reject: false,
+        reject: true,
         removeReject: false
       }
     },

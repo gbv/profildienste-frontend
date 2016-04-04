@@ -106,7 +106,7 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
   };
 
   this.search = function () {
-    SearchService.setSearchterm($scope.searchterm);
+    SearchService.setSearchterm($scope.searchterm, 'keyword');
     $location.path('search');
   };
 
@@ -126,6 +126,10 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
 
   $rootScope.$on('searchViewUnload', function () {
     $scope.searchterm = '';
+  });
+
+  $rootScope.$on('setSearchbox', function (e, data){
+    $scope.searchterm = data;
   });
 
   $rootScope.$on('siteChanged', function (ev, site) {

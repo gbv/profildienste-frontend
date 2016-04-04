@@ -1,5 +1,5 @@
 // Load the entries
-pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', function ($http, $uibModal, $rootScope, SelectService) {
+pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', '$q', function ($http, $uibModal, $rootScope, SelectService, $q) {
 
   // Entry object
   var Entries = function (site, id, title) {
@@ -11,6 +11,7 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', f
     this.id = id;
     this.total = 0;
     this.error = false;
+    this.additional = $q.defer();
 
     $rootScope.$broadcast('siteChanged', {
       site: (title !== undefined) ? title : site,
@@ -49,6 +50,13 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', f
         this.loading = false;
         this.more = data.more;
         this.total = data.total;
+
+        if(data.hasOwnProperty('additional')){
+          this.additional.resolve(data.additional);
+        }else{
+          this.additional.reject('No additional information available');
+        }
+
         $rootScope.$broadcast('siteLoadingFinished', data.total);
       } else {
         this.error = true;
@@ -94,6 +102,10 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', f
     this.items = [];
     this.more = true;
     this.loadMore();
+  };
+
+  Entries.prototype.getAdditional = function(){
+    return this.additional.promise;
   };
 
   return Entries;

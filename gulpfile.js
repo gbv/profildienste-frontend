@@ -124,6 +124,4 @@ gulp.task('build', function () {
   );
 });
 
-gulp.task('default',
-          ['build']
-);
+gulp.task('default', ['build']);
