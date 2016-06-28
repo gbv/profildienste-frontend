@@ -29,12 +29,15 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', '
 
         this.loading = true;
         $rootScope.$broadcast('siteLoading');
+        
         var url;
         if (this.id === undefined) {
             url = '/api/' + this.site + '/page/' + this.page;
         } else {
             url = '/api/' + this.site + '/' + this.id + '/page/' + this.page;
         }
+
+        console.log(url);
 
         $http.get(url).success(function (resp) {
 

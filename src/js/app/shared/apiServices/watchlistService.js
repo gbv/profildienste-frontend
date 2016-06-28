@@ -3,12 +3,12 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
     var defWatchlists = $q.defer();
 
     LoginService.whenLoggedIn().then(function (data) {
-        $http.get('/api/watchlist/list').success(function (json) {
+        $http.get('/api/watchlist/list').success(function (resp) {
 
-            this.data = json.data;
+            this.data = resp.data;
 
             defWatchlists.resolve({
-                watchlists: json.data,
+                watchlists: resp.data,
                 def_wl: 0 // TODO: rework default watchlist handling
             });
 
@@ -18,17 +18,7 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
     }.bind(this));
 
     this.getWatchlists = function () {
-        if (this.data === undefined) {
-            return defWatchlists.promise;
-        } else {
-            var d = $q.defer();
-            d.resolve({
-                watchlists: this.data.watchlists,
-                def_wl: this.data.def_wl
-            });
-
-            return d.promise;
-        }
+        return defWatchlists.promise;
     };
 
     this.removeFromWatchlist = function (item) {

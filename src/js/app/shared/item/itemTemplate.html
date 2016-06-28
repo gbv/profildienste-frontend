@@ -65,7 +65,7 @@
 
             <!-- Budget -->
             <span class="text-muted">Budget:</span>
-            <select ng-model="item.budget" ng-options="budget.key as budget.value for budget in budgets"
+            <select ng-model="item.budget" ng-options="budget.value as budget.name for budget in budgets"
                     ng-show="ItemCtrl.editOrderInformation()" class="form-control lft input-sm"
                     ng-change="ItemCtrl.saveBudget()" ng-disabled="loading.budget"
                     ng-class="{saved: saved.budget}"></select>
