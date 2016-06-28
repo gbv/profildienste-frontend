@@ -38,7 +38,7 @@ pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams',
       return;
     }
 
-    LoginService.performLogin($scope.user, $scope.pass).then(function (data) {
+    LoginService.performLogin($scope.user, $scope.pass).then(function () {
       $location.path('/main');
     }, function (error) {
       $scope.error = true;

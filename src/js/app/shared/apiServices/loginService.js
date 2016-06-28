@@ -23,20 +23,15 @@ pdApp.service('LoginService', ['$http', '$window', '$q', '$rootScope', function 
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function (json) {
-      if (!json.success) {
-        login.reject(json.message);
-      } else {
+      defLogin.resolve();
+      login.resolve();
 
-        defLogin.resolve();
-        login.resolve();
+      $window.sessionStorage.setItem('token', json.data);
 
-        $window.sessionStorage.setItem('token', json.token);
-
-        $rootScope.$broadcast('userLogin');
-      }
-    }).error(function (reason) {
-      $scope.error = true;
-      $scope.errorMessage = reason;
+      $rootScope.$broadcast('userLogin');
+    }).error(function (data) {
+      defLogin.reject(data.error);
+      login.reject(data.error);
     });
 
     return login.promise;
@@ -53,8 +48,6 @@ pdApp.service('LoginService', ['$http', '$window', '$q', '$rootScope', function 
   };
 
   this.destroySession = function (reason) {
-    $scope.hasInfo = true;
-    $scope.info = reason;
     $window.sessionStorage.removeItem('token');
     $rootScope.$broadcast('userLogout');
   };

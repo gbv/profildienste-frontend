@@ -3,19 +3,16 @@ pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', funct
   var defCart = $q.defer();
 
   LoginService.whenLoggedIn().then(function (data) {
-    $http.get('/api/user/cart').success(function (json) {
-      if (!json.success) {
-        defCart.reject(json.message);
-      } else {
 
-        this.data = json.data;
+    $http.get('/api/cart/info').success(function (resp) {
+
+        this.data = resp.data;
 
         defCart.resolve({
-          cart: json.data.cart,
-          price: json.data.price
+          cart: resp.data.count,
+          price: resp.data.price
         });
 
-      }
     }.bind(this)).error(function (reason) {
       defCart.reject(reason);
     });
