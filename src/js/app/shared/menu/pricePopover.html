@@ -1,7 +1,7 @@
 <div>
     <span class='text-muted'>Schätzpreis:</span><br>
-    <span id='estprice'>{{price.price | currency:'EUR '}}</span><br><br>
+    <span id='estprice'>{{price.total | currency:'EUR '}}</span><br><br>
     <span class='text-muted'>Details:</span><br>
     <span id='price_known'>{{price.known}}</span> bekannt<br>
-    <span id='price_est'>{{price.est}}</span> geschätzt
+    <span id='price_est'>{{price.estimated}}</span> geschätzt
 </div>
