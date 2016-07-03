@@ -21,9 +21,9 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', '
     };
 
     // loads more entries from the server
-    Entries.prototype.loadMore = function () {
+    Entries.prototype.loadMore = function (forceLoad) {
 
-        if (!this.more || this.loading) {
+        if ((!forceLoad && !this.more) || this.loading) {
             return;
         }
 

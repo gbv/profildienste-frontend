@@ -1,108 +1,62 @@
-pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', function ($http, $rootScope, $q, LoginService) {
+pdApp.service('CartService', ['$http', '$rootScope', function ($http, $rootScope) {
 
-  var defCart = $q.defer();
+    this.getCart = function () {
+        return $http.get('/api/cart/info');
+    };
 
-  LoginService.whenLoggedIn().then(function (data) {
+    this.addToCart = function (data, view) {
 
-    $http.get('/api/cart/info').success(function (resp) {
+        var items = data;
+        if (data.constructor !== Array) {
+            items = [data.id];
+        }
 
-        this.data = resp.data;
+        var affected = (view === undefined || view === '') ? items : view;
 
-        defCart.resolve({
-          cart: resp.data.count,
-          price: resp.data.price
+        var req = $http({
+            method: 'POST',
+            url: '/api/cart/add',
+            data: $.param({
+                affected: affected
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
 
-    }.bind(this)).error(function (reason) {
-      defCart.reject(reason);
-    });
-  }.bind(this));
+        req.then(function () {
+            this.getCart().then(function (resp){
+                $rootScope.$broadcast('cartChange', resp);
+            });
+        }.bind(this));
 
-  this.getCart = function () {
-    if (this.data === undefined) {
-      return defCart.promise;
-    } else {
-      var d = $q.defer();
-      d.resolve({
-        cart: this.data.cart,
-        price: this.data.price
-      });
-      return d.promise;
-    }
-  };
+        return req;
+    };
 
-  this.addToCart = function (data, view) {
 
-    var def = $q.defer();
+    this.removeFromCart = function (data, view) {
 
-    var items = data;
-    if (data.constructor !== Array) {
-      items = [data.id];
-    }
+        var items = data;
+        if (data.constructor !== Array) {
+            items = [data.id];
+        }
 
-    var v = (view === undefined) ? '' : view;
+        var affected = (view === undefined || view === '') ? items : view;
 
-    $http({
-      method: 'POST',
-      url: '/api/cart/add',
-      data: $.param({
-        id: items,
-        view: v
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
-      if (!json.success) {
-        def.reject(json.errormsg);
-      } else {
-
-        def.resolve({
-          order: json.order
+        var req = $http({
+            method: 'POST',
+            url: '/api/cart/remove',
+            data: $.param({
+                affected: affected
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
 
-        $rootScope.$broadcast('cartChange', json.content, json.price);
+        req.then(function () {
+            this.getCart().then(function (resp){
+                $rootScope.$broadcast('cartChange', resp);
+            });
+        }.bind(this));
 
-      }
-    }.bind(this));
-
-    return def.promise;
-  };
-
-
-  this.removeFromCart = function (data, view) {
-
-    var def = $q.defer();
-
-    var items = data;
-    if (data.constructor !== Array) {
-      items = [data.id];
-    }
-
-    var v = (view === undefined) ? '' : view;
-
-    $http({
-      method: 'POST',
-      url: '/api/cart/remove',
-      data: $.param({
-        id: items,
-        view: v
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
-      if (!json.success) {
-        def.reject(json.errormsg);
-      } else {
-
-        this.data.cart = json.content;
-        this.data.price = json.price;
-
-        $rootScope.$broadcast('cartChange', this.data.cart, this.data.price);
-
-        def.resolve();
-
-      }
-    }.bind(this));
-
-    return def.promise;
-  };
+        return req;
+    };
 
 }]);

@@ -159,7 +159,7 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
 
       if (this.config.actionConfig.hideCart && selectView) {
         this.entries.items = [];
-        this.entries.loadMore();
+        this.entries.loadMore(true);
       }
 
       this.loading = false;
@@ -192,7 +192,7 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
 
       if (this.config.actionConfig.hideCart && selectView) {
         this.entries.items = [];
-        this.entries.loadMore();
+        this.entries.loadMore(true);
       }
 
       this.loading = false;
@@ -225,7 +225,7 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
 
         if (this.config.actionConfig.hideRejected && selectView) {
           this.entries.items = [];
-          this.entries.loadMore();
+          this.entries.loadMore(true);
         }
 
         this.loading = false;
@@ -261,7 +261,7 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
 
         if (this.config.actionConfig.hideRejected && selectView) {
           this.entries.items = [];
-          this.entries.loadMore();
+          this.entries.loadMore(true);
         }
 
         this.loading = false;

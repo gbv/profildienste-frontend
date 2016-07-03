@@ -11,14 +11,14 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
     $scope.name = data.name;
   });
 
-  CartService.getCart().then(function (data) {
-    $scope.cart = data.cart;
-    $scope.price = data.price;
+  CartService.getCart().then(function (resp) {
+    $scope.cart = resp.data.data.count;
+    $scope.price = resp.data.data.price;
   });
 
-  $rootScope.$on('cartChange', function (e, cart, price) {
-    $scope.cart = cart;
-    $scope.price = price;
+  $rootScope.$on('cartChange', function (e, resp) {
+    $scope.cart = resp.data.data.count;
+    $scope.price = resp.data.data.price;
   });
 
   $rootScope.$on('watchlistChange', function (e, watchlists) {
