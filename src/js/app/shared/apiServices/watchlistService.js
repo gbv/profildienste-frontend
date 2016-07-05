@@ -25,30 +25,34 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
 
         var def = $q.defer();
 
-        $http({
+        // TODO
+        var req = $http({
             method: 'POST',
-            url: '/api/watchlist/remove',
-            data: $.param({id: item.id, wl: item.status.watchlist.id}),
+            url: '/api/watchlist/' + item.status.watchlist.id + '/remove',
+            data: $.param({
+                affected: [item.id]
+            }),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function (json) {
-            if (!json.success) {
-                def.reject(json.errormsg);
-            } else {
+        });
+        /*.success(function (json) {
+         if (!json.success) {
+         def.reject(json.errormsg);
+         } else {
 
-                for (var i = 0; i < this.data.watchlists.length; i++) {
-                    if (this.data.watchlists[i].id == item.status.watchlist.id) {
-                        this.data.watchlists[i].count = json.content;
-                        $rootScope.$broadcast('watchlistChange', this.data.watchlists);
-                        break;
-                    }
-                }
+         for (var i = 0; i < this.data.watchlists.length; i++) {
+         if (this.data.watchlists[i].id == item.status.watchlist.id) {
+         this.data.watchlists[i].count = json.content;
+         $rootScope.$broadcast('watchlistChange', this.data.watchlists);
+         break;
+         }
+         }
 
-                def.resolve();
+         def.resolve();
 
-            }
-        }.bind(this));
+         }
+         }.bind(this));*/
 
-        return def.promise;
+        return req;
     };
 
 
@@ -58,38 +62,42 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
             wl = this.data.def_wl;
         }
 
-        var def = $q.defer();
-
-        $http({
+        // TODO: update to ids and view possible (see cart for instance)
+        var req = $http({
             method: 'POST',
-            url: '/api/watchlist/add',
-            data: $.param({id: item.id, wl: wl}),
+            url: '/api/watchlist/' + wl + '/add',
+            data: $.param({
+                affected: [item.id]
+            }),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function (json) {
-            if (!json.success) {
-                def.reject(json.errormsg);
-            } else {
+        });
 
-                var name;
-                for (var i = 0; i < this.data.watchlists.length; i++) {
-                    if (this.data.watchlists[i].id == wl) {
-                        this.data.watchlists[i].count = json.content;
-                        name = this.data.watchlists[i].name;
-                        $rootScope.$broadcast('watchlistChange', this.data.watchlists);
-                        break;
-                    }
-                }
+        /*
+         .success(function (json) {
+         if (!json.success) {
+         def.reject(json.errormsg);
+         } else {
 
-                def.resolve({
-                    content: json.content,
-                    id: wl,
-                    name: name
-                });
+         var name;
+         for (var i = 0; i < this.data.watchlists.length; i++) {
+         if (this.data.watchlists[i].id == wl) {
+         this.data.watchlists[i].count = json.content;
+         name = this.data.watchlists[i].name;
+         $rootScope.$broadcast('watchlistChange', this.data.watchlists);
+         break;
+         }
+         }
 
-            }
-        }.bind(this));
+         def.resolve({
+         content: json.content,
+         id: wl,
+         name: name
+         });
 
-        return def.promise;
+         }
+         }.bind(this));*/
+
+        return req;
     };
 
     this.manageWatchlist = function (wlId, type, content) {

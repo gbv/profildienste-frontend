@@ -1,186 +1,189 @@
 pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 'CartService', 'UserService', '$uibModal', 'SelectService', 'LoginService', 'SearchService', '$location', 'PageConfigService', function ($scope, $rootScope, WatchlistService, CartService, UserService, $uibModal, SelectService, LoginService, SearchService, $location, PageConfigService) {
 
-  $scope.pricePopover = '/menu/pricePopover.html';
+    $scope.pricePopover = '/menu/pricePopover.html';
 
-  WatchlistService.getWatchlists().then(function (data) {
-    $scope.watchlists = data.watchlists;
-    $scope.def_wl = data.def_wl;
-  });
+    LoginService.whenLoggedIn().then(function () {
 
-  UserService.getUserData().then(function (data) {
-    $scope.name = data.name;
-  });
+        WatchlistService.getWatchlists().then(function (data) {
+            $scope.watchlists = data.watchlists;
+            $scope.def_wl = data.def_wl;
+        });
 
-  CartService.getCart().then(function (resp) {
-    $scope.cart = resp.data.data.count;
-    $scope.price = resp.data.data.price;
-  });
+        UserService.getUserData().then(function (data) {
+            $scope.name = data.name;
+        });
 
-  $rootScope.$on('cartChange', function (e, resp) {
-    $scope.cart = resp.data.data.count;
-    $scope.price = resp.data.data.price;
-  });
-
-  $rootScope.$on('watchlistChange', function (e, watchlists) {
-    $scope.watchlists = watchlists;
-  });
-
-  this.openHelp = function () {
-
-    $uibModal.open({
-      templateUrl: '/html/help.html',
-      controller: 'HelpController'
+        CartService.getCart().then(function (resp) {
+            $scope.cart = resp.data.data.count;
+            $scope.price = resp.data.data.price;
+        });
     });
-  };
 
-  $scope.itemsSelected = (SelectService.getSelectedNumber() > 0);
-  $scope.showSelMenu = false;
+    $rootScope.$on('cartChange', function (e, resp) {
+        $scope.cart = resp.data.data.count;
+        $scope.price = resp.data.data.price;
+    });
 
-  $rootScope.$on('itemSelected', function () {
-    $scope.itemsSelected = true;
-    $scope.selNumber = SelectService.getSelectedNumber();
+    $rootScope.$on('watchlistChange', function (e, watchlists) {
+        $scope.watchlists = watchlists;
+    });
 
-    if ($scope.selNumber == 1) {
-      $scope.showSelMenu = true;
-    }
-  });
+    this.openHelp = function () {
 
-  $rootScope.$on('viewSelected', function () {
-    $scope.itemsSelected = true;
-    $scope.selNumber = SelectService.getSelectedNumber() + ' (alle)';
-    $scope.showSelMenu = true;
-  });
+        $uibModal.open({
+            templateUrl: '/html/help.html',
+            controller: 'HelpController'
+        });
+    };
 
-  $rootScope.$on('allDeselected', function () {
-    $scope.selNumber = 0;
-    $scope.itemsSelected = false;
+    $scope.itemsSelected = (SelectService.getSelectedNumber() > 0);
     $scope.showSelMenu = false;
-  });
 
-  $rootScope.$on('allSelected', function () {
-    $scope.itemsSelected = true;
-    $scope.selNumber = SelectService.getSelectedNumber();
-    $scope.showSelMenu = true;
-  });
+    $rootScope.$on('itemSelected', function () {
+        $scope.itemsSelected = true;
+        $scope.selNumber = SelectService.getSelectedNumber();
 
-  $rootScope.$on('itemDeselected', function () {
+        if ($scope.selNumber == 1) {
+            $scope.showSelMenu = true;
+        }
+    });
 
-    $scope.selNumber = SelectService.getSelectedNumber();
+    $rootScope.$on('viewSelected', function () {
+        $scope.itemsSelected = true;
+        $scope.selNumber = SelectService.getSelectedNumber() + ' (alle)';
+        $scope.showSelMenu = true;
+    });
 
-    if ($scope.selNumber === 0) {
-      $scope.itemsSelected = false;
-      $scope.showSelMenu = false;
-    }
-  });
+    $rootScope.$on('allDeselected', function () {
+        $scope.selNumber = 0;
+        $scope.itemsSelected = false;
+        $scope.showSelMenu = false;
+    });
 
-  this.toggleSelMenu = function () {
-    $scope.showSelMenu = !$scope.showSelMenu;
-  };
+    $rootScope.$on('allSelected', function () {
+        $scope.itemsSelected = true;
+        $scope.selNumber = SelectService.getSelectedNumber();
+        $scope.showSelMenu = true;
+    });
 
-  this.selectAll = function () {
-    SelectService.selectAll();
-  };
+    $rootScope.$on('itemDeselected', function () {
 
-  this.selectView = function () {
-    SelectService.selectView();
-  };
+        $scope.selNumber = SelectService.getSelectedNumber();
 
-  this.deselectAll = function () {
-    SelectService.resetSelection();
-  };
+        if ($scope.selNumber === 0) {
+            $scope.itemsSelected = false;
+            $scope.showSelMenu = false;
+        }
+    });
 
-  this.selectionInCart = function () {
-    SelectService.selectionInCart($scope.site);
-  };
+    this.toggleSelMenu = function () {
+        $scope.showSelMenu = !$scope.showSelMenu;
+    };
 
-  this.selectionRemoveFromCart = function () {
-    SelectService.selectionRemoveFromCart($scope.site);
-  };
+    this.selectAll = function () {
+        SelectService.selectAll();
+    };
 
-  this.selectionReject = function () {
-    SelectService.selectionReject($scope.site);
-  };
+    this.selectView = function () {
+        SelectService.selectView();
+    };
 
-  this.selectionRemoveReject = function () {
-    SelectService.selectionRemoveReject($scope.site);
-  };
+    this.deselectAll = function () {
+        SelectService.resetSelection();
+    };
 
-  this.search = function () {
-    SearchService.setSearchterm($scope.searchterm, 'keyword');
-    $location.path('search');
-  };
+    this.selectionInCart = function () {
+        SelectService.selectionInCart($scope.site);
+    };
 
-  $scope.loggedIn = false;
+    this.selectionRemoveFromCart = function () {
+        SelectService.selectionRemoveFromCart($scope.site);
+    };
 
-  LoginService.whenLoggedIn().then(function (data) {
-    $scope.loggedIn = true;
-  });
+    this.selectionReject = function () {
+        SelectService.selectionReject($scope.site);
+    };
 
-  $rootScope.$on('userLogin', function (e) {
-    $scope.loggedIn = true;
-  });
+    this.selectionRemoveReject = function () {
+        SelectService.selectionRemoveReject($scope.site);
+    };
 
-  $rootScope.$on('userLogout', function (e) {
+    this.search = function () {
+        SearchService.setSearchterm($scope.searchterm, 'keyword');
+        $location.path('search');
+    };
+
     $scope.loggedIn = false;
-  });
 
-  $rootScope.$on('searchViewUnload', function () {
-    $scope.searchterm = '';
-  });
+    LoginService.whenLoggedIn().then(function (data) {
+        $scope.loggedIn = true;
+    });
 
-  $rootScope.$on('setSearchbox', function (e, data){
-    $scope.searchterm = data;
-  });
+    $rootScope.$on('userLogin', function (e) {
+        $scope.loggedIn = true;
+    });
 
-  $rootScope.$on('siteChanged', function (ev, site) {
-    $scope.site = site.watchlist ? 'watchlist' : site.site;
-    $scope.selection = PageConfigService.getSelectionOptions($scope.site);
-  });
+    $rootScope.$on('userLogout', function (e) {
+        $scope.loggedIn = false;
+    });
 
-  var backShown = false;
-  var initialRoute = true;
+    $rootScope.$on('searchViewUnload', function () {
+        $scope.searchterm = '';
+    });
 
-  if ($location.path() !== '/main') {
-    $('#back').css('font-size', '12px');
-    $('#back').css('opacity', '1');
-    $('#logo').css('line-height', '14px');
-    backShown = true;
-  } else {
-    $('#back').css('font-size', '0px');
-    $('#back').css('opacity', '0');
-    $('#logo').css('line-height', '20px');
-  }
+    $rootScope.$on('setSearchbox', function (e, data) {
+        $scope.searchterm = data;
+    });
 
-  $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
+    $rootScope.$on('siteChanged', function (ev, site) {
+        $scope.site = site.watchlist ? 'watchlist' : site.site;
+        $scope.selection = PageConfigService.getSelectionOptions($scope.site);
+    });
 
-    if (initialRoute) {
-      initialRoute = false;
-      return;
-    }
+    var backShown = false;
+    var initialRoute = true;
 
     if ($location.path() !== '/main') {
-      if (!backShown) {
-
-        $('#back').removeClass('back-out');
-        $('#back').addClass('back-in');
-
-        $('#logo').removeClass('logo-out');
-        $('#logo').addClass('logo-in');
-
+        $('#back').css('font-size', '12px');
+        $('#back').css('opacity', '1');
+        $('#logo').css('line-height', '14px');
         backShown = true;
-      }
     } else {
-      if (backShown) {
-
-        $('#back').removeClass('back-in');
-        $('#back').addClass('back-out');
-
-        $('#logo').removeClass('logo-in');
-        $('#logo').addClass('logo-out');
-
-        backShown = false;
-      }
+        $('#back').css('font-size', '0px');
+        $('#back').css('opacity', '0');
+        $('#logo').css('line-height', '20px');
     }
-  });
+
+    $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
+
+        if (initialRoute) {
+            initialRoute = false;
+            return;
+        }
+
+        if ($location.path() !== '/main') {
+            if (!backShown) {
+
+                $('#back').removeClass('back-out');
+                $('#back').addClass('back-in');
+
+                $('#logo').removeClass('logo-out');
+                $('#logo').addClass('logo-in');
+
+                backShown = true;
+            }
+        } else {
+            if (backShown) {
+
+                $('#back').removeClass('back-in');
+                $('#back').addClass('back-out');
+
+                $('#logo').removeClass('logo-in');
+                $('#logo').addClass('logo-out');
+
+                backShown = false;
+            }
+        }
+    });
 
 }]);

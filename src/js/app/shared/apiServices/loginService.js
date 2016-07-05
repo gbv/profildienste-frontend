@@ -23,11 +23,12 @@ pdApp.service('LoginService', ['$http', '$window', '$q', '$rootScope', function 
       }),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     }).success(function (json) {
-      defLogin.resolve();
-      login.resolve();
 
       $window.sessionStorage.setItem('token', json.data);
 
+      defLogin.resolve();
+      login.resolve();
+      
       $rootScope.$broadcast('userLogin');
     }).error(function (data) {
       defLogin.reject(data.error);

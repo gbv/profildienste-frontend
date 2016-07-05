@@ -1,5 +1,6 @@
 pdApp.service('CartService', ['$http', '$rootScope', function ($http, $rootScope) {
 
+    
     this.getCart = function () {
         return $http.get('/api/cart/info');
     };
