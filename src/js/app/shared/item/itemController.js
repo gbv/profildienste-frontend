@@ -23,8 +23,8 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
 
   $scope.item.preis = $sce.trustAsHtml($scope.item.preis);
 
-  WatchlistService.getWatchlists().then(function (data) {
-    $scope.watchlists = data.watchlists;
+  WatchlistService.getWatchlists().then(function (resp) {
+    $scope.watchlists = resp.data.data.watchlists;
   });
 
   UserService.getUserData().then(function (data) {
@@ -69,10 +69,10 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
   };
 
   this.addToWL = function (wl) {
-    WatchlistService.addToWatchlist($scope.item, wl).then(function (data) {
+    WatchlistService.addToWatchlist($scope.item, wl).then(function (resp) {
         $scope.item.status.watchlist.watched = true;
-        $scope.item.status.watchlist.name = data.name;
-        $scope.item.status.watchlist.id = data.id;
+        $scope.item.status.watchlist.name = resp.data.data.additionalInfo.name;
+        $scope.item.status.watchlist.id = resp.data.data.additionalInfo.id;
 
         SelectService.deselect($scope.item);
 

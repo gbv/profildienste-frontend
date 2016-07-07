@@ -4,9 +4,8 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
 
     LoginService.whenLoggedIn().then(function () {
 
-        WatchlistService.getWatchlists().then(function (data) {
-            $scope.watchlists = data.watchlists;
-            $scope.def_wl = data.def_wl;
+        WatchlistService.getWatchlists().then(function (resp) {
+            $scope.watchlists = resp.data.data.watchlists;
         });
 
         UserService.getUserData().then(function (data) {
