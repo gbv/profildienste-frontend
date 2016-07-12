@@ -3,7 +3,7 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
     $scope.pricePopover = '/menu/pricePopover.html';
 
     LoginService.whenLoggedIn().then(function () {
-
+        
         WatchlistService.getWatchlists().then(function (resp) {
             $scope.watchlists = resp.data.data.watchlists;
         });

@@ -1,13 +1,11 @@
 pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', function ($http, $rootScope, $q, LoginService) {
 
 
-    var req = $http.get('/api/watchlist/list').then(function (resp) {
-        return resp;
-    });
+    var req;
 
     this.getWatchlists = function (update) {
 
-        if (update) {
+        if (update || req === undefined) {
             req = $http.get('/api/watchlist/list');
         }
 

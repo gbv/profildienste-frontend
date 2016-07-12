@@ -59,18 +59,18 @@
                             <input type="text" class="form-control input-sm" ng-model="name" ng-show="editMode">
                         </div>
                         <button class="btn btn-default" ng-click="ManageWLCtrl.edit()" ng-hide="editMode"><i
-                                class="fa fa-pencil"></i></button>
+                                class="fa fa-pencil"></i> Umbenennen</button>
                         <button class="btn btn-default" ng-click="ManageWLCtrl.save()" ng-show="editMode"><i
-                                class="fa fa-check"></i></button>
+                                class="fa fa-check"></i> Speichern</button>
                     </td>
                     <td>
                         <div class="pull-right">
-                            <button class="btn btn-default" ng-click="ManageWLCtrl.open()"><i class="fa fa-eye"></i>
+                            <button class="btn btn-default" ng-click="ManageWLCtrl.open()"><i class="fa fa-eye"></i> Öffnen
                             </button>
                             <button class="btn btn-default" ng-click="ManageWLCtrl.setAsDefault()"
-                                    ng-disabled="ManageWLCtrl.disableDefault()"><i class="fa fa-bookmark"></i></button>
+                                    ng-disabled="ManageWLCtrl.disableDefault()"><i class="fa fa-bookmark"></i> Als Standard setzen</button>
                             <button class="btn btn-default" ng-click="ManageWLCtrl.delete()"
-                                    ng-disabled="ManageWLCtrl.disableDelete()"><i class="fa fa-times"></i></button>
+                                    ng-disabled="ManageWLCtrl.disableDelete()"><i class="fa fa-times"></i> Löschen</button>
                         </div>
                     </td>
                 </tr>

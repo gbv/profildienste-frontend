@@ -12,21 +12,21 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
 
     p.then(function (data) {
 
-        $scope.sortby = data[0].sortby;
-        $scope.order = data[1].order;
+        $scope.sortby = data[0];
+        $scope.order = data[1];
 
         $scope.selected_sorter_key = data[2].sort;
-        for (i = 0; i < data[0].sortby.length; i++) {
-            if (data[0].sortby[i].value === data[2].sort) {
-                $scope.selected_sorter = data[0].sortby[i].name;
+        for (var i = 0; i < data[0].length; i++) {
+            if (data[0][i].value === data[2].sort) {
+                $scope.selected_sorter = data[0][i].name;
                 break;
             }
         }
 
         $scope.selected_order_key = data[2].order;
-        for (i = 0; i < data[1].order.length; i++) {
-            if (data[1].order[i].value === data[2].order) {
-                $scope.selected_order = data[1].order[i].name;
+        for (i = 0; i < data[1].length; i++) {
+            if (data[1][i].value === data[2].order) {
+                $scope.selected_order = data[1][i].name;
                 break;
             }
         }
@@ -46,12 +46,13 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
             return;
         }
 
-        SettingsService.changeSetting('sortby', sorter).then(function (data) {
+        SettingsService.changeSetting('sortby', sorter).then(function (resp) {
 
-            $scope.selected_sorter_key = data.value;
+
+            $scope.selected_sorter_key = resp.data.data.value;
             for (var i = 0; i < $scope.sortby.length; i++) {
-                if ($scope.sortby[i].key === data.value) {
-                    $scope.selected_sorter = $scope.sortby[i].value;
+                if ($scope.sortby[i].value === resp.data.data.value) {
+                    $scope.selected_sorter = $scope.sortby[i].name;
                     break;
                 }
             }
@@ -70,12 +71,12 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
             return;
         }
 
-        SettingsService.changeSetting('order', order).then(function (data) {
+        SettingsService.changeSetting('order', order).then(function (resp) {
 
-            $scope.selected_order_key = data.value;
+            $scope.selected_order_key = resp.data.data.value;
             for (var i = 0; i < $scope.order.length; i++) {
-                if ($scope.order[i].key === data.value) {
-                    $scope.selected_order = $scope.order[i].value;
+                if ($scope.order[i].value === resp.data.data.value) {
+                    $scope.selected_order = $scope.order[i].name;
                     break;
                 }
             }

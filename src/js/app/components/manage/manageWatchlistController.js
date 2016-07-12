@@ -1,12 +1,7 @@
 pdApp.controller('ManageWatchlistController', ['$scope', 'WatchlistService', '$location', '$rootScope', 'Notification', function ($scope, WatchlistService, $location, $rootScope, Notification) {
 
-  WatchlistService.getWatchlists().then(function (data) {
-    $scope.watchlists = data.watchlists;
-    $scope.default_watchlist = data.def_wl;
-  });
-
   $rootScope.$on('defaultWatchlistChange', function (e, data) {
-    $scope.default_watchlist = data;
+    // TODO
   });
 
   $scope.editMode = false;
@@ -17,6 +12,7 @@ pdApp.controller('ManageWatchlistController', ['$scope', 'WatchlistService', '$l
   };
 
   this.save = function () {
+
     if ($scope.name === $scope.watchlist.name) {
       $scope.editMode = false;
       return;
@@ -44,11 +40,11 @@ pdApp.controller('ManageWatchlistController', ['$scope', 'WatchlistService', '$l
   };
 
   this.disableDelete = function () {
-    return $scope.watchlists.length == 1 || $scope.default_watchlist == $scope.watchlist.id;
+    return $scope.watchlists.length === 1 || $scope.watchlist.default;
   };
 
   this.disableDefault = function () {
-    return $scope.default_watchlist == $scope.watchlist.id;
+    return $scope.watchlist.default;
   };
 
   this.open = function () {

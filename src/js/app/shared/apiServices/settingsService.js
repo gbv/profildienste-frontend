@@ -1,100 +1,73 @@
-pdApp.service('SettingsService', ['$http', '$rootScope', '$q', 'LoginService', function ($http, $rootScope, $q, LoginService) {
+pdApp.service('SettingsService', ['$http', function ($http) {
 
-    var defSort = $q.defer();
-    var defOrder = $q.defer();
+    var reqSettings;
+    this.getSettings = function () {
 
-    var defSelOptions = $q.defer();
-
-    LoginService.whenLoggedIn().then(function (data) {
-
-        // all available settings
-        $http.get('/api/settings').success(function (resp) {
-
-            defSort.resolve({
-                sortby: resp.data.sortby
-            });
-
-            defOrder.resolve({
-                order: resp.data.order
-            });
-
-        }).error(function (reason) {
-            defSort.reject(reason);
-            defOrder.reject(reason);
-        });
+        if (reqSettings === undefined) {
+            reqSettings = $http.get('/api/settings');
+        }
+        return reqSettings;
+    };
 
 
-        // user specific settings
-        $http.get('/api/user/settings').success(function (resp) {
-
-            this.data = resp.data;
-
-            defSelOptions.resolve({
-                sort: resp.data.settings.sortby,
-                order: resp.data.settings.order
-            });
-
-        }.bind(this)).error(function (reason) {
-            defSelOptions.reject(reason);
-        });
-
-    }.bind(this));
+    this.getUserSettings = function () {
+        return $http.get('/api/user/settings');
+    };
 
     this.getOrder = function () {
-
-        return defOrder.promise;
+        return this.getSettings().then(function (resp) {
+            return resp.data.data.order;
+        });
     };
 
     this.getSortby = function () {
-
-        return defSort.promise;
+        return this.getSettings().then(function (resp) {
+            return resp.data.data.sortby;
+        });
     };
 
 
     this.getSelOptions = function () {
-        if (this.data === undefined) {
-            return defSelOptions.promise;
-        } else {
-            var d = $q.defer();
-            d.resolve({
-                sort: this.data.settings.sortby,
-                order: this.data.settings.order
-            });
-            return d.promise;
-        }
+        return this.getUserSettings().then(function (resp) {
+            return {
+                sort: resp.data.data.settings.sortby,
+                order: resp.data.data.settings.order
+            };
+        });
     };
 
     this.changeSetting = function (type, value) {
 
-        var def = $q.defer();
-
-        $http({
+        return $http({
             method: 'POST',
-            url: '/api/settings',
+            url: '/api/user/settings',
             data: $.param({
                 type: type,
                 value: value
             }),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function (json) {
-            if (!json.success) {
-                def.reject(json.errormsg);
-            } else {
-                def.resolve({
-                    type: json.type,
-                    value: json.value
-                });
+        });
 
-                if (type === 'sortby') {
-                    this.data.settings.sortby = value;
-                } else if (type === 'order') {
-                    this.data.settings.order = value;
-                }
 
-            }
-        }.bind(this));
+        /*.success(function (json) {
+         if (!json.success) {
+         def.reject(json.errormsg);
+         } else {
+         def.resolve({
+         type: json.type,
+         value: json.value
+         });
 
-        return def.promise;
+         if (type === 'sortby') {
+         this.data.settings.sortby = value;
+         } else if (type === 'order') {
+         this.data.settings.order = value;
+         }
+
+         }
+         }.bind(this));
+
+         return def.promise;*/
     };
 
 }]);
