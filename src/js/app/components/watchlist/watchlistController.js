@@ -1,20 +1,22 @@
-pdApp.controller('WatchlistController', ['$scope', 'Entries', 'ConfigService', '$routeParams', 'WatchlistService', function ($scope, Entries, ConfigService, $routeParams, WatchlistService) {
+pdApp.controller('WatchlistController', ['$scope', 'Entries', 'ConfigService', '$routeParams', 'WatchlistService', '$location', function ($scope, Entries, ConfigService, $routeParams, WatchlistService, $location) {
 
 
-  WatchlistService.getWatchlists().then(function (resp) {
+    WatchlistService.getWatchlists().then(function (resp) {
 
-    console.log(resp);
+        var title;
+        for (var i = 0; i < resp.data.data.watchlists.length; i++) {
+            if (resp.data.data.watchlists[i].id == $routeParams.id) {
+                title = resp.data.data.watchlists[i].name;
+                break;
+            }
+        }
 
-    var title;
-    for (var i = 0; i < resp.data.data.watchlists.length; i++) {
-      if (resp.data.data.watchlists[i].id == $routeParams.id) {
-        title = resp.data.data.watchlists[i].name;
-        break;
-      }
-    }
+        if (title === undefined) {
+            $location.path('/');
+        }
 
-    $scope.entries = new Entries('watchlist', $routeParams.id, title);
-    ConfigService.setEntries($scope.entries);
+        $scope.entries = new Entries('watchlist', $routeParams.id, title);
+        ConfigService.setEntries($scope.entries);
 
-  });
+    });
 }]);

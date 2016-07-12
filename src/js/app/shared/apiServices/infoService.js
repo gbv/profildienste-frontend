@@ -1,49 +1,24 @@
-pdApp.service('InfoService', ['$http', '$q', 'Notification', function ($http, $q, Notification) {
+pdApp.service('InfoService', ['$http', 'Notification', function ($http, Notification) {
 
-  this.getAddInf = function (item) {
-
-    var def = $q.defer();
-
-    $http({
-      method: 'POST',
-      url: '/api/info',
-      data: $.param({id: item.id}),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
-      if (!json.success) {
-        def.reject(json.errormsg);
-      } else {
-        def.resolve({
-          type: json.type,
-          content: json.content
+    this.getAddInf = function (item) {
+        return $http({
+            method: 'GET',
+            url: '/api/titles/' + item.id + '/info'
         });
-      }
-    }).error(function (reason) {
-      def.reject(reason);
-    });
+    };
 
-    return def.promise;
-  };
+    this.openOPAC = function (item) {
 
-  this.openOPAC = function (item) {
+        var req = $http({
+            method: 'GET',
+            url: '/api/titles/' + item.id + '/opac'
+        });
 
-    $http({
-      method: 'POST',
-      url: '/api/opac',
-      data: $.param({
-        titel: item.titel,
-        verfasser: item.verfasser
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
-      if (!json.success) {
-        Notification.error('Es wurde kein OPAC Katalog für Ihre Bibliothek hinterlegt.');
-      } else {
-        window.open(json.data.url, '_blank');
-      }
-    }).error(function (reason) {
-      def.reject(reason);
-    });
-  };
+        req.then(function (resp) {
+            window.open(resp.data.data.opac, '_blank');
+        }, function (resp) {
+            Notification.error(resp.data.error);
+        });
+    };
 
 }]);
