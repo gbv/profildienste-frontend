@@ -18,7 +18,7 @@ pdApp.controller('ManageWatchlistController', ['$scope', 'WatchlistService', '$l
       return;
     }
 
-    WatchlistService.manageWatchlist($scope.watchlist.id, 'upd-name', $scope.name).then(function () {
+    WatchlistService.renameWatchlist($scope.watchlist.id, $scope.name).then(function () {
       $scope.editMode = false;
     }, function (reason) {
       Notification.error(reason);
@@ -26,8 +26,7 @@ pdApp.controller('ManageWatchlistController', ['$scope', 'WatchlistService', '$l
   };
 
   this.delete = function () {
-    WatchlistService.manageWatchlist($scope.watchlist.id, 'remove', undefined).then(function () {
-    }, function (reason) {
+    WatchlistService.deleteWatchlist($scope.watchlist.id).then(function () {}, function (reason) {
       Notification.error(reason);
     });
   };

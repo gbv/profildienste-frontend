@@ -79,6 +79,79 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
         return req;
     };
 
+    this.addNewWatchlist = function (name) {
+        var req = $http({
+            method: 'PUT',
+            url: '/api/watchlist/new',
+            data: $.param({
+                name: name
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+
+        req.then(function (resp) {
+            this.getWatchlists(true).then(function (resp) {
+                $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+            });
+        }.bind(this));
+
+        return req;
+    };
+
+    this.deleteWatchlist = function (id) {
+        var req = $http({
+            method: 'DELETE',
+            url: '/api/watchlist/'+id
+        });
+
+        req.then(function (resp) {
+            this.getWatchlists(true).then(function (resp) {
+                $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+            });
+        }.bind(this));
+
+        return req;
+    };
+
+    this.changeWatchlistOrder = function (order){
+        var req = $http({
+            method: 'PATCH',
+            url: '/api/watchlist/order',
+            data: $.param({
+                order: order
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+
+        req.then(function (resp) {
+            this.getWatchlists(true).then(function (resp) {
+                $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+            });
+        }.bind(this));
+
+        return req;
+    };
+
+    this.renameWatchlist = function (id, name) {
+
+        var req = $http({
+            method: 'PATCH',
+            url: '/api/watchlist/'+id,
+            data: $.param({
+                name: name
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+
+        req.then(function (resp) {
+            this.getWatchlists(true).then(function (resp) {
+                $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+            });
+        }.bind(this));
+
+        return req;
+    };
+
     this.manageWatchlist = function (wlId, type, content) {
 
         var def = $q.defer();
