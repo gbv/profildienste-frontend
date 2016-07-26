@@ -47,27 +47,6 @@ pdApp.service('SettingsService', ['$http', function ($http) {
             }),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
-
-
-        /*.success(function (json) {
-         if (!json.success) {
-         def.reject(json.errormsg);
-         } else {
-         def.resolve({
-         type: json.type,
-         value: json.value
-         });
-
-         if (type === 'sortby') {
-         this.data.settings.sortby = value;
-         } else if (type === 'order') {
-         this.data.settings.order = value;
-         }
-
-         }
-         }.bind(this));
-
-         return def.promise;*/
     };
 
 }]);

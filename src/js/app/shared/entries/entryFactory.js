@@ -55,7 +55,7 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', '
             this.total = resp.data.total;
 
             if (resp.data.hasOwnProperty('additional')) {
-                this.additional.resolve(data.data.additional);
+                this.additional.resolve(resp.data.additional);
             } else {
                 this.additional.reject('No additional information available');
             }
