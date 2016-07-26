@@ -32,7 +32,7 @@ pdApp.controller('ManageWatchlistController', ['$scope', 'WatchlistService', '$l
   };
 
   this.setAsDefault = function () {
-    WatchlistService.manageWatchlist($scope.watchlist.id, 'def', undefined).then(function () {
+    WatchlistService.updateDefaultWatchlist($scope.watchlist.id).then(function () {
     }, function (reason) {
       Notification.error(reason);
     });
