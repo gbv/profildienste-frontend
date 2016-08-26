@@ -135,8 +135,8 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
     });
 
     $rootScope.$on('siteChanged', function (ev, site) {
-        $scope.site = site.watchlist ? 'watchlist' : site.site;
-        $scope.selection = PageConfigService.getSelectionOptions($scope.site);
+        $scope.site = site.watchlist ? 'watchlist/'+site.id : site.site;
+        $scope.selection = PageConfigService.getSelectionOptions((site.watchlist ? 'watchlist' : site.site));
     });
 
     var backShown = false;

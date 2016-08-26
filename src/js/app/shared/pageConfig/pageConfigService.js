@@ -158,14 +158,14 @@ pdApp.service('PageConfigService', ['Notification', function (Notification) {
       actionConfig: {
         hideWatchlist: true,
         hideCart: false,
-        hideRejected: true
+        hideRejected: false
       },
       selection: {
         cart: false,
         removeCart: false,
         watchlist: false,
         removeWatchlist: false,
-        reject: false,
+        reject: true,
         removeReject: false
       }
     }

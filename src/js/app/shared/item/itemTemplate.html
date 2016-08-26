@@ -57,11 +57,11 @@
         <form class="form-inline">
             <!-- Lieferant -->
             <span class="text-muted">Lieferant: </span>
-            <input type="text" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7"
-                   ng-show="ItemCtrl.editOrderInformation()" ng-model="item.lft" ng-maxlength="7" ng-minlength="1"
-                   ng-focus="ItemCtrl.saveLieft()" ng-blur="ItemCtrl.closeLieft()" placeholder="{{defaults.lft}}"
-                   ng-disabled="loading.lieft" ng-class="{saved: saved.lieft}">
-            <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.lft}}</span>
+            <select ng-model="item.supplier" ng-options="supplier.value as supplier.name for supplier in suppliers"
+                    ng-show="ItemCtrl.editOrderInformation()" class="form-control lft input-sm"
+                    ng-change="ItemCtrl.saveSupplier()" ng-disabled="loading.supplier"
+                    ng-class="{saved: saved.supplier}"></select>
+            <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.supplier}}</span>
 
             <!-- Budget -->
             <span class="text-muted">Budget:</span>

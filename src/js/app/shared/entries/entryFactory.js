@@ -16,6 +16,7 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', '
         $rootScope.$broadcast('siteChanged', {
             site: (title !== undefined) ? title : site,
             watchlist: (id !== undefined),
+            id: id,
             entries: this
         });
     };
@@ -36,8 +37,6 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', '
         } else {
             url = '/api/' + this.site + '/' + this.id + '/page/' + this.page;
         }
-
-        console.log(url);
 
         $http.get(url).success(function (resp) {
 

@@ -14,6 +14,7 @@ pdApp.service('UserService', ['$http', '$q', 'LoginService', function ($http, $q
                 motd: resp.data.motd,
                 defaults: resp.data.defaults,
                 budgets: resp.data.budgets,
+                suppliers: resp.data.suppliers,
                 show: {
                     comments: false,
                     author: true,

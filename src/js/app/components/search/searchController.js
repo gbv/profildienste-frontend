@@ -27,7 +27,7 @@ pdApp.controller('SearchController', ['$scope', 'SearchService', '$rootScope', '
     if ($scope.searchType === 'keyword'){
        searchterm = window.encodeURIComponent($scope.searchterm);
     } else {
-      searchterm = window.encodeURIComponent(JSON.stringify($scope.searchterm));
+      searchterm = window.encodeURIComponent(angular.toJson($scope.searchterm));
     }
       $scope.entries = new Entries('search/' + searchterm + '/' + $scope.searchType, undefined, 'search');
       ConfigService.setEntries($scope.entries);

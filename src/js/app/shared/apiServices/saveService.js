@@ -19,8 +19,8 @@ pdApp.service('SaveService', ['$http', function ($http) {
         return save(item.id, 'comment', item.comment);
     };
 
-    this.saveLieft = function (item) {
-        return save(item.id, 'lieft', item.lft);
+    this.saveSupplier = function (item) {
+        return save(item.id, 'lieft', item.supplier);
     };
 
     this.saveSelcode = function (item) {

@@ -6,7 +6,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
 
     $scope.loading = {
         comment: false,
-        lieft: false,
+        supplier: false,
         selcode: false,
         ssgnr: false,
         budget: false
@@ -15,7 +15,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
     // for the background fade
     $scope.saved = {
         comment: false,
-        lieft: false,
+        supplier: false,
         selcode: false,
         ssgnr: false,
         budget: false
@@ -29,13 +29,25 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
 
     UserService.getUserData().then(function (data) {
         $scope.budgets = data.budgets;
+        $scope.suppliers = data.suppliers;
         $scope.defaults = data.defaults;
-        
+
+        // TODO: these need to be reworked once the budget and the supplier are removed from the default user settings
         if ($scope.item.budget === null && $scope.budgets.length > 0) {
             $scope.item.budget = $scope.budgets[0].value;
             for (var i = 0; i < $scope.budgets.length; i++) {
                 if ($scope.budgets[i].value === $scope.defaults.budget) {
                     $scope.item.budget = $scope.budgets[i].value;
+                    break;
+                }
+            }
+        }
+
+        if ($scope.item.supplier === null && $scope.suppliers.length > 0) {
+            $scope.item.supplier = $scope.suppliers[0].value;
+            for (var j = 0; j < $scope.suppliers.length; j++) {
+                if ($scope.suppliers[j].value === $scope.defaults.supplier) {
+                    $scope.item.budget = $scope.budgets[j].value;
                     break;
                 }
             }
@@ -151,27 +163,18 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
     };
 
     /*
-     * Lieferant saving
+     * Supplier saving
      */
 
-    var lieft = '';
-
-    this.saveLieft = function () {
-        lieft = $scope.item.lft;
-    };
-
-    this.closeLieft = function () {
-
-        if ($scope.item.lft !== lieft) {
-            $scope.saved.lieft = false;
-            $scope.loading.lieft = true;
-            SaveService.saveLieft($scope.item).then(function () {
-                $scope.loading.lieft = false;
-                $scope.saved.lieft = true;
-            }, function (reason) {
-                Notification.error(reason);
-            });
-        }
+    this.saveSupplier = function () {
+        $scope.saved.supplier = false;
+        $scope.loading.supplier = true;
+        SaveService.saveSupplier($scope.item).then(function () {
+            $scope.loading.supplier = false;
+            $scope.saved.supplier = true;
+        }, function (reason) {
+            Notification.error(reason);
+        });
     };
 
 
@@ -316,15 +319,15 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
     };
 
     this.isRejectable = function () {
-        return !$scope.item.status.rejected && !$scope.item.status.cart && !$scope.item.status.watchlist.watched && !$scope.item.status.done && !$scope.item.status.pending;
+        return !$scope.item.status.rejected && !$scope.item.status.cart && !$scope.item.status.done && !$scope.item.status.pending;
     };
 
     this.showWatchlistBtn = function () {
-        return !$scope.item.status.done && !$scope.item.status.pending && !$scope.item.status.rejected && !$scope.item.status.watchlist.watched;
+        return !$scope.item.status.done && !$scope.item.status.pending  && !$scope.item.status.watchlist.watched;
     };
 
     this.showWatchlistRemBtn = function () {
-        return !$scope.item.status.done && !$scope.item.status.pending && !$scope.item.status.rejected && $scope.item.status.watchlist.watched;
+        return !$scope.item.status.done && !$scope.item.status.pending && $scope.item.status.watchlist.watched;
     };
 
     this.editOrderInformation = function () {
