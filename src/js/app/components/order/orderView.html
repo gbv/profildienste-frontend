@@ -17,27 +17,13 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="order in orderlist">
-                            <td>{{order.titel}}</td>
+                            <td>{{order.title}}</td>
                             <!-- Lieferant -->
-                            <td ng-show="order.lieft | notEmpty">{{order.lieft}}</td>
-                            <td ng-hide="order.lieft | notEmpty" class="auto-default">{{defaults.lft}}
-                                <i class="fa fa-question-circle auto-default-help"
-                                   uib-popover-html="defaultValueHelpText"
-                                   popover-placement="bottom"
-                                   popover-trigger="mouseenter">
-                                </i>
-                            </td>
+                            <td>{{order.supplier}}</td>
 
                             <!-- Budget -->
-                            <td ng-show="order.budget | notEmpty">{{order.budget}}</td>
-                            <td ng-hide="order.budget | notEmpty" class="auto-default">{{defaults.budget}}
-                                <i class="fa fa-question-circle auto-default-help"
-                                   uib-popover-html="defaultValueHelpText"
-                                   popover-placement="bottom"
-                                   popover-trigger="mouseenter">
-                                </i>
-                            </td>
-
+                            <td>{{order.budget}}</td>
+                            
                             <!-- Selcode -->
                             <td ng-show="order.selcode | notEmpty">{{order.selcode}}</td>
                             <td ng-hide="order.selcode | notEmpty" class="auto-default">{{defaults.selcode}}

@@ -2,7 +2,7 @@ pdApp.controller('WatchlistController', ['$scope', 'Entries', 'ConfigService', '
 
 
     WatchlistService.getWatchlists().then(function (resp) {
-        
+
         var title;
         for (var i = 0; i < resp.data.data.watchlists.length; i++) {
             if (resp.data.data.watchlists[i].id == $routeParams.id) {
