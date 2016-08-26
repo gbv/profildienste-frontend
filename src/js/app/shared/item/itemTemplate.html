@@ -196,7 +196,7 @@
             <div class="col-md-12">
 
                 <span class="text-muted" ng-show="item.status.done">Die Bearbeitung dieses Titels wurde am {{item.status.lastChange | date:'dd.MM.yyyy'}} abgeschlossen.</span>
-                <span class="text-muted" ng-show="item.status.pending">Sie haben diesen Titel am {{item.status.lastChange | date:'dd.MM.yyyy'}} bestellt.</span>
+                <span class="text-muted" ng-show="item.status.pending">Sie haben diesen Titel am {{item.status.lastChange | date:'dd.MM.yyyy'}} bestellt.<br><br></span>
 
                 <div class="btn-group pull-right" ng-show="item.status.rejected">
                     <button type="button" class="btn btn-danger" ng-click="ItemCtrl.removeRejected()">

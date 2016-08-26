@@ -23,7 +23,7 @@
 
                             <!-- Budget -->
                             <td>{{order.budget}}</td>
-                            
+
                             <!-- Selcode -->
                             <td ng-show="order.selcode | notEmpty">{{order.selcode}}</td>
                             <td ng-hide="order.selcode | notEmpty" class="auto-default">{{defaults.selcode}}
@@ -68,7 +68,7 @@
         <div class="row">
             <div class="col-md-12">
                 <ul class="nav nav-pills nav-stacked orders">
-                    <li ng-repeat="order in orderlist"><a href=""><i class="fa fa-caret-right orders-caret"></i>{{order.titel}}</a>
+                    <li ng-repeat="order in orderlist"><a href=""><i class="fa fa-caret-right orders-caret"></i>{{order.title}}</a>
                     </li>
                 </ul>
             </div>

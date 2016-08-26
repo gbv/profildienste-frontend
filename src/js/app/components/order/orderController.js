@@ -1,4 +1,4 @@
-pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$http', '$rootScope', 'Notification', 'UserService', '$sce', function ($scope, OrderService, $location, $http, $rootScope, Notification, UserService, $sce) {
+pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$http', '$rootScope', 'Notification', 'UserService', '$sce', 'CartService', function ($scope, OrderService, $location, $http, $rootScope, Notification, UserService, $sce, CartService) {
 
     $scope.orderComplete = false;
 
@@ -29,21 +29,25 @@ pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$ht
     });
 
     this.order = function () {
-        $http({
+        var req = $http({
             method: 'POST',
-            url: '/api/order',
+            url: '/api/cart/order',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function (json) {
-            if (!json.success) {
-                Notification.error(json.errormsg);
-            } else {
-                $scope.orderComplete = true;
-                $rootScope.$broadcast('cartChange', json.cart, json.price);
-                $rootScope.$broadcast('siteChanged', {
-                    site: 'ordered',
-                    watchlist: false
-                });
-            }
+        });
+
+        req.then(function (resp) {
+            $scope.orderComplete = true;
+
+            CartService.getCart().then(function (resp) {
+                $rootScope.$broadcast('cartChange', resp);
+            });
+
+            $rootScope.$broadcast('siteChanged', {
+                site: 'ordered',
+                watchlist: false
+            });
+        }, function (resp) {
+            Notification.error(resp.data.error);
         });
     };
 
