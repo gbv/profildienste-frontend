@@ -31,27 +31,6 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
         $scope.budgets = data.budgets;
         $scope.suppliers = data.suppliers;
         $scope.defaults = data.defaults;
-
-        // TODO: these need to be reworked once the budget and the supplier are removed from the default user settings
-        if ($scope.item.budget === null && $scope.budgets.length > 0) {
-            $scope.item.budget = $scope.budgets[0].value;
-            for (var i = 0; i < $scope.budgets.length; i++) {
-                if ($scope.budgets[i].value === $scope.defaults.budget) {
-                    $scope.item.budget = $scope.budgets[i].value;
-                    break;
-                }
-            }
-        }
-
-        if ($scope.item.supplier === null && $scope.suppliers.length > 0) {
-            $scope.item.supplier = $scope.suppliers[0].value;
-            for (var j = 0; j < $scope.suppliers.length; j++) {
-                if ($scope.suppliers[j].value === $scope.defaults.supplier) {
-                    $scope.item.budget = $scope.budgets[j].value;
-                    break;
-                }
-            }
-        }
     });
 
     ConfigService.getConfig().then(function (data) {

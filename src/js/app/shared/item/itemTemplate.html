@@ -60,15 +60,17 @@
             <select ng-model="item.supplier" ng-options="supplier.value as supplier.name for supplier in suppliers"
                     ng-show="ItemCtrl.editOrderInformation()" class="form-control lft input-sm"
                     ng-change="ItemCtrl.saveSupplier()" ng-disabled="loading.supplier"
-                    ng-class="{saved: saved.supplier}"></select>
+                    ng-class="{saved: saved.supplier}">
+            </select>
             <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.supplier}}</span>
 
             <!-- Budget -->
-            <span class="text-muted">Budget:</span>
+            <span class="text-muted">Budget: </span>
             <select ng-model="item.budget" ng-options="budget.value as budget.name for budget in budgets"
                     ng-show="ItemCtrl.editOrderInformation()" class="form-control lft input-sm"
                     ng-change="ItemCtrl.saveBudget()" ng-disabled="loading.budget"
-                    ng-class="{saved: saved.budget}"></select>
+                    ng-class="{saved: saved.budget}">
+            </select>
             <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.budget}}</span>
 
             <!-- Selektionscode -->
