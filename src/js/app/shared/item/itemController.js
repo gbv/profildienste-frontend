@@ -30,7 +30,6 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
     UserService.getUserData().then(function (data) {
         $scope.budgets = data.budgets;
         $scope.suppliers = data.suppliers;
-        $scope.defaults = data.defaults;
     });
 
     ConfigService.getConfig().then(function (data) {

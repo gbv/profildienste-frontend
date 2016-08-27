@@ -78,14 +78,14 @@
             <input type="text" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20"
                    ng-show="ItemCtrl.editOrderInformation()" ng-maxlength="20" ng-minlength="0" ng-model="item.selcode"
                    ng-focus="ItemCtrl.saveSelcode()" ng-blur="ItemCtrl.closeSelcode()"
-                   placeholder="{{defaults.selcode}}" ng-disabled="loading.selcode" ng-class="{saved: saved.selcode}">
+                   ng-disabled="loading.selcode" ng-class="{saved: saved.selcode}">
             <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.selcode}}</span>
 
             <!-- SSG Nummer -->
             <span class="text-muted">SSGs-Nr.: </span>
             <input type="text" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3"
                    ng-show="ItemCtrl.editOrderInformation()" ng-maxlength="3" ng-minlength="0" ng-model="item.ssgnr"
-                   placeholder="{{defaults.ssgnr}}" ng-focus="ItemCtrl.saveSSGNr()" ng-blur="ItemCtrl.closeSSGNr()"
+                   ng-focus="ItemCtrl.saveSSGNr()" ng-blur="ItemCtrl.closeSSGNr()"
                    ng-disabled="loading.ssgnr" ng-class="{saved: saved.ssgnr}">
             <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.ssgnr}}</span>
 
