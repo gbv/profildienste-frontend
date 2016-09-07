@@ -393,6 +393,10 @@
   margin-right: 10px;
 }
 
+.help-btn {
+  margin-right: 10px;
+}
+
 .advanced-search-panel {
   border: 1px solid $primary !important;
   @include panel-variant($primary, $navbar-link-col, $primary, $secondary);
