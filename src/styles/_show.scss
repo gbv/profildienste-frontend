@@ -3,7 +3,6 @@
 
 .pd-brand {
   display: inline-block;
-  border-right: 1px solid $secondary !important;
   margin-right: 5px !important;
 }
 
@@ -11,10 +10,6 @@
   color: $navbar-link-col;
   background-color: $wl-dd-badge-col;
   margin-left: 3px;
-}
-
-.shop-options li {
-  border-left: 1px solid $secondary;
 }
 
 .shop-options .dropdown-menu li {
@@ -134,12 +129,8 @@
 
 #search-field {
   border: 1px solid $secondary;
-  margin-right: 5px;
 }
 
-.sep-right {
-  border-right: 1px solid $secondary;
-}
 
 .navbar-inverse .navbar-nav > li > a,
 .navbar-inverse .navbar-nav > li > a:hover {

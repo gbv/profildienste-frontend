@@ -86,7 +86,7 @@ gulp.task('scripts', function () {
      'partials.js'
      ]))
     .pipe(concat('bundle.js'))
-    //.pipe(uglify())
+    .pipe(uglify())
     .pipe(gulp.dest(distDir + '/js'));
 });
 

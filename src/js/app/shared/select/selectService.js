@@ -57,7 +57,10 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
             selected.push(this.entries.items[i]);
         }
 
-        $rootScope.$broadcast('allSelected');
+        $rootScope.$broadcast('selectionChange', {
+            type: 'item',
+            selected: selected.length
+        });
     };
 
     this.selectView = function () {
@@ -74,7 +77,9 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
             selected.push(this.entries.items[i]);
         }
 
-        $rootScope.$broadcast('viewSelected');
+        $rootScope.$broadcast('selectionChange', {
+            type: 'view'
+        });
     };
 
 
@@ -94,8 +99,10 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
         }
 
         selected = [];
-        $rootScope.$broadcast('allDeselected');
 
+        $rootScope.$broadcast('selectionChange', {
+            type: 'none'
+        });
     };
 
     this.select = function (item) {
@@ -109,7 +116,11 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
         }
         selected.push(item);
         item.status.selected = true;
-        $rootScope.$broadcast('itemSelected');
+
+        $rootScope.$broadcast('selectionChange', {
+            type: 'item',
+            selected: selected.length
+        });
     };
 
     this.deselect = function (item) {
@@ -127,7 +138,10 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
         item.status.selected = false;
         selectView = false;
 
-        $rootScope.$broadcast('itemDeselected');
+        $rootScope.$broadcast('selectionChange', {
+            type: 'item',
+            selected: selected.length
+        });
     };
 
     this.getSelectionIds = function () {

@@ -35,44 +35,12 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
         });
     };
 
-    $scope.itemsSelected = (SelectService.getSelectedNumber() > 0);
     $scope.showSelMenu = false;
+    $scope.menuChangePossible = false;
 
-    $rootScope.$on('itemSelected', function () {
-        $scope.itemsSelected = true;
-        $scope.selNumber = SelectService.getSelectedNumber();
-
-        if ($scope.selNumber == 1) {
-            $scope.showSelMenu = true;
-        }
-    });
-
-    $rootScope.$on('viewSelected', function () {
-        $scope.itemsSelected = true;
-        $scope.selNumber = SelectService.getSelectedNumber() + ' (alle)';
-        $scope.showSelMenu = true;
-    });
-
-    $rootScope.$on('allDeselected', function () {
-        $scope.selNumber = 0;
-        $scope.itemsSelected = false;
-        $scope.showSelMenu = false;
-    });
-
-    $rootScope.$on('allSelected', function () {
-        $scope.itemsSelected = true;
-        $scope.selNumber = SelectService.getSelectedNumber();
-        $scope.showSelMenu = true;
-    });
-
-    $rootScope.$on('itemDeselected', function () {
-
-        $scope.selNumber = SelectService.getSelectedNumber();
-
-        if ($scope.selNumber === 0) {
-            $scope.itemsSelected = false;
-            $scope.showSelMenu = false;
-        }
+    $rootScope.$on('selectionChange', function (e, data) {
+        $scope.showSelMenu = data.type === 'view' || (data.type === 'item' && data.selected > 0);
+        $scope.menuChangePossible = $scope.showSelMenu;
     });
 
     this.toggleSelMenu = function () {
