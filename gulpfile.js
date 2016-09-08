@@ -22,106 +22,106 @@ var distDir = 'dist';
 
 
 var vendor_css = [
-  'bower_components/fontawesome/css/font-awesome.min.css',
-  'bower_components/angular-ui-notification/dist/angular-ui-notification.min.css',
-  'bower_components/bootstrap-select/dist/css/bootstrap-select.min.css'
+    'bower_components/fontawesome/css/font-awesome.min.css',
+    'bower_components/angular-ui-notification/dist/angular-ui-notification.min.css',
+    'bower_components/bootstrap-select/dist/css/bootstrap-select.min.css'
 ];
 
 gulp.task('styles', function () {
 
-  var vendorFiles = gulp.src(vendor_css);
+    var vendorFiles = gulp.src(vendor_css);
 
-  var appFiles = gulp.src(srcDir + '/styles/**/*.scss')
-    .pipe(sass(
-      {
-        outputStyle:  'compressed',
-        includePaths: [
-          'bower_components/bootstrap-sass/assets/stylesheets'
-        ]
-      }
-    ).on('error', sass.logError));
+    var appFiles = gulp.src(srcDir + '/styles/**/*.scss')
+        .pipe(sass(
+            {
+                outputStyle: 'compressed',
+                includePaths: [
+                    'bower_components/bootstrap-sass/assets/stylesheets'
+                ]
+            }
+        ).on('error', sass.logError));
 
-  return es.concat(vendorFiles, appFiles)
-    .pipe(concat('./bundle.css'))
-    .pipe(autoprefixer())
-    .pipe(cssnano())
-    .pipe(gulp.dest(distDir + '/css'));
+    return es.concat(vendorFiles, appFiles)
+        .pipe(concat('./bundle.css'))
+        .pipe(autoprefixer())
+        .pipe(cssnano())
+        .pipe(gulp.dest(distDir + '/css'));
 });
 
 gulp.task('scripts', function () {
 
-  // Script vendor files
-  var jsFilter = gulpFilter(['*.js']);
-  var vendorFiles = gulp.src(mainBowerFiles(['**/*.js', '!bower_components/jquery/dist/jquery.js']).concat(['bower_components/jquery/dist/jquery.js']))
-    .pipe(concat('vendor.js'));
+    // Script vendor files
+    var jsFilter = gulpFilter(['*.js']);
+    var vendorFiles = gulp.src(mainBowerFiles(['**/*.js', '!bower_components/jquery/dist/jquery.js']).concat(['bower_components/jquery/dist/jquery.js']))
+        .pipe(concat('vendor.js'));
 
-  // App files
-  var appFiles = gulp.src(srcDir + '/js/**/*.js')
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'))
-    .pipe(order([
-                  srcDir + '/js/app.module.js',
-                  srcDir + '/js/app.route.js',
-                  '*'
-                ]))
-    .pipe(concat('app.js'));
+    // App files
+    var appFiles = gulp.src(srcDir + '/js/**/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'))
+        .pipe(order([
+            srcDir + '/js/app.module.js',
+            srcDir + '/js/app.route.js',
+            '*'
+        ]))
+        .pipe(concat('app.js'));
 
-  // Partials
-  var partials = gulp.src(srcDir + '/js/**/*.html')
-    .pipe(htmlmin({collapseWhitespace: true}))
-    .pipe(ngHtml2Js({
-                      moduleName:    'Profildienst',
-                      prefix:        '',
-                      rename:        function (templateUrl, templateFile) {
-                        return templateUrl.replace(/app\/(components|shared)/, '');
-                      },
-                      declareModule: false
-                    }))
-    .pipe(concat('partials.js'));
+    // Partials
+    var partials = gulp.src(srcDir + '/js/**/*.html')
+        .pipe(htmlmin({collapseWhitespace: true}))
+        .pipe(ngHtml2Js({
+            moduleName: 'Profildienst',
+            prefix: '',
+            rename: function (templateUrl, templateFile) {
+                return templateUrl.replace(/app\/(components|shared)/, '');
+            },
+            declareModule: false
+        }))
+        .pipe(concat('partials.js'));
 
-  return es.concat(vendorFiles, appFiles, partials)
-    .pipe(order([
-     'vendor.js',
-     'app.js',
-     'partials.js'
-     ]))
-    .pipe(concat('bundle.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest(distDir + '/js'));
+    return es.concat(vendorFiles, appFiles, partials)
+        .pipe(order([
+            'vendor.js',
+            'app.js',
+            'partials.js'
+        ]))
+        .pipe(concat('bundle.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest(distDir + '/js'));
 });
 
 gulp.task('lint', function () {
-  gulp.src([srcDir + '/js/**/*.js', '!./bower_components/**'])
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'))
-    .pipe(jshint.reporter('fail'));
+    gulp.src([srcDir + '/js/**/*.js', '!./bower_components/**'])
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'))
+        .pipe(jshint.reporter('fail'));
 });
 
 gulp.task('fonts', function () {
-  gulp.src('bower_components/fontawesome/fonts/**.*')
-    .pipe(gulp.dest(distDir + '/fonts'));
+    gulp.src('bower_components/fontawesome/fonts/**.*')
+        .pipe(gulp.dest(distDir + '/fonts'));
 });
 
 gulp.task('clean', function (cb) {
-  rimraf(distDir, cb);
+    rimraf(distDir, cb);
 });
 
 gulp.task('copy-index', function () {
-  gulp.src(srcDir + '/index.html')
-    .pipe(htmlmin({collapseWhitespace: true}))
-    .pipe(gulp.dest(distDir));
+    gulp.src(srcDir + '/index.html')
+        .pipe(htmlmin({collapseWhitespace: true}))
+        .pipe(gulp.dest(distDir));
 });
 
 gulp.task('copy-assets', function () {
-  gulp.src('assets/**/*')
-    .pipe(gulp.dest(distDir));
+    gulp.src('assets/**/*')
+        .pipe(gulp.dest(distDir));
 });
 
 gulp.task('build', function () {
-  runSequence(
-    ['clean'],
-    ['lint', 'styles', 'scripts', 'fonts', 'copy-index', 'copy-assets']
-  );
+    runSequence(
+        ['clean'],
+        ['lint', 'styles', 'scripts', 'fonts', 'copy-index', 'copy-assets']
+    );
 });
 
 gulp.task('default', ['build']);

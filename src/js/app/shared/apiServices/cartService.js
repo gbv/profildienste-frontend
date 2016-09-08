@@ -1,6 +1,6 @@
 pdApp.service('CartService', ['$http', '$rootScope', function ($http, $rootScope) {
 
-    
+
     this.getCart = function () {
         return $http.get('/api/cart/info');
     };
@@ -24,7 +24,7 @@ pdApp.service('CartService', ['$http', '$rootScope', function ($http, $rootScope
         });
 
         req.then(function () {
-            this.getCart().then(function (resp){
+            this.getCart().then(function (resp) {
                 $rootScope.$broadcast('cartChange', resp);
             });
         }.bind(this));
@@ -52,7 +52,7 @@ pdApp.service('CartService', ['$http', '$rootScope', function ($http, $rootScope
         });
 
         req.then(function () {
-            this.getCart().then(function (resp){
+            this.getCart().then(function (resp) {
                 $rootScope.$broadcast('cartChange', resp);
             });
         }.bind(this));

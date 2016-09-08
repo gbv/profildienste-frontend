@@ -301,7 +301,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
     };
 
     this.showWatchlistBtn = function () {
-        return !$scope.item.status.done && !$scope.item.status.pending  && !$scope.item.status.watchlist.watched;
+        return !$scope.item.status.done && !$scope.item.status.pending && !$scope.item.status.watchlist.watched;
     };
 
     this.showWatchlistRemBtn = function () {

@@ -37,10 +37,10 @@ pdApp.controller('ManageController', ['$scope', 'WatchlistService', '$rootScope'
     $scope.sortableOptions = {
         stop: function (e, ui) {
 
-            var order = $scope.watchlists.map(function (watchlist){
+            var order = $scope.watchlists.map(function (watchlist) {
                 return watchlist.id;
             });
-            
+
             WatchlistService.changeWatchlistOrder(order).then(function () {
             }, function (reason) {
                 Notification.error(reason);

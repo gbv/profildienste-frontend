@@ -117,15 +117,7 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
 
     this.showEntriesInformation = function () {
         return (
-            !$scope.loading &&
-            !this.showError() &&
-            !this.showManageWatchlists() &&
-            !this.showOrderConfirmation() &&
-            !this.showOrderedConfirmation() &&
-            !this.showSearchResults() &&
-            !this.showSearchNoResults() &&
-            !this.showSearchGettingStarted() &&
-            !this.showEntriesSelectedInformation()
+            !$scope.loading && !this.showError() && !this.showManageWatchlists() && !this.showOrderConfirmation() && !this.showOrderedConfirmation() && !this.showSearchResults() && !this.showSearchNoResults() && !this.showSearchGettingStarted() && !this.showEntriesSelectedInformation()
         );
     };
 
@@ -139,7 +131,12 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
         }
 
         if (data.type === 'item') {
+
             $scope.selected = data.selected;
+
+            if ($scope.selected === $scope.total) {
+                $scope.selection = 'view';
+            }
         }
 
     });

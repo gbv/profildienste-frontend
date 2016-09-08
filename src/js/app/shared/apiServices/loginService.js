@@ -1,55 +1,55 @@
 pdApp.service('LoginService', ['$http', '$window', '$q', '$rootScope', function ($http, $window, $q, $rootScope) {
 
-  var defLogin = $q.defer();
-
-  if ($window.sessionStorage.token) {
-    $rootScope.$broadcast('userLogin');
-  }
-
-  this.performLogin = function (user, pass) {
+    var defLogin = $q.defer();
 
     if ($window.sessionStorage.token) {
-      return;
+        $rootScope.$broadcast('userLogin');
     }
 
-    var login = $q.defer();
+    this.performLogin = function (user, pass) {
 
-    $http({
-      method: 'POST',
-      url: '/api/auth',
-      data: $.param({
-        user: user,
-        pass: pass
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
+        if ($window.sessionStorage.token) {
+            return;
+        }
 
-      $window.sessionStorage.setItem('token', json.data);
+        var login = $q.defer();
 
-      defLogin.resolve();
-      login.resolve();
-      
-      $rootScope.$broadcast('userLogin');
-    }).error(function (data) {
-      defLogin.reject(data.error);
-      login.reject(data.error);
-    });
+        $http({
+            method: 'POST',
+            url: '/api/auth',
+            data: $.param({
+                user: user,
+                pass: pass
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function (json) {
 
-    return login.promise;
+            $window.sessionStorage.setItem('token', json.data);
 
-  };
+            defLogin.resolve();
+            login.resolve();
 
-  this.whenLoggedIn = function () {
+            $rootScope.$broadcast('userLogin');
+        }).error(function (data) {
+            defLogin.reject(data.error);
+            login.reject(data.error);
+        });
 
-    if ($window.sessionStorage.token) {
-      defLogin.resolve();
-    }
+        return login.promise;
 
-    return defLogin.promise;
-  };
+    };
 
-  this.destroySession = function (reason) {
-    $window.sessionStorage.removeItem('token');
-    $rootScope.$broadcast('userLogout');
-  };
+    this.whenLoggedIn = function () {
+
+        if ($window.sessionStorage.token) {
+            defLogin.resolve();
+        }
+
+        return defLogin.promise;
+    };
+
+    this.destroySession = function (reason) {
+        $window.sessionStorage.removeItem('token');
+        $rootScope.$broadcast('userLogout');
+    };
 }]);

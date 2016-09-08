@@ -1,6 +1,6 @@
 pdApp.directive('ngFooter', function () {
-  return {
-    restrict: 'E',
-    templateUrl: '/footer/footerTemplate.html'
-  };
+    return {
+        restrict: 'E',
+        templateUrl: '/footer/footerTemplate.html'
+    };
 });

@@ -101,7 +101,7 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
     this.deleteWatchlist = function (id) {
         var req = $http({
             method: 'DELETE',
-            url: '/api/watchlist/'+id
+            url: '/api/watchlist/' + id
         });
 
         req.then(function (resp) {
@@ -113,7 +113,7 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
         return req;
     };
 
-    this.changeWatchlistOrder = function (order){
+    this.changeWatchlistOrder = function (order) {
         var req = $http({
             method: 'PATCH',
             url: '/api/watchlist/order',
@@ -136,7 +136,7 @@ pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', 
 
         var req = $http({
             method: 'POST',
-            url: '/api/watchlist/'+id+'/rename',
+            url: '/api/watchlist/' + id + '/rename',
             data: $.param({
                 name: name
             }),

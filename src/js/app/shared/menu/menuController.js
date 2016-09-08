@@ -3,7 +3,7 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
     $scope.pricePopover = '/menu/pricePopover.html';
 
     LoginService.whenLoggedIn().then(function () {
-        
+
         WatchlistService.getWatchlists().then(function (resp) {
             $scope.watchlists = resp.data.data.watchlists;
         });
@@ -103,7 +103,7 @@ pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 
     });
 
     $rootScope.$on('siteChanged', function (ev, site) {
-        $scope.site = site.watchlist ? 'watchlist/'+site.id : site.site;
+        $scope.site = site.watchlist ? 'watchlist/' + site.id : site.site;
         $scope.selection = PageConfigService.getSelectionOptions((site.watchlist ? 'watchlist' : site.site));
     });
 

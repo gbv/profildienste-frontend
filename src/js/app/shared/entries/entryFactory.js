@@ -30,7 +30,7 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', '
 
         this.loading = true;
         $rootScope.$broadcast('siteLoading');
-        
+
         var url;
         if (this.id === undefined) {
             url = '/api/' + this.site + '/page/' + this.page;
