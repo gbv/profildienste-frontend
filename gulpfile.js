@@ -16,6 +16,7 @@ var order = require('gulp-order');
 var ngHtml2Js = require("gulp-ng-html2js");
 var htmlmin = require("gulp-htmlmin");
 var cssnano = require('gulp-cssnano');
+var sourcemaps = require('gulp-sourcemaps');
 
 var srcDir = 'src';
 var distDir = 'dist';
@@ -85,8 +86,10 @@ gulp.task('scripts', function () {
             'app.js',
             'partials.js'
         ]))
+        .pipe(sourcemaps.init())
         .pipe(concat('bundle.js'))
         .pipe(uglify())
+        .pipe(sourcemaps.write(distDir + '/js/maps'))
         .pipe(gulp.dest(distDir + '/js'));
 });
 
