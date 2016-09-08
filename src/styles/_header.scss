@@ -1,0 +1,40 @@
+/*
+|--------------------------------------------------------------------------
+|
+|--------------------------------------------------------------------------
+|
+|
+|
+|
+|
+*/
+
+#header-fixed {
+  background-color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.affix {
+  box-shadow: 1px 0 6px #666;
+}
+
+.page-title-container {
+  border-bottom-width: 0px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.page-header a, .page-header small {
+  color: #999;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.header-icon {
+  margin-right: 5px;
+}

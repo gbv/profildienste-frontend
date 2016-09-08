@@ -1,0 +1,123 @@
+/*
+|--------------------------------------------------------------------------
+| Style tweaks for the main menu / navigation
+|--------------------------------------------------------------------------
+|
+| This file contains all styles for the main navigation including the search
+| box.
+*/
+
+.pd-brand {
+  display: inline-block;
+  margin-right: 5px !important;
+}
+
+.dropdown .badge {
+  color: $navbar-link-col;
+  background-color: $wl-dd-badge-col;
+  margin-left: 3px;
+}
+
+.shop-options .dropdown-menu li {
+  border-width: 0px;
+}
+
+@keyframes logoIn {
+  from {
+    line-height: 20px;
+  }
+  to {
+    line-height: 14px;
+  }
+}
+
+@keyframes logoOut {
+  from {
+    line-height: 14px
+  }
+  to {
+    line-height: 20px
+  }
+}
+
+@keyframes backIn {
+  from {
+    font-size: 0px;
+    opacity: 0;
+  }
+  to {
+    font-size: 12px;
+    opacity: 1;
+  }
+}
+
+@keyframes backOut {
+  from {
+    font-size: 12px;
+    opacity: 1;
+  }
+  to {
+    font-size: 0px;
+    opacity: 0;
+  }
+}
+
+.logo-in {
+  animation-name: logoIn;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+.logo-out {
+  animation-name: logoOut;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+.back-in {
+  animation-name: backIn;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+.back-out {
+  animation-name: backOut;
+  animation-duration: 0.3s;
+  animation-fill-mode: forwards;
+}
+
+#back {
+  color: $navbar-back-color;
+}
+
+.search-inp-group {
+  padding-right: 5px;
+  display: table !important;
+}
+
+.search-form-group {
+  display: inline !important;
+}
+
+.navbar {
+  margin: 0 !important;
+}
+
+.navbar-collapse .collapse {
+  display: block;
+}
+
+.search-lbl {
+  background-color: transparent;
+  border: 1px solid $secondary;
+  color: $navbar-link-col !important;
+  width: 1% !important;
+}
+
+#search-field {
+  border: 1px solid $secondary;
+}
+
+.navbar > .container {
+  margin-top: 0px;
+}

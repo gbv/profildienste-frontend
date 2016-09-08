@@ -1,0 +1,41 @@
+/*
+|--------------------------------------------------------------------------
+|
+|--------------------------------------------------------------------------
+|
+|
+|
+|
+|
+*/
+
+.btns-order {
+  text-align: center;
+}
+
+.btn-order {
+  display: inline-block;
+}
+
+.orders a {
+  color: $text-col;
+}
+
+.orders-caret {
+  color: $primary;
+  margin-right: 10px;
+}
+
+.auto-default {
+  color: $autodefault-color;
+}
+
+.auto-default-help {
+  font-size: 10px;
+  vertical-align: super;
+  color: $primary;
+}
+
+.fixed-orderinfo {
+  margin-right: 10px;
+}
