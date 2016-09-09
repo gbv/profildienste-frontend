@@ -39,8 +39,10 @@ pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$ht
                 site: 'ordered',
                 watchlist: false
             });
-        }, function (resp) {
-            Notification.error(resp.data.error);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
     };
 

@@ -36,8 +36,10 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
         $scope.entries = data[4].entries;
 
 
-    }, function (reason) {
-        Notification.error(reason);
+    }, function (err) {
+        if (err) {
+            Notification.error(err);
+        }
     });
 
     this.setSorter = function (sorter) {
@@ -59,8 +61,10 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
 
             $scope.entries.reset();
 
-        }, function (reason) {
-            Notification.error(reason);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
 
     };
@@ -83,8 +87,10 @@ pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigServic
 
             $scope.entries.reset();
 
-        }, function (reason) {
-            Notification.error(reason);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
 
     };

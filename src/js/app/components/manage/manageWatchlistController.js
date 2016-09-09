@@ -20,22 +20,28 @@ pdApp.controller('ManageWatchlistController', ['$scope', 'WatchlistService', '$l
 
         WatchlistService.renameWatchlist($scope.watchlist.id, $scope.name).then(function () {
             $scope.editMode = false;
-        }, function (reason) {
-            Notification.error(reason);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
     };
 
     this.delete = function () {
         WatchlistService.deleteWatchlist($scope.watchlist.id).then(function () {
-        }, function (reason) {
-            Notification.error(reason);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
     };
 
     this.setAsDefault = function () {
         WatchlistService.updateDefaultWatchlist($scope.watchlist.id).then(function () {
-        }, function (reason) {
-            Notification.error(reason);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
     };
 

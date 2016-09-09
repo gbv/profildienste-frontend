@@ -180,8 +180,10 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
 
             this.loading = false;
             this.resetSelection();
-        }.bind(this), function (reason) {
-            Notification.error(reason);
+        }.bind(this), function (err) {
+            if (err) {
+                Notification.error(err);
+            }
             this.loading = false;
         }.bind(this));
     };
@@ -214,8 +216,10 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
 
             this.loading = false;
             this.resetSelection();
-        }.bind(this), function (reason) {
-            Notification.error(reason);
+        }.bind(this), function (err) {
+            if (err) {
+                Notification.error(err);
+            }
             this.loading = false;
         }.bind(this));
     };
@@ -250,8 +254,10 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
                 this.resetSelection();
 
             }.bind(this),
-            function (reason) {
-                Notification.error(reason);
+            function (err) {
+                if (err) {
+                    Notification.error(err);
+                }
                 this.loading = false;
             }.bind(this));
 
@@ -287,12 +293,11 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
                 this.resetSelection();
 
             }.bind(this),
-            function (reason) {
-                Notification.error(reason);
+            function (err) {
+                if (err) {
+                    Notification.error(err);
+                }
                 this.loading = false;
             }.bind(this));
-
     };
-
-
 }]);

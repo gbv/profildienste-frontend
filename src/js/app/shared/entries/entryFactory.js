@@ -1,8 +1,9 @@
 // Load the entries
-pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', '$q', function ($http, $uibModal, $rootScope, SelectService, $q) {
+pdApp.factory('Entries', ['$http', '$rootScope', 'SelectService', '$q', function ($http, $rootScope, SelectService, $q) {
 
     // Entry object
     var Entries = function (site, id, title) {
+
         this.items = [];
         this.loading = false;
         this.page = 0;
@@ -48,6 +49,7 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', '
                 items[i].status.selected = selectAll;
                 this.items.push(items[i]);
             }
+
             this.page++;
             this.loading = false;
             this.more = resp.data.more;
@@ -62,23 +64,24 @@ pdApp.factory('Entries', ['$http', '$uibModal', '$rootScope', 'SelectService', '
             $rootScope.$broadcast('siteLoadingFinished', this.total);
 
 
-        }.bind(this)).error(function (data, status, headers, config) {
-
-            // TODO: Better error handling (check status code etc.)
-
-            /*
-             this.error = true;
-             this.errorMessage = data.message;
-             $rootScope.$broadcast('siteLoadingFinished', -1);
-             */
-
-            $uibModal.open({
-                templateUrl: 'errorModal.html',
-                controller: 'ErrorModalCtrl',
-                keyboard: false
-            });
-
-        });
+        }.bind(this));
+        // .bind(this)).error(function (data, status, headers, config) {
+        //
+        //     // TODO: Better error handling (check status code etc.)
+        //
+        //     /*
+        //      this.error = true;
+        //      this.errorMessage = data.message;
+        //      $rootScope.$broadcast('siteLoadingFinished', -1);
+        //      */
+        //
+        //     $uibModal.open({
+        //         templateUrl: 'errorModal.html',
+        //         controller: 'ErrorModalCtrl',
+        //         keyboard: false
+        //     });
+        //
+        // });
     };
 
     // removes a given item from the item collection

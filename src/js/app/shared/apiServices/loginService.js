@@ -1,55 +1,55 @@
 pdApp.service('LoginService', ['$http', '$window', '$q', '$rootScope', function ($http, $window, $q, $rootScope) {
 
-    var defLogin = $q.defer();
+  var defLogin = $q.defer();
+
+  if ($window.sessionStorage.token) {
+    $rootScope.$broadcast('userLogin');
+  }
+
+  this.performLogin = function (user, pass) {
 
     if ($window.sessionStorage.token) {
-        $rootScope.$broadcast('userLogin');
+      return;
     }
 
-    this.performLogin = function (user, pass) {
+    var login = $q.defer();
 
-        if ($window.sessionStorage.token) {
-            return;
-        }
+    $http({
+      method: 'POST',
+      url: '/api/auth',
+      data: $.param({
+        user: user,
+        pass: pass
+      }),
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+    }).success(function (json) {
 
-        var login = $q.defer();
+      $window.sessionStorage.setItem('token', json.data);
 
-        $http({
-            method: 'POST',
-            url: '/api/auth',
-            data: $.param({
-                user: user,
-                pass: pass
-            }),
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function (json) {
+      defLogin.resolve();
+      login.resolve();
 
-            $window.sessionStorage.setItem('token', json.data);
+      $rootScope.$broadcast('userLogin');
+    }).error(function (data) {
+      defLogin.reject(data.error);
+      login.reject(data.error);
+    });
 
-            defLogin.resolve();
-            login.resolve();
+    return login.promise;
 
-            $rootScope.$broadcast('userLogin');
-        }).error(function (data) {
-            defLogin.reject(data.error);
-            login.reject(data.error);
-        });
+  };
 
-        return login.promise;
+  this.whenLoggedIn = function () {
 
-    };
+    if ($window.sessionStorage.token) {
+      defLogin.resolve();
+    }
 
-    this.whenLoggedIn = function () {
+    return defLogin.promise;
+  };
 
-        if ($window.sessionStorage.token) {
-            defLogin.resolve();
-        }
-
-        return defLogin.promise;
-    };
-
-    this.destroySession = function (reason) {
-        $window.sessionStorage.removeItem('token');
-        $rootScope.$broadcast('userLogout');
-    };
+  this.destroySession = function (reason) {
+    $window.sessionStorage.removeItem('token');
+    $rootScope.$broadcast('userLogout');
+  };
 }]);

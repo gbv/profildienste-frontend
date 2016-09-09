@@ -26,13 +26,13 @@ pdApp.constant('version', '1.2.0');
 
 pdApp.controller('ErrorModalCtrl', ['$scope', '$uibModalInstance', '$location', '$rootScope', function ($scope, $uibModalInstance, $location, $rootScope) {
 
-    $scope.redirect = function () {
-        $location.path('/');
+    $scope.close = function () {
         $uibModalInstance.close();
         $rootScope.token = undefined;
     };
 
 }]);
+
 
 pdApp.factory('authInterceptor', ['$rootScope', '$q', '$window', 'LogoutService', function ($rootScope, $q, $window, LogoutService) {
     return {
@@ -48,9 +48,12 @@ pdApp.factory('authInterceptor', ['$rootScope', '$q', '$window', 'LogoutService'
         responseError: function (rejection) {
 
             if (rejection.status === 401) {
-                LogoutService.destroySession('Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an um fortzufahren.');
+                LogoutService.forceLogout();
+                return $q.reject();
             }
-            return $q.reject(rejection);
+
+            var err = rejection.data.error || rejection.statusText;
+            return $q.reject(err);
         }
     };
 }]);
@@ -89,17 +92,4 @@ pdApp.filter('unsafe', ['$sce', function ($sce) {
     return function (val) {
         return $sce.trustAsHtml(val);
     };
-}]);
-
-angular.module('template/popover/popover.html', []).run(['$templateCache', function ($templateCache) {
-    $templateCache.put('template/popover/popover.html',
-        '<div class=\"popover {{placement}}\" ng-class=\"{ in: isOpen(), fade: animation() }\">\n' +
-        '  <div class=\"arrow\"></div>\n' +
-        '\n' +
-        '  <div class=\"popover-inner\">\n' +
-        '      <h3 class=\"popover-title\" ng-bind-html=\"title | unsafe\" ng-show=\"title\"></h3>\n' +
-        '      <div class=\"popover-content\"ng-bind-html=\"content | unsafe\"></div>\n' +
-        '  </div>\n' +
-        '</div>\n' +
-        '');
 }]);

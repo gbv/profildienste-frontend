@@ -150,8 +150,10 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
         SaveService.saveSupplier($scope.item).then(function () {
             $scope.loading.supplier = false;
             $scope.saved.supplier = true;
-        }, function (reason) {
-            Notification.error(reason);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
     };
 
@@ -174,8 +176,10 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
             SaveService.saveSelcode($scope.item).then(function () {
                 $scope.loading.selcode = false;
                 $scope.saved.selcode = true;
-            }, function (reason) {
-                Notification.error(reason);
+            }, function (err) {
+                if (err) {
+                    Notification.error(err);
+                }
             });
         }
     };
@@ -215,8 +219,10 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
         SaveService.saveBudget($scope.item).then(function () {
             $scope.loading.budget = false;
             $scope.saved.budget = true;
-        }, function (reason) {
-            Notification.error(reason);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
     };
 
@@ -239,8 +245,10 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
                     window.open(resp.data.data.content, '_blank');
                 }
             },
-            function (reason) {
-                Notification.error(reason);
+            function (err) {
+                if (err) {
+                    Notification.error(err);
+                }
             });
     };
 
@@ -253,8 +261,10 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
             if ($scope.config.hideRejected) {
                 $scope.entries.removeItem($scope.item);
             }
-        }, function (reason) {
-            Notification.error(reason);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
     };
 
@@ -265,8 +275,10 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
             if ($scope.config.hideRejected) {
                 $scope.entries.removeItem($scope.item);
             }
-        }, function (reason) {
-            Notification.error(reason);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
     };
 

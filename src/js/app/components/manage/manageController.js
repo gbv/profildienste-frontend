@@ -29,8 +29,10 @@ pdApp.controller('ManageController', ['$scope', 'WatchlistService', '$rootScope'
         }
 
         WatchlistService.addNewWatchlist($scope.newName).then(function () {
-        }, function (reason) {
-            Notification.error(reason);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
     };
 
@@ -42,8 +44,10 @@ pdApp.controller('ManageController', ['$scope', 'WatchlistService', '$rootScope'
             });
 
             WatchlistService.changeWatchlistOrder(order).then(function () {
-            }, function (reason) {
-                Notification.error(reason);
+            }, function (err) {
+                if (err) {
+                    Notification.error(err);
+                }
             });
         },
         axis: 'y'

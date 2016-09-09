@@ -6,17 +6,16 @@ pdApp.controller('LandingController', ['$scope', 'LibraryService', '$location', 
 
     LibraryService.getLibraries().then(function (data) {
         $scope.libraries = data.libs;
-    }, function (reason) {
-        console.log(reason);
-        Notification.error(reason);
+    }, function (err) {
+        if (err) {
+            Notification.error(err);
+        }
     });
 
     $scope.openLogin = function (isil) {
+
         $location.path('login/' + isil);
     };
 
-
-    $scope.hasInfo = LogoutService.hasInfo();
     $scope.info = LogoutService.getInfo();
-
 }]);

@@ -7,8 +7,10 @@ pdApp.controller('AdvancedSearchController', ['$scope', 'Notification', 'SearchS
         $scope.searchable_fields = data.searchable_fields;
         $scope.search_modes = data.search_modes;
 
-    }, function (reason) {
-        Notification.error(reason);
+    }, function (err) {
+        if (err) {
+            Notification.error(err);
+        }
     });
 
     this.addCriterion = function (field, mode, value) {

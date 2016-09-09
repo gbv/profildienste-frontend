@@ -16,8 +16,10 @@ pdApp.service('InfoService', ['$http', 'Notification', function ($http, Notifica
 
         req.then(function (resp) {
             window.open(resp.data.data.opac, '_blank');
-        }, function (resp) {
-            Notification.error(resp.data.error);
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
         });
     };
 

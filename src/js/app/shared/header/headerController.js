@@ -74,17 +74,17 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
 
     this.deletePermanently = function () {
         $http({
-            method: 'POST',
-            url: '/api/delete',
+            method: 'DELETE',
+            url: '/api/titles/delete',
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function (json) {
-            if (!json.success) {
-                Notification.error(json.errormsg);
-            } else {
-                Notification.success(json.msg);
-                $location.path('/main');
+        }).then(function (resp) {
+            Notification.success('Ihre abgelehnten Titel wurden erfolgreich gelöscht.');
+            $location.path('/main');
+        }, function (err){
+            if (err) {
+                Notification.error(err);
             }
-        }.bind(this));
+        });
     };
 
     this.showManageWatchlists = function () {

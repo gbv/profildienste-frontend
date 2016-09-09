@@ -12,8 +12,10 @@ pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams',
             $location.path('/');
         }
 
-    }, function (reason) {
-        Notification.error(reason);
+    }, function (err) {
+        if (err) {
+            Notification.error(err);
+        }
     });
 
     $scope.userValid = true;

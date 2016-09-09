@@ -86,10 +86,13 @@ gulp.task('scripts', function () {
             'app.js',
             'partials.js'
         ]))
-        .pipe(sourcemaps.init())
         .pipe(concat('bundle.js'))
+        .pipe(sourcemaps.init())
         .pipe(uglify())
-        .pipe(sourcemaps.write(distDir + '/js/maps'))
+        .pipe(sourcemaps.write('.', {
+            destPath: distDir,
+            debug: true
+        }))
         .pipe(gulp.dest(distDir + '/js'));
 });
 

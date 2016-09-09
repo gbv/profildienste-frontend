@@ -1,27 +1,43 @@
-pdApp.service('LogoutService', ['$window', '$rootScope', function ($window, $rootScope) {
+pdApp.service('LogoutService', ['$window', '$rootScope', '$injector', '$location', function ($window, $rootScope, $injector, $location) {
 
-    var hasInfo = false;
     var info;
+
+    var openModal = false;
+    this.forceLogout = function (){
+        this.destroySession('Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an um fortzufahren.');
+
+        if (!openModal) {
+            var modalInstance = $injector.get('$uibModal').open({
+                templateUrl: 'errorModal.html',
+                controller: 'ErrorModalCtrl',
+                backdrop: 'static',
+                keyboard: false
+            });
+
+            openModal = true;
+
+            modalInstance.result.then(function (whatever){
+                openModal = false;
+            });
+        }
+
+    };
 
     this.destroySession = function (reason) {
 
         if (reason !== undefined) {
-            hasInfo = true;
             info = reason;
         }
 
         $window.sessionStorage.removeItem('token');
         $rootScope.$broadcast('userLogout');
-    };
-
-    this.hasInfo = function () {
-        var tmp = hasInfo;
-        hasInfo = false;
-        return tmp;
+        $location.path('/');
     };
 
     this.getInfo = function () {
-        return info;
+        var ret = info;
+        info = '';
+        return ret;
     };
 
 }]);
