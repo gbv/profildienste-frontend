@@ -24,17 +24,8 @@ pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams',
     this.submitLogin = function () {
 
 
-        if ($scope.user === undefined) {
-            $scope.userValid = false;
-        } else {
-            $scope.userValid = true;
-        }
-
-        if ($scope.pass === undefined || $scope.pass.trim() === '') {
-            $scope.passValid = false;
-        } else {
-            $scope.passValid = true;
-        }
+        $scope.userValid = $scope.user !== undefined;
+        $scope.passValid = !($scope.pass === undefined || $scope.pass.trim() === '');
 
         if (!$scope.userValid || !$scope.passValid) {
             return;

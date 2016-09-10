@@ -80,7 +80,7 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
         }).then(function (resp) {
             Notification.success('Ihre abgelehnten Titel wurden erfolgreich gelöscht.');
             $location.path('/main');
-        }, function (err){
+        }, function (err) {
             if (err) {
                 Notification.error(err);
             }

@@ -3,7 +3,7 @@ pdApp.service('LogoutService', ['$window', '$rootScope', '$injector', '$location
     var info;
 
     var openModal = false;
-    this.forceLogout = function (){
+    this.forceLogout = function () {
         this.destroySession('Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an um fortzufahren.');
 
         if (!openModal) {
@@ -16,7 +16,7 @@ pdApp.service('LogoutService', ['$window', '$rootScope', '$injector', '$location
 
             openModal = true;
 
-            modalInstance.result.then(function (whatever){
+            modalInstance.result.then(function () {
                 openModal = false;
             });
         }
