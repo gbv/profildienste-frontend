@@ -4,8 +4,8 @@ pdApp.controller('LandingController', ['$scope', 'LibraryService', '$location', 
         $location.path('/main');
     }
 
-    LibraryService.getLibraries().then(function (data) {
-        $scope.libraries = data.libs;
+    LibraryService.getLibraries().then(function (resp) {
+        $scope.libraries = resp.data.data;
     }, function (err) {
         if (err) {
             Notification.error(err);

@@ -34,6 +34,10 @@ pdApp.service('LogoutService', ['$window', '$rootScope', '$injector', '$location
         $location.path('/');
     };
 
+    this.showMaintenance = function () {
+        $location.path('/maintenance');
+    };
+
     this.getInfo = function () {
         var ret = info;
         info = '';

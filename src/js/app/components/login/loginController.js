@@ -1,9 +1,9 @@
 pdApp.controller('LoginController', ['$scope', 'LibraryService', '$routeParams', '$location', 'LoginService', 'Notification', function ($scope, LibraryService, $routeParams, $location, LoginService, Notification) {
 
-    LibraryService.getLibraries().then(function (data) {
-        for (var i = 0; i < data.libs.length; i++) {
-            if (data.libs[i].isil == $routeParams.isil) {
-                $scope.library = data.libs[i];
+    LibraryService.getLibraries().then(function (resp) {
+        for (var i = 0; i < resp.data.data.length; i++) {
+            if (resp.data.data[i].isil == $routeParams.isil) {
+                $scope.library = resp.data.data[i];
                 break;
             }
         }

@@ -1,6 +1,23 @@
 pdApp.config(['$routeProvider', '$locationProvider',
     function ($routeProvider, $locationProvider) {
 
+        // Maintenance function
+        var maintenanceCheck = function ($http, $location, $q) {
+
+            var deferred = $q.defer();
+            $http.get('/api/status').then(function () {
+                console.log('successful status resp');
+                deferred.reject();
+                $location.path('/');
+            }, function () {
+                console.log('errornous status resp');
+                deferred.resolve();
+            });
+
+            return deferred.promise;
+        };
+        maintenanceCheck.$inject = ['$http', '$location', '$q'];
+
         // Authentication function
         var checkAuth = function ($location, $q, $window, LogoutService) {
             var deferred = $q.defer();
@@ -48,6 +65,9 @@ pdApp.config(['$routeProvider', '$locationProvider',
         }).when('/order', {
             templateUrl: '/order/orderView.html',
             resolve: {checkAuth: checkAuth}
+        }).when('/maintenance', {
+            templateUrl: '/maintenance/maintenanceView.html',
+            resolve: {maintenanceCheck: maintenanceCheck}
         }).when('/', {
             templateUrl: '/landing/landingView.html'
         }).otherwise({

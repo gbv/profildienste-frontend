@@ -47,6 +47,13 @@ pdApp.factory('authInterceptor', ['$rootScope', '$q', '$window', 'LogoutService'
 
         responseError: function (rejection) {
 
+            if (rejection.status === 503) {
+                if (rejection.config.url !== '/api/status') {
+                    LogoutService.showMaintenance();
+                }
+                return $q.reject();
+            }
+
             if (rejection.status === 401) {
                 LogoutService.forceLogout();
                 return $q.reject();
