@@ -2,8 +2,7 @@
 
     <div ng-controller="AdvancedSearchController as AdvSearchCtrl">
         <uib-accordion>
-            <uib-accordion-group is-open="$parent.advancedSearchOpen" is-disabled="noSearchterm"
-                                 panel-class="advanced-search-panel">
+            <div uib-accordion-group is-open="$parent.advancedSearchOpen" is-disabled="noSearchterm" class="advanced-search-panel">
                 <uib-accordion-heading>
                     <i class="fa"
                        ng-class="{'fa-chevron-down': advancedSearchOpen, 'fa-chevron-right': !advancedSearchOpen}"
@@ -32,7 +31,7 @@
                         </button>
                     </div>
                 </div>
-            </uib-accordion-group>
+            </div>
         </uib-accordion>
     </div>
 

@@ -1,4 +1,10 @@
-pdApp.service('PageConfigService', ['Notification', function (Notification) {
+pdApp.service('PageConfigService', ['$rootScope', function ($rootScope) {
+
+    var currentView;
+
+    $rootScope.$on('siteChanged', function (ev, data) {
+        currentView = data.watchlist ? 'watchlist' : data.site;
+    });
 
     var views = {
         overview: {
@@ -6,14 +12,14 @@ pdApp.service('PageConfigService', ['Notification', function (Notification) {
             icon: 'fa-home',
             enableSelection: true,
             actionConfig: {
-                hideWatchlist: false,
+                hideWatchlist: true,
                 hideCart: true,
                 hideRejected: true
             },
             selection: {
                 cart: true,
                 removeCart: false,
-                watchlist: false,   //actually true when implemented
+                watchlist: true,
                 removeWatchlist: false,
                 reject: true,
                 removeReject: false
@@ -24,14 +30,14 @@ pdApp.service('PageConfigService', ['Notification', function (Notification) {
             icon: 'fa-shopping-cart',
             enableSelection: true,
             actionConfig: {
-                hideWatchlist: false,
+                hideWatchlist: true,
                 hideCart: true,
                 hideRejected: true
             },
             selection: {
                 cart: false,
                 removeCart: true,
-                watchlist: false,   //actually true when implemented
+                watchlist: true,
                 removeWatchlist: false,
                 reject: false,
                 removeReject: false
@@ -42,7 +48,7 @@ pdApp.service('PageConfigService', ['Notification', function (Notification) {
             icon: 'fa-tasks',
             enableSelection: false,
             actionConfig: {
-                hideWatchlist: false,
+                hideWatchlist: true,
                 hideCart: true,
                 hideRejected: true
             },
@@ -60,14 +66,14 @@ pdApp.service('PageConfigService', ['Notification', function (Notification) {
             icon: 'fa-minus-circle',
             enableSelection: true,
             actionConfig: {
-                hideWatchlist: false,
+                hideWatchlist: true,
                 hideCart: true,
                 hideRejected: true
             },
             selection: {
                 cart: false,
                 removeCart: false,
-                watchlist: false,
+                watchlist: true,
                 removeWatchlist: false,
                 reject: false,
                 removeReject: true
@@ -78,7 +84,7 @@ pdApp.service('PageConfigService', ['Notification', function (Notification) {
             icon: 'fa-check',
             enableSelection: false,
             actionConfig: {
-                hideWatchlist: false,
+                hideWatchlist: true,
                 hideCart: true,
                 hideRejected: true
             },
@@ -145,7 +151,7 @@ pdApp.service('PageConfigService', ['Notification', function (Notification) {
             selection: {
                 cart: true,
                 removeCart: false,
-                watchlist: false,
+                watchlist: true,
                 removeWatchlist: false,
                 reject: true,
                 removeReject: false
@@ -157,52 +163,57 @@ pdApp.service('PageConfigService', ['Notification', function (Notification) {
             enableSelection: true,
             actionConfig: {
                 hideWatchlist: true,
-                hideCart: false,
-                hideRejected: false
+                hideCart: true,
+                hideRejected: true
             },
             selection: {
-                cart: false,
+                cart: true,
                 removeCart: false,
                 watchlist: false,
-                removeWatchlist: false,
+                removeWatchlist: true,
                 reject: true,
                 removeReject: false
             }
         }
     };
 
-    this.getTitle = function (view) {
-        if (views.hasOwnProperty(view)) {
-            return views[view].title;
+    this.getTitle = function () {
+        if (views.hasOwnProperty(currentView)) {
+            return views[currentView].title;
         } else {
             return undefined;
         }
     };
 
-    this.getIcon = function (view) {
-        if (views.hasOwnProperty(view)) {
-            return views[view].icon;
+    this.getIcon = function () {
+        if (views.hasOwnProperty(currentView)) {
+            return views[currentView].icon;
         } else {
             return undefined;
         }
     };
 
-    this.getConfig = function (view) {
-        if (views.hasOwnProperty(view)) {
+    this.getConfig = function () {
+        if (views.hasOwnProperty(currentView)) {
             return {
-                actionConfig: views[view].actionConfig,
-                selectionEnabled: views[view].enableSelection
+                actionConfig: views[currentView].actionConfig,
+                selectionEnabled: views[currentView].enableSelection
             };
         } else {
             return undefined;
         }
     };
 
-    this.getSelectionOptions = function (view) {
-        if (views.hasOwnProperty(view)) {
-            return views[view].selection;
+    this.getSelectionOptions = function () {
+        if (views.hasOwnProperty(currentView)) {
+            return views[currentView].selection;
         } else {
             return undefined;
         }
     };
+
+    this.getCurrentView = function () {
+        return currentView;
+    };
+
 }]);

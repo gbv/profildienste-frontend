@@ -59,7 +59,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
     };
 
     this.addToWL = function (wl) {
-        WatchlistService.addToWatchlist($scope.item, wl).then(function (resp) {
+        WatchlistService.addToWatchlist([$scope.item.id], wl).then(function (resp) {
                 $scope.item.status.watchlist.watched = true;
                 $scope.item.status.watchlist.name = resp.data.data.additionalInfo.name;
                 $scope.item.status.watchlist.id = resp.data.data.additionalInfo.id;
@@ -76,7 +76,7 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
     };
 
     this.removeFromWL = function () {
-        WatchlistService.removeFromWatchlist($scope.item).then(function (data) {
+        WatchlistService.removeFromWatchlist([$scope.item.id], $scope.item.status.watchlist.id).then(function () {
                 $scope.item.status.watchlist.watched = false;
 
                 if ($scope.config.hideWatchlist) {

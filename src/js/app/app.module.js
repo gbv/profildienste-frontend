@@ -24,11 +24,12 @@ pdApp.filter('notEmpty', function () {
 
 pdApp.constant('version', '1.2.0');
 
-pdApp.controller('ErrorModalCtrl', ['$scope', '$uibModalInstance', '$location', '$rootScope', function ($scope, $uibModalInstance, $location, $rootScope) {
+pdApp.controller('ErrorModalCtrl', ['$scope', '$uibModalInstance', '$rootScope', '$window', function ($scope, $uibModalInstance, $rootScope, $window) {
 
     $scope.close = function () {
-        $uibModalInstance.close();
         $rootScope.token = undefined;
+        $uibModalInstance.close();
+        $window.location.reload();
     };
 
 }]);

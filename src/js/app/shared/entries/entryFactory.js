@@ -1,5 +1,5 @@
 // Load the entries
-pdApp.factory('Entries', ['$http', '$rootScope', 'SelectService', '$q', function ($http, $rootScope, SelectService, $q) {
+pdApp.factory('Entries', ['$http', '$rootScope', 'SelectService', '$q', 'Notification', function ($http, $rootScope, SelectService, $q, Notification) {
 
     // Entry object
     var Entries = function (site, id, title) {
@@ -39,9 +39,9 @@ pdApp.factory('Entries', ['$http', '$rootScope', 'SelectService', '$q', function
             url = '/api/' + this.site + '/' + this.id + '/page/' + this.page;
         }
 
-        $http.get(url).success(function (resp) {
+        $http.get(url).then(function (resp) {
 
-            var items = resp.data.titles;
+            var items = resp.data.data.titles;
 
             var selectAll = SelectService.viewSelected();
 
@@ -52,11 +52,11 @@ pdApp.factory('Entries', ['$http', '$rootScope', 'SelectService', '$q', function
 
             this.page++;
             this.loading = false;
-            this.more = resp.data.more;
-            this.total = resp.data.total;
+            this.more = resp.data.data.more;
+            this.total = resp.data.data.total;
 
-            if (resp.data.hasOwnProperty('additional')) {
-                this.additional.resolve(resp.data.additional);
+            if (resp.data.data.hasOwnProperty('additional')) {
+                this.additional.resolve(resp.data.data.additional);
             } else {
                 this.additional.reject('No additional information available');
             }
@@ -64,24 +64,11 @@ pdApp.factory('Entries', ['$http', '$rootScope', 'SelectService', '$q', function
             $rootScope.$broadcast('siteLoadingFinished', this.total);
 
 
-        }.bind(this));
-        // .bind(this)).error(function (data, status, headers, config) {
-        //
-        //     // TODO: Better error handling (check status code etc.)
-        //
-        //     /*
-        //      this.error = true;
-        //      this.errorMessage = data.message;
-        //      $rootScope.$broadcast('siteLoadingFinished', -1);
-        //      */
-        //
-        //     $uibModal.open({
-        //         templateUrl: 'errorModal.html',
-        //         controller: 'ErrorModalCtrl',
-        //         keyboard: false
-        //     });
-        //
-        // });
+        }.bind(this), function (err) {
+            if (err){
+                Notification.error(err);
+            }
+        });
     };
 
     // removes a given item from the item collection

@@ -75,6 +75,10 @@ pdApp.controller('MenuController',['$scope', '$rootScope', 'WatchlistService', '
         SelectService.selectionRemoveReject($scope.site);
     };
 
+    this.selectionRemoveFromWatchlist = function (){
+        SelectService.selectionRemoveFromWatchlist();
+    };
+
     this.search = function () {
         SearchService.setSearchterm($scope.searchterm, 'keyword');
         $location.path('search');
@@ -152,5 +156,9 @@ pdApp.controller('MenuController',['$scope', '$rootScope', 'WatchlistService', '
             }
         }
     });
+
+    this.selectionInWatchlist = function (){
+        SelectService.selectionAddToWatchlist();
+    };
 
 }]);

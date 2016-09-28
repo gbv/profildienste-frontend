@@ -1,4 +1,4 @@
-pdApp.service('CartService', ['$http', '$rootScope', function ($http, $rootScope) {
+pdApp.service('CartService', ['$http', '$rootScope', 'PageConfigService', function ($http, $rootScope, PageConfigService) {
 
 
     this.getCart = function () {
@@ -27,6 +27,12 @@ pdApp.service('CartService', ['$http', '$rootScope', function ($http, $rootScope
             this.getCart().then(function (resp) {
                 $rootScope.$broadcast('cartChange', resp);
             });
+
+            // if titles in a watchlist are moved into the cart, update the watchlist info
+            if (PageConfigService.getCurrentView() === 'watchlist') {
+                $rootScope.$broadcast('watchlistsNeedUpdate');
+            }
+
         }.bind(this));
 
         return req;
@@ -59,5 +65,11 @@ pdApp.service('CartService', ['$http', '$rootScope', function ($http, $rootScope
 
         return req;
     };
+
+    $rootScope.$on('cartNeedsUpdate', function (){
+        this.getCart().then(function (resp) {
+            $rootScope.$broadcast('cartChange', resp);
+        });
+    }.bind(this));
 
 }]);

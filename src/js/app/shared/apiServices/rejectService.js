@@ -1,4 +1,4 @@
-pdApp.service('RejectService', ['$http', '$rootScope', '$q', function ($http, $rootScope, $q) {
+pdApp.service('RejectService', ['$http', '$rootScope', 'PageConfigService', function ($http, $rootScope, PageConfigService) {
 
     this.addRejected = function (data, view) {
 
@@ -9,7 +9,7 @@ pdApp.service('RejectService', ['$http', '$rootScope', '$q', function ($http, $r
 
         var affected = (view === undefined || view === '') ? items : view;
 
-        return $http({
+        var req = $http({
             method: 'POST',
             url: '/api/rejected/add',
             data: $.param({
@@ -18,6 +18,14 @@ pdApp.service('RejectService', ['$http', '$rootScope', '$q', function ($http, $r
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
 
+        req.then(function (){
+            // if titles in a watchlist were rejected, update the watchlist info
+            if (PageConfigService.getCurrentView() === 'watchlist') {
+                $rootScope.$broadcast('watchlistsNeedUpdate');
+            }
+        });
+
+        return req;
     };
 
     this.removeRejected = function (data, view) {

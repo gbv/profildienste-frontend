@@ -1,17 +1,20 @@
-pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService', 'CartService', 'RejectService', function ($rootScope, Notification, PageConfigService, CartService, RejectService) {
+pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService', 'CartService', 'RejectService', 'WatchlistService', '$uibModal', function ($rootScope, Notification, PageConfigService, CartService, RejectService, WatchlistService, $uibModal) {
 
+    // TODO: Refactor this whole service since a lot of these methods share the same code
     var selected = [];
 
     var selectView = false;
     var selectAll = false;
 
-    var loading = false;
-
     $rootScope.$on('siteChanged', function (ev, data) {
         this.resetSelection();
         this.entries = data.entries;
+        this.siteData = data;
+
+        // load page config
         var site = data.watchlist ? 'watchlist' : data.site;
         this.config = PageConfigService.getConfig(site);
+
     }.bind(this));
 
     $rootScope.$on('siteLoadingFinished', function (ev, data) {
@@ -300,4 +303,81 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
                 this.loading = false;
             }.bind(this));
     };
+
+    this.selectionRemoveFromWatchlist = function () {
+
+        var affected = this.viewSelected() ? 'watchlist/' + this.siteData.id : this.getSelectionIds();
+        var watchlistId = this.siteData.watchlist ? this.siteData.id : undefined;
+
+        this.loading = true;
+
+        WatchlistService.removeFromWatchlist(affected, watchlistId).then(function () {
+
+                for (var i = 0; i < selected.length; i++) {
+                    selected[i].status.selected = false;
+                    selected[i].status.watchlist = false;
+                    if (this.config.actionConfig.hideWatchlist && !selectView) {
+                        this.entries.removeItem(selected[i]);
+                    }
+                }
+
+                if (this.config.actionConfig.hideWatchlist && selectView) {
+                    this.entries.items = [];
+                    this.entries.loadMore(true);
+                }
+
+                this.loading = false;
+                this.resetSelection();
+
+            }.bind(this),
+            function (err) {
+                if (err) {
+                    Notification.error(err);
+                }
+                this.loading = false;
+            }.bind(this));
+    };
+
+    this.selectionAddToWatchlist = function () {
+
+        var modalInstance = $uibModal.open({
+            templateUrl: '/watchlist/watchlistSelectionModal.html',
+            controller: 'WatchlistSelectionModalController',
+            keyboard: true
+        });
+
+        modalInstance.result.then(function (watchlistId) {
+
+            var affected = this.viewSelected() ? this.siteData.site : this.getSelectionIds();
+
+            this.loading = true;
+
+            WatchlistService.addToWatchlist(affected, watchlistId).then(function () {
+
+                    for (var i = 0; i < selected.length; i++) {
+                        selected[i].status.selected = false;
+                        selected[i].status.watchlist = false;
+                        if (this.config.actionConfig.hideWatchlist && !selectView) {
+                            this.entries.removeItem(selected[i]);
+                        }
+                    }
+
+                    if (this.config.actionConfig.hideWatchlist && selectView) {
+                        this.entries.items = [];
+                        this.entries.loadMore(true);
+                    }
+
+                    this.loading = false;
+                    this.resetSelection();
+
+                }.bind(this),
+                function (err) {
+                    if (err) {
+                        Notification.error(err);
+                    }
+                    this.loading = false;
+                }.bind(this));
+        }.bind(this));
+    };
+
 }]);

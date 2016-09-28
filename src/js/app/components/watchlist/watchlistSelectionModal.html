@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <h4 class="modal-title">Merkliste auswählen</h4>
+</div>
+<div class="modal-body">
+    <p>Wählen Sie die Merkliste aus, in die die ausgewählten Titel verschoben werden sollen.</p>
+    <uib-tabset active="selectedWatchlist" vertical="true" type="pills">
+        <uib-tab ng-repeat="watchlist in watchlists" index="watchlist.id" heading="{{watchlist.name}}"></uib-tab>
+    </uib-tabset>
+</div>
+<div class="modal-footer">
+    <button class="btn" ng-click="cancel()">Abbrechen</button>
+    <button class="btn btn-primary" ng-disabled="!selectedWatchlist" ng-click="moveSelection()">Auswahl verschieben</button>
+</div>
