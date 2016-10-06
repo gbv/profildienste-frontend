@@ -13,16 +13,8 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
 
         $scope.site = site.site;
 
-        if (!site.watchlist) {
-            $scope.title = PageConfigService.getTitle(site.site);
-            $scope.icon = PageConfigService.getIcon(site.site);
-
-        } else {
-
-            $scope.title = site.site;
-            $scope.icon = PageConfigService.getIcon('watchlist');
-
-        }
+        $scope.title = site.watchlist ? site.site : PageConfigService.getTitle();
+        $scope.icon = PageConfigService.getIcon();
 
         $scope.total = 0;
     });
@@ -143,6 +135,11 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
 
     this.showEntriesSelectedInformation = function () {
         return !$scope.loading && $scope.selection;
+    };
+
+    // used to display the special case when items in a search result are selected
+    this.selectionInSearchResult = function (){
+        return $scope.selection && this.showSearchResults();
     };
 
 }]);

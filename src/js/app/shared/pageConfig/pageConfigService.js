@@ -158,7 +158,7 @@ pdApp.service('PageConfigService', ['$rootScope', function ($rootScope) {
             }
         },
         watchlist: {
-            title: 'Merkliste', //unused
+            title: 'Merkliste',
             icon: 'fa-star',
             enableSelection: true,
             actionConfig: {

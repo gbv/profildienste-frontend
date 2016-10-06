@@ -48,12 +48,12 @@
                         <i class="fa fa-asterisk fa-lg"></i> Ansicht auswählen
                     </a>
                 </li>
-                <li ng-show="showSelMenu" class="dropdown">
-                    <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                <li ng-show="showSelMenu" class="dropdown" uib-dropdown is-open="openSelectionActions">
+                    <a href="" class="dropdown-toggle" uib-dropdown-toggle>
                         <i class="fa fa-caret-square-o-down fa-lg"></i> Aktionen
                         <b class="caret"></b>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" uib-dropdown-menu role="menu">
                         <li class="dropdown-header">Ausgewählte Titel...</li>
                         <li ng-show="selection.cart">
                             <a href="" ng-click="MenuCtrl.selectionInCart()">

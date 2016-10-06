@@ -1,7 +1,8 @@
 pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService', 'CartService', 'RejectService', 'WatchlistService', '$uibModal', function ($rootScope, Notification, PageConfigService, CartService, RejectService, WatchlistService, $uibModal) {
 
     // TODO: Refactor this whole service since a lot of these methods share the same code
-    var selected = [];
+
+    var selected = []; // stores all selected items
 
     var selectView = false;
     var selectAll = false;
@@ -12,8 +13,7 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
         this.siteData = data;
 
         // load page config
-        var site = data.watchlist ? 'watchlist' : data.site;
-        this.config = PageConfigService.getConfig(site);
+        this.config = PageConfigService.getConfig();
 
     }.bind(this));
 
@@ -25,14 +25,6 @@ pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService
             }
         }
     }.bind(this));
-
-    $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
-        this.resetSelection();
-    }.bind(this));
-
-    this.getSelected = function () {
-        return selected;
-    };
 
     this.viewSelected = function () {
         return selectView;

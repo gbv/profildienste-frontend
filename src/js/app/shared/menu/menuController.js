@@ -1,6 +1,7 @@
-pdApp.controller('MenuController',['$scope', '$rootScope', 'WatchlistService', 'CartService', 'UserService', '$uibModal', 'SelectService', 'LoginService', 'SearchService', '$location', 'PageConfigService', function ($scope, $rootScope, WatchlistService, CartService, UserService, $uibModal, SelectService, LoginService, SearchService, $location, PageConfigService) {
+pdApp.controller('MenuController',['$scope', '$rootScope', 'WatchlistService', 'CartService', 'UserService', '$uibModal', 'SelectService', 'LoginService', 'SearchService', '$location', 'PageConfigService', '$timeout', function ($scope, $rootScope, WatchlistService, CartService, UserService, $uibModal, SelectService, LoginService, SearchService, $location, PageConfigService, $timeout) {
 
     $scope.pricePopover = '/menu/pricePopover.html';
+    $scope.openSelectionActions = true;
 
     LoginService.whenLoggedIn().then(function () {
 
@@ -39,8 +40,15 @@ pdApp.controller('MenuController',['$scope', '$rootScope', 'WatchlistService', '
     $scope.menuChangePossible = false;
 
     $rootScope.$on('selectionChange', function (e, data) {
+        var selectionMenuPreviouslyShown = $scope.showSelMenu;
         $scope.showSelMenu = data.type === 'view' || (data.type === 'item' && data.selected > 0);
         $scope.menuChangePossible = $scope.showSelMenu;
+
+        if (!selectionMenuPreviouslyShown && $scope.showSelMenu){
+            $timeout(function () {
+                $scope.openSelectionActions = true;
+            }, 50);
+        }
     });
 
     this.toggleSelMenu = function () {

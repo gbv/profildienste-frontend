@@ -23,8 +23,10 @@
                         <span ng-show="HeaderCtrl.showOrderedConfirmation()">Folgende Titel werden weitergeleitet</span>
                         <span ng-show="HeaderCtrl.showEntriesInformation()">{{total}} Datensätze in dieser Ansicht</span>
                         <span ng-show="HeaderCtrl.showEntriesSelectedInformation()">
+                            <span ng-show="HeaderCtrl.selectionInSearchResult()">(</span>
                             <span ng-show="selection == 'item'">{{selected}} von {{total}} Datensätzen ausgewählt</span>
                             <span ng-show="selection == 'view'">Alle Datensätze dieser Ansicht ausgewählt</span>
+                            <span ng-show="HeaderCtrl.selectionInSearchResult()">)</span>
                         </span>
                         <span ng-show="HeaderCtrl.showManageWatchlists()">Sie verfügen über {{total}} Merklisten</span>
                         <span ng-show="loading"><i class="fa fa-spinner fa-spin"></i> Laden...</span>
