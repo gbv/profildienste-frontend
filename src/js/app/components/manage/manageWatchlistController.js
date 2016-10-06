@@ -1,9 +1,5 @@
 pdApp.controller('ManageWatchlistController', ['$scope', 'WatchlistService', '$location', '$rootScope', 'Notification', function ($scope, WatchlistService, $location, $rootScope, Notification) {
 
-    $rootScope.$on('defaultWatchlistChange', function (e, data) {
-        // TODO
-    });
-
     $scope.editMode = false;
     $scope.name = $scope.watchlist.name;
 

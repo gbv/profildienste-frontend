@@ -17,10 +17,6 @@ pdApp.controller('ManageController', ['$scope', 'WatchlistService', '$rootScope'
         $scope.watchlists = data;
     });
 
-    $rootScope.$on('defaultWatchlistChange', function (e, data) {
-        // TODO
-    });
-
     this.addNewWatchlist = function () {
 
         if ($scope.newName === undefined || $scope.newName === '') {
