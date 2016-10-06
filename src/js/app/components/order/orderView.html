@@ -17,10 +17,11 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="order in orderlist">
-                            <td>{{order.titel}}</td>
+                            <td>{{order.title}}</td>
+
                             <!-- Lieferant -->
-                            <td ng-show="order.lieft | notEmpty">{{order.lieft}}</td>
-                            <td ng-hide="order.lieft | notEmpty" class="auto-default">{{defaults.lft}}
+                            <td ng-show="order.supplier.setByUser">{{order.supplier.value}}</td>
+                            <td ng-hide="order.supplier.setByUser" class="auto-default">{{order.supplier.value}}
                                 <i class="fa fa-question-circle auto-default-help"
                                    uib-popover-html="defaultValueHelpText"
                                    popover-placement="bottom"
@@ -29,8 +30,8 @@
                             </td>
 
                             <!-- Budget -->
-                            <td ng-show="order.budget | notEmpty">{{order.budget}}</td>
-                            <td ng-hide="order.budget | notEmpty" class="auto-default">{{defaults.budget}}
+                            <td ng-show="order.budget.setByUser">{{order.budget.value}}</td>
+                            <td ng-hide="order.budget.setByUser" class="auto-default">{{order.budget.value}}
                                 <i class="fa fa-question-circle auto-default-help"
                                    uib-popover-html="defaultValueHelpText"
                                    popover-placement="bottom"
@@ -39,8 +40,8 @@
                             </td>
 
                             <!-- Selcode -->
-                            <td ng-show="order.selcode | notEmpty">{{order.selcode}}</td>
-                            <td ng-hide="order.selcode | notEmpty" class="auto-default">{{defaults.selcode}}
+                            <td ng-show="order.selcode.setByUser">{{order.selcode.value}}</td>
+                            <td ng-hide="order.selcode.setByUser" class="auto-default">{{order.selcode.value}}
                                 <i class="fa fa-question-circle auto-default-help"
                                    uib-popover-html="defaultValueHelpText"
                                    popover-placement="bottom"
@@ -50,8 +51,8 @@
 
 
                             <!-- SSG-Nr. -->
-                            <td ng-show="order.ssgnr | notEmpty">{{order.ssgnr}}</td>
-                            <td ng-hide="order.ssgnr | notEmpty" class="auto-default">{{defaults.ssgnr}}
+                            <td ng-show="order.ssgnr.setByUser">{{order.ssgnr.value}}</td>
+                            <td ng-hide="order.ssgnr.setByUser" class="auto-default">{{order.ssgnr.value}}
                                 <i class="fa fa-question-circle auto-default-help"
                                    uib-popover-html="defaultValueHelpText"
                                    popover-placement="bottom"
@@ -82,7 +83,7 @@
         <div class="row">
             <div class="col-md-12">
                 <ul class="nav nav-pills nav-stacked orders">
-                    <li ng-repeat="order in orderlist"><a href=""><i class="fa fa-caret-right orders-caret"></i>{{order.titel}}</a>
+                    <li ng-repeat="order in orderlist"><a href=""><i class="fa fa-caret-right orders-caret"></i>{{order.title}}</a>
                     </li>
                 </ul>
             </div>

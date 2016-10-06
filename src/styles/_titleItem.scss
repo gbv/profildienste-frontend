@@ -1,0 +1,97 @@
+/*
+|--------------------------------------------------------------------------
+| Styles for the title view
+|--------------------------------------------------------------------------
+*/
+
+.title-box {
+  border-bottom: 1px solid #eee;
+
+}
+
+.title-box h2, .title-box h3 {
+  padding: 0;
+  margin: 0;
+  display: inline;
+}
+
+.title-box h3 {
+  color: $secondary;
+}
+
+.btn-group {
+  margin-bottom: 10px;
+}
+
+.selected {
+  background-color: $selected;
+}
+
+.title-price {
+  height: 75px;
+  overflow: auto;
+}
+
+.cover {
+  display: inline-block;
+  border: 1px solid $primary;
+  margin-top: 8px;
+  margin-left: -12px;
+}
+
+.xt-list {
+  padding: 3px;
+}
+
+.title-content {
+  padding-top: 4px;
+}
+
+.item-select {
+  color: $select-color !important;
+  outline: 0 !important;
+}
+
+.item-remove {
+  color: $remove-color !important;
+}
+
+.itemSelected {
+  color: $primary !important;
+}
+
+@keyframes saved {
+  0% {
+    background-color: transparent
+  }
+  50% {
+    background-color: $save-success-color
+  }
+  100% {
+    background-color: transparent
+  }
+}
+
+.saved {
+  animation-name: saved;
+  animation-duration: 2.0s;
+}
+
+.price {
+  float: right;
+  color: $secondary;
+  font-size: 16px;
+  max-height: 100px;
+  min-height: 50px;
+  overflow: auto;
+  margin-bottom: 10px;
+}
+
+.order-input {
+  width: 80px !important;
+  display: inline-block;
+}
+
+.cover-section {
+  overflow: auto;
+}

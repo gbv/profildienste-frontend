@@ -1,111 +1,75 @@
-pdApp.service('CartService', ['$http', '$rootScope', '$q', 'LoginService', function ($http, $rootScope, $q, LoginService) {
+pdApp.service('CartService', ['$http', '$rootScope', 'PageConfigService', function ($http, $rootScope, PageConfigService) {
 
-  var defCart = $q.defer();
 
-  LoginService.whenLoggedIn().then(function (data) {
-    $http.get('/api/user/cart').success(function (json) {
-      if (!json.success) {
-        defCart.reject(json.message);
-      } else {
+    this.getCart = function () {
+        return $http.get('/api/cart/info');
+    };
 
-        this.data = json.data;
+    this.addToCart = function (data, view) {
 
-        defCart.resolve({
-          cart: json.data.cart,
-          price: json.data.price
+        var items = data;
+        if (data.constructor !== Array) {
+            items = [data.id];
+        }
+
+        var affected = (view === undefined || view === '') ? items : view;
+
+        var req = $http({
+            method: 'POST',
+            url: '/api/cart/add',
+            data: $.param({
+                affected: affected
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
 
-      }
-    }.bind(this)).error(function (reason) {
-      defCart.reject(reason);
-    });
-  }.bind(this));
+        req.then(function () {
+            this.getCart().then(function (resp) {
+                $rootScope.$broadcast('cartChange', resp);
+            });
 
-  this.getCart = function () {
-    if (this.data === undefined) {
-      return defCart.promise;
-    } else {
-      var d = $q.defer();
-      d.resolve({
-        cart: this.data.cart,
-        price: this.data.price
-      });
-      return d.promise;
-    }
-  };
+            // if titles in a watchlist are moved into the cart, update the watchlist info
+            if (PageConfigService.getCurrentView() === 'watchlist') {
+                $rootScope.$broadcast('watchlistsNeedUpdate');
+            }
 
-  this.addToCart = function (data, view) {
+        }.bind(this));
 
-    var def = $q.defer();
+        return req;
+    };
 
-    var items = data;
-    if (data.constructor !== Array) {
-      items = [data.id];
-    }
 
-    var v = (view === undefined) ? '' : view;
+    this.removeFromCart = function (data, view) {
 
-    $http({
-      method: 'POST',
-      url: '/api/cart/add',
-      data: $.param({
-        id: items,
-        view: v
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
-      if (!json.success) {
-        def.reject(json.errormsg);
-      } else {
+        var items = data;
+        if (data.constructor !== Array) {
+            items = [data.id];
+        }
 
-        def.resolve({
-          order: json.order
+        var affected = (view === undefined || view === '') ? items : view;
+
+        var req = $http({
+            method: 'POST',
+            url: '/api/cart/remove',
+            data: $.param({
+                affected: affected
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
 
-        $rootScope.$broadcast('cartChange', json.content, json.price);
+        req.then(function () {
+            this.getCart().then(function (resp) {
+                $rootScope.$broadcast('cartChange', resp);
+            });
+        }.bind(this));
 
-      }
+        return req;
+    };
+
+    $rootScope.$on('cartNeedsUpdate', function (){
+        this.getCart().then(function (resp) {
+            $rootScope.$broadcast('cartChange', resp);
+        });
     }.bind(this));
-
-    return def.promise;
-  };
-
-
-  this.removeFromCart = function (data, view) {
-
-    var def = $q.defer();
-
-    var items = data;
-    if (data.constructor !== Array) {
-      items = [data.id];
-    }
-
-    var v = (view === undefined) ? '' : view;
-
-    $http({
-      method: 'POST',
-      url: '/api/cart/remove',
-      data: $.param({
-        id: items,
-        view: v
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
-      if (!json.success) {
-        def.reject(json.errormsg);
-      } else {
-
-        this.data.cart = json.content;
-        this.data.price = json.price;
-
-        $rootScope.$broadcast('cartChange', this.data.cart, this.data.price);
-
-        def.resolve();
-
-      }
-    }.bind(this));
-
-    return def.promise;
-  };
 
 }]);

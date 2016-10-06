@@ -1,21 +1,21 @@
 pdApp.controller('LandingController', ['$scope', 'LibraryService', '$location', 'LogoutService', '$window', 'Notification', function ($scope, LibraryService, $location, LogoutService, $window, Notification) {
 
-  if ($window.sessionStorage.token) {
-    $location.path('/main');
-  }
+    if ($window.sessionStorage.token) {
+        $location.path('/main');
+    }
 
-  LibraryService.getLibraries().then(function (data) {
-    $scope.libraries = data.libs;
-  }, function (reason) {
-    Notification.error(reason);
-  });
+    LibraryService.getLibraries().then(function (resp) {
+        $scope.libraries = resp.data.data;
+    }, function (err) {
+        if (err) {
+            Notification.error(err);
+        }
+    });
 
-  $scope.openLogin = function (isil) {
-    $location.path('login/' + isil);
-  };
+    $scope.openLogin = function (isil) {
 
+        $location.path('login/' + isil);
+    };
 
-  $scope.hasInfo = LogoutService.hasInfo();
-  $scope.info = LogoutService.getInfo();
-
+    $scope.info = LogoutService.getInfo();
 }]);

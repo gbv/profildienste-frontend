@@ -1,27 +1,47 @@
-pdApp.service('LogoutService', ['$window', '$rootScope', function ($window, $rootScope) {
+pdApp.service('LogoutService', ['$window', '$rootScope', '$injector', '$location', function ($window, $rootScope, $injector, $location) {
 
-  var hasInfo = false;
-  var info;
+    var info;
 
-  this.destroySession = function (reason) {
+    var openModal = false;
+    this.forceLogout = function () {
+        this.destroySession('Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an um fortzufahren.');
 
-    if (reason !== undefined) {
-      hasInfo = true;
-      info = reason;
-    }
+        if (!openModal) {
+            var modalInstance = $injector.get('$uibModal').open({
+                templateUrl: 'errorModal.html',
+                controller: 'ErrorModalCtrl',
+                backdrop: 'static',
+                keyboard: false
+            });
 
-    $window.sessionStorage.removeItem('token');
-    $rootScope.$broadcast('userLogout');
-  };
+            openModal = true;
 
-  this.hasInfo = function () {
-    var tmp = hasInfo;
-    hasInfo = false;
-    return tmp;
-  };
+            modalInstance.result.then(function () {
+                openModal = false;
+            });
+        }
 
-  this.getInfo = function () {
-    return info;
-  };
+    };
+
+    this.destroySession = function (reason) {
+
+        if (reason !== undefined) {
+            info = reason;
+        }
+
+        $window.sessionStorage.removeItem('token');
+        $rootScope.$broadcast('userLogout');
+        $location.path('/');
+    };
+
+    this.showMaintenance = function () {
+        $location.path('/maintenance');
+    };
+
+    this.getInfo = function () {
+        var ret = info;
+        info = '';
+        return ret;
+    };
 
 }]);

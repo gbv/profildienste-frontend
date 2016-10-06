@@ -1,279 +1,375 @@
-pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService', 'CartService', 'RejectService', function ($rootScope, Notification, PageConfigService, CartService, RejectService) {
+pdApp.service('SelectService', ['$rootScope', 'Notification', 'PageConfigService', 'CartService', 'RejectService', 'WatchlistService', '$uibModal', function ($rootScope, Notification, PageConfigService, CartService, RejectService, WatchlistService, $uibModal) {
 
-  var selected = [];
+    // TODO: Refactor this whole service since a lot of these methods share the same code
 
-  var selectView = false;
-  var selectAll = false;
+    var selected = []; // stores all selected items
 
-  var loading = false;
+    var selectView = false;
+    var selectAll = false;
 
-  $rootScope.$on('siteChanged', function (ev, data) {
-    this.resetSelection();
-    this.entries = data.entries;
-    this.config = PageConfigService.getConfig(data.site);
-  }.bind(this));
+    $rootScope.$on('siteChanged', function (ev, data) {
+        this.resetSelection();
+        this.entries = data.entries;
+        this.siteData = data;
 
-  $rootScope.$on('siteLoadingFinished', function (ev, data) {
-    if (selectView) {
-      selected = [];
-      for (var i = 0; i < this.entries.items.length; i++) {
-        selected.push(this.entries.items[i]);
-      }
-    }
-  }.bind(this));
+        // load page config
+        this.config = PageConfigService.getConfig();
 
-  $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
-    this.resetSelection();
-  }.bind(this));
-
-  this.getSelected = function () {
-    return selected;
-  };
-
-  this.viewSelected = function () {
-    return selectView;
-  };
-
-  this.getSelectedNumber = function () {
-    if (selectView) {
-      return this.entries.total;
-    } else {
-      return selected.length;
-    }
-  };
-
-  this.selectAll = function () {
-
-    if (this.loading) {
-      return;
-    }
-
-    this.resetSelection(false);
-    selectView = false;
-    selectAll = true;
-    for (var i = 0; i < this.entries.items.length; i++) {
-      this.entries.items[i].status.selected = true;
-      selected.push(this.entries.items[i]);
-    }
-
-    $rootScope.$broadcast('allSelected');
-  };
-
-  this.selectView = function () {
-
-    if (this.loading) {
-      return;
-    }
-
-    this.resetSelection(false);
-    selectAll = false;
-    selectView = true;
-    for (var i = 0; i < this.entries.items.length; i++) {
-      this.entries.items[i].status.selected = true;
-      selected.push(this.entries.items[i]);
-    }
-
-    $rootScope.$broadcast('viewSelected');
-  };
-
-
-  this.resetSelection = function (hardReset) {
-
-    if (this.loading) {
-      return;
-    }
-
-    if (typeof hardReset === 'undefined' || hardReset) {
-      selectView = false;
-      selectAll = false;
-    }
-
-    for (var i = 0; i < selected.length; i++) {
-      selected[i].status.selected = false;
-    }
-
-    selected = [];
-    $rootScope.$broadcast('allDeselected');
-
-  };
-
-  this.select = function (item) {
-
-    if (this.loading) {
-      return;
-    }
-
-    if (item.status.selected) {
-      return;
-    }
-    selected.push(item);
-    item.status.selected = true;
-    $rootScope.$broadcast('itemSelected');
-  };
-
-  this.deselect = function (item) {
-
-    if (this.loading) {
-      return;
-    }
-
-    var ind = selected.indexOf(item);
-    if (ind < 0) {
-      return;
-    }
-
-    selected.splice(ind, 1);
-    item.status.selected = false;
-    selectView = false;
-
-    $rootScope.$broadcast('itemDeselected');
-  };
-
-  this.getSelectionIds = function () {
-    var ids = [];
-    for (var i = 0; i < selected.length; i++) {
-      ids.push(selected[i].id);
-    }
-    return ids;
-  };
-
-  this.selectionInCart = function (site) {
-
-    var s = '';
-    var ids = [];
-    if (selectView) {
-      s = site;
-    } else {
-      ids = this.getSelectionIds();
-    }
-
-    this.loading = true;
-    CartService.addToCart(ids, s).then(function () {
-
-      for (var i = 0; i < selected.length; i++) {
-        selected[i].status.selected = false;
-        if (this.config.actionConfig.hideCart && !selectView) {
-          this.entries.removeItem(selected[i]);
-        }
-      }
-
-      if (this.config.actionConfig.hideCart && selectView) {
-        this.entries.items = [];
-        this.entries.loadMore();
-      }
-
-      this.loading = false;
-      this.resetSelection();
-    }.bind(this), function (reason) {
-      Notification.error(reason);
-      this.loading = false;
     }.bind(this));
-  };
 
-  this.selectionRemoveFromCart = function (site) {
-
-    var s = '';
-    var ids = [];
-    if (selectView) {
-      s = site;
-    } else {
-      ids = this.getSelectionIds();
-    }
-
-    this.loading = true;
-    CartService.removeFromCart(ids, s).then(function () {
-
-      for (var i = 0; i < selected.length; i++) {
-        selected[i].status.selected = false;
-        if (this.config.actionConfig.hideCart && !selectView) {
-          this.entries.removeItem(selected[i]);
+    $rootScope.$on('siteLoadingFinished', function (ev, data) {
+        if (selectView) {
+            selected = [];
+            for (var i = 0; i < this.entries.items.length; i++) {
+                selected.push(this.entries.items[i]);
+            }
         }
-      }
-
-      if (this.config.actionConfig.hideCart && selectView) {
-        this.entries.items = [];
-        this.entries.loadMore();
-      }
-
-      this.loading = false;
-      this.resetSelection();
-    }.bind(this), function (reason) {
-      Notification.error(reason);
-      this.loading = false;
     }.bind(this));
-  };
 
-  this.selectionReject = function (site) {
+    this.viewSelected = function () {
+        return selectView;
+    };
 
-    var s = '';
-    var ids = [];
-    if (selectView) {
-      s = site;
-    } else {
-      ids = this.getSelectionIds();
-    }
+    this.getSelectedNumber = function () {
+        if (selectView) {
+            return this.entries.total;
+        } else {
+            return selected.length;
+        }
+    };
 
-    this.loading = true;
-    RejectService.addRejected(ids, s).then(function () {
+    this.selectAll = function () {
+
+        if (this.loading) {
+            return;
+        }
+
+        this.resetSelection(false);
+        selectView = false;
+        selectAll = true;
+        for (var i = 0; i < this.entries.items.length; i++) {
+            this.entries.items[i].status.selected = true;
+            selected.push(this.entries.items[i]);
+        }
+
+        $rootScope.$broadcast('selectionChange', {
+            type: 'item',
+            selected: selected.length
+        });
+    };
+
+    this.selectView = function () {
+
+        if (this.loading) {
+            return;
+        }
+
+        this.resetSelection(false);
+        selectAll = false;
+        selectView = true;
+        for (var i = 0; i < this.entries.items.length; i++) {
+            this.entries.items[i].status.selected = true;
+            selected.push(this.entries.items[i]);
+        }
+
+        $rootScope.$broadcast('selectionChange', {
+            type: 'view'
+        });
+    };
+
+
+    this.resetSelection = function (hardReset) {
+
+        if (this.loading) {
+            return;
+        }
+
+        if (typeof hardReset === 'undefined' || hardReset) {
+            selectView = false;
+            selectAll = false;
+        }
 
         for (var i = 0; i < selected.length; i++) {
-          selected[i].status.selected = false;
-          if (this.config.actionConfig.hideRejected && !selectView) {
-            this.entries.removeItem(selected[i]);
-          }
+            selected[i].status.selected = false;
         }
 
-        if (this.config.actionConfig.hideRejected && selectView) {
-          this.entries.items = [];
-          this.entries.loadMore();
+        selected = [];
+
+        $rootScope.$broadcast('selectionChange', {
+            type: 'none'
+        });
+    };
+
+    this.select = function (item) {
+
+        if (this.loading) {
+            return;
         }
 
-        this.loading = false;
-        this.resetSelection();
+        if (item.status.selected) {
+            return;
+        }
+        selected.push(item);
+        item.status.selected = true;
 
-      }.bind(this),
-      function (reason) {
-        Notification.error(reason);
-        this.loading = false;
-      }.bind(this));
+        $rootScope.$broadcast('selectionChange', {
+            type: 'item',
+            selected: selected.length
+        });
+    };
 
-  };
+    this.deselect = function (item) {
 
-  this.selectionRemoveReject = function (site) {
+        if (this.loading) {
+            return;
+        }
 
-    var s = '';
-    var ids = [];
-    if (selectView) {
-      s = site;
-    } else {
-      ids = this.getSelectionIds();
-    }
+        var ind = selected.indexOf(item);
+        if (ind < 0) {
+            return;
+        }
 
-    this.loading = true;
-    RejectService.removeRejected(ids, s).then(function () {
+        selected.splice(ind, 1);
+        item.status.selected = false;
+        selectView = false;
 
+        $rootScope.$broadcast('selectionChange', {
+            type: 'item',
+            selected: selected.length
+        });
+    };
+
+    this.getSelectionIds = function () {
+        var ids = [];
         for (var i = 0; i < selected.length; i++) {
-          selected[i].status.selected = false;
-          if (this.config.actionConfig.hideRejected && !selectView) {
-            this.entries.removeItem(selected[i]);
-          }
+            ids.push(selected[i].id);
+        }
+        return ids;
+    };
+
+    this.selectionInCart = function (site) {
+
+        var s = '';
+        var ids = [];
+        if (selectView) {
+            s = site;
+        } else {
+            ids = this.getSelectionIds();
         }
 
-        if (this.config.actionConfig.hideRejected && selectView) {
-          this.entries.items = [];
-          this.entries.loadMore();
+        this.loading = true;
+        CartService.addToCart(ids, s).then(function () {
+
+            for (var i = 0; i < selected.length; i++) {
+                selected[i].status.selected = false;
+                selected[i].status.cart = true;
+                if (this.config.actionConfig.hideCart && !selectView) {
+                    this.entries.removeItem(selected[i]);
+                }
+            }
+
+            if (this.config.actionConfig.hideCart && selectView) {
+                this.entries.items = [];
+                this.entries.loadMore(true);
+            }
+
+            this.loading = false;
+            this.resetSelection();
+        }.bind(this), function (err) {
+            if (err) {
+                Notification.error(err);
+            }
+            this.loading = false;
+        }.bind(this));
+    };
+
+    this.selectionRemoveFromCart = function (site) {
+
+        var s = '';
+        var ids = [];
+        if (selectView) {
+            s = site;
+        } else {
+            ids = this.getSelectionIds();
         }
 
-        this.loading = false;
-        this.resetSelection();
+        this.loading = true;
+        CartService.removeFromCart(ids, s).then(function () {
 
-      }.bind(this),
-      function (reason) {
-        Notification.error(reason);
-        this.loading = false;
-      }.bind(this));
+            for (var i = 0; i < selected.length; i++) {
+                selected[i].status.selected = false;
+                selected[i].status.cart = false;
+                if (this.config.actionConfig.hideCart && !selectView) {
+                    this.entries.removeItem(selected[i]);
+                }
+            }
 
-  };
+            if (this.config.actionConfig.hideCart && selectView) {
+                this.entries.items = [];
+                this.entries.loadMore(true);
+            }
 
+            this.loading = false;
+            this.resetSelection();
+        }.bind(this), function (err) {
+            if (err) {
+                Notification.error(err);
+            }
+            this.loading = false;
+        }.bind(this));
+    };
+
+    this.selectionReject = function (site) {
+
+        var s = '';
+        var ids = [];
+        if (selectView) {
+            s = site;
+        } else {
+            ids = this.getSelectionIds();
+        }
+
+        this.loading = true;
+        RejectService.addRejected(ids, s).then(function () {
+
+                for (var i = 0; i < selected.length; i++) {
+                    selected[i].status.selected = false;
+                    selected[i].status.rejected = true;
+                    if (this.config.actionConfig.hideRejected && !selectView) {
+                        this.entries.removeItem(selected[i]);
+                    }
+                }
+
+                if (this.config.actionConfig.hideRejected && selectView) {
+                    this.entries.items = [];
+                    this.entries.loadMore(true);
+                }
+
+                this.loading = false;
+                this.resetSelection();
+
+            }.bind(this),
+            function (err) {
+                if (err) {
+                    Notification.error(err);
+                }
+                this.loading = false;
+            }.bind(this));
+
+    };
+
+    this.selectionRemoveReject = function (site) {
+
+        var s = '';
+        var ids = [];
+        if (selectView) {
+            s = site;
+        } else {
+            ids = this.getSelectionIds();
+        }
+
+        this.loading = true;
+        RejectService.removeRejected(ids, s).then(function () {
+
+                for (var i = 0; i < selected.length; i++) {
+                    selected[i].status.selected = false;
+                    selected[i].status.rejected = false;
+                    if (this.config.actionConfig.hideRejected && !selectView) {
+                        this.entries.removeItem(selected[i]);
+                    }
+                }
+
+                if (this.config.actionConfig.hideRejected && selectView) {
+                    this.entries.items = [];
+                    this.entries.loadMore(true);
+                }
+
+                this.loading = false;
+                this.resetSelection();
+
+            }.bind(this),
+            function (err) {
+                if (err) {
+                    Notification.error(err);
+                }
+                this.loading = false;
+            }.bind(this));
+    };
+
+    this.selectionRemoveFromWatchlist = function () {
+
+        var affected = this.viewSelected() ? 'watchlist/' + this.siteData.id : this.getSelectionIds();
+        var watchlistId = this.siteData.watchlist ? this.siteData.id : undefined;
+
+        this.loading = true;
+
+        WatchlistService.removeFromWatchlist(affected, watchlistId).then(function () {
+
+                for (var i = 0; i < selected.length; i++) {
+                    selected[i].status.selected = false;
+                    selected[i].status.watchlist = false;
+                    if (this.config.actionConfig.hideWatchlist && !selectView) {
+                        this.entries.removeItem(selected[i]);
+                    }
+                }
+
+                if (this.config.actionConfig.hideWatchlist && selectView) {
+                    this.entries.items = [];
+                    this.entries.loadMore(true);
+                }
+
+                this.loading = false;
+                this.resetSelection();
+
+            }.bind(this),
+            function (err) {
+                if (err) {
+                    Notification.error(err);
+                }
+                this.loading = false;
+            }.bind(this));
+    };
+
+    this.selectionAddToWatchlist = function () {
+
+        var modalInstance = $uibModal.open({
+            templateUrl: '/watchlist/watchlistSelectionModal.html',
+            controller: 'WatchlistSelectionModalController',
+            keyboard: true
+        });
+
+        modalInstance.result.then(function (watchlistId) {
+
+            var affected = this.viewSelected() ? this.siteData.site : this.getSelectionIds();
+
+            this.loading = true;
+
+            WatchlistService.addToWatchlist(affected, watchlistId).then(function () {
+
+                    for (var i = 0; i < selected.length; i++) {
+                        selected[i].status.selected = false;
+                        selected[i].status.watchlist = false;
+                        if (this.config.actionConfig.hideWatchlist && !selectView) {
+                            this.entries.removeItem(selected[i]);
+                        }
+                    }
+
+                    if (this.config.actionConfig.hideWatchlist && selectView) {
+                        this.entries.items = [];
+                        this.entries.loadMore(true);
+                    }
+
+                    this.loading = false;
+                    this.resetSelection();
+
+                }.bind(this),
+                function (err) {
+                    if (err) {
+                        Notification.error(err);
+                    }
+                    this.loading = false;
+                }.bind(this));
+        }.bind(this));
+    };
 
 }]);

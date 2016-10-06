@@ -1,186 +1,172 @@
-pdApp.controller('MenuController', ['$scope', '$rootScope', 'WatchlistService', 'CartService', 'UserService', '$uibModal', 'SelectService', 'LoginService', 'SearchService', '$location', 'PageConfigService', function ($scope, $rootScope, WatchlistService, CartService, UserService, $uibModal, SelectService, LoginService, SearchService, $location, PageConfigService) {
+pdApp.controller('MenuController',['$scope', '$rootScope', 'WatchlistService', 'CartService', 'UserService', '$uibModal', 'SelectService', 'LoginService', 'SearchService', '$location', 'PageConfigService', '$timeout', function ($scope, $rootScope, WatchlistService, CartService, UserService, $uibModal, SelectService, LoginService, SearchService, $location, PageConfigService, $timeout) {
 
-  $scope.pricePopover = '/menu/pricePopover.html';
+    $scope.pricePopover = '/menu/pricePopover.html';
+    $scope.openSelectionActions = true;
 
-  WatchlistService.getWatchlists().then(function (data) {
-    $scope.watchlists = data.watchlists;
-    $scope.def_wl = data.def_wl;
-  });
+    LoginService.whenLoggedIn().then(function () {
 
-  UserService.getUserData().then(function (data) {
-    $scope.name = data.name;
-  });
+        WatchlistService.getWatchlists().then(function (resp) {
+            $scope.watchlists = resp.data.data.watchlists;
+        });
 
-  CartService.getCart().then(function (data) {
-    $scope.cart = data.cart;
-    $scope.price = data.price;
-  });
+        UserService.getUserData().then(function (data) {
+            $scope.name = data.name;
+        });
 
-  $rootScope.$on('cartChange', function (e, cart, price) {
-    $scope.cart = cart;
-    $scope.price = price;
-  });
-
-  $rootScope.$on('watchlistChange', function (e, watchlists) {
-    $scope.watchlists = watchlists;
-  });
-
-  this.openHelp = function () {
-
-    $uibModal.open({
-      templateUrl: '/html/help.html',
-      controller: 'HelpController'
+        CartService.getCart().then(function (resp) {
+            $scope.cart = resp.data.data.count;
+            $scope.price = resp.data.data.price;
+        });
     });
-  };
 
-  $scope.itemsSelected = (SelectService.getSelectedNumber() > 0);
-  $scope.showSelMenu = false;
+    $rootScope.$on('cartChange', function (e, resp) {
+        $scope.cart = resp.data.data.count;
+        $scope.price = resp.data.data.price;
+    });
 
-  $rootScope.$on('itemSelected', function () {
-    $scope.itemsSelected = true;
-    $scope.selNumber = SelectService.getSelectedNumber();
+    $rootScope.$on('watchlistChange', function (e, watchlists) {
+        $scope.watchlists = watchlists;
+    });
 
-    if ($scope.selNumber == 1) {
-      $scope.showSelMenu = true;
-    }
-  });
+    this.openHelp = function () {
 
-  $rootScope.$on('viewSelected', function () {
-    $scope.itemsSelected = true;
-    $scope.selNumber = SelectService.getSelectedNumber() + ' (alle)';
-    $scope.showSelMenu = true;
-  });
+        $uibModal.open({
+            templateUrl: '/html/help.html',
+            controller: 'HelpController'
+        });
+    };
 
-  $rootScope.$on('allDeselected', function () {
-    $scope.selNumber = 0;
-    $scope.itemsSelected = false;
     $scope.showSelMenu = false;
-  });
+    $scope.menuChangePossible = false;
 
-  $rootScope.$on('allSelected', function () {
-    $scope.itemsSelected = true;
-    $scope.selNumber = SelectService.getSelectedNumber();
-    $scope.showSelMenu = true;
-  });
+    $rootScope.$on('selectionChange', function (e, data) {
+        var selectionMenuPreviouslyShown = $scope.showSelMenu;
+        $scope.showSelMenu = data.type === 'view' || (data.type === 'item' && data.selected > 0);
+        $scope.menuChangePossible = $scope.showSelMenu;
 
-  $rootScope.$on('itemDeselected', function () {
+        if (!selectionMenuPreviouslyShown && $scope.showSelMenu){
+            $timeout(function () {
+                $scope.openSelectionActions = true;
+            }, 50);
+        }
+    });
 
-    $scope.selNumber = SelectService.getSelectedNumber();
+    this.toggleSelMenu = function () {
+        $scope.showSelMenu = !$scope.showSelMenu;
+    };
 
-    if ($scope.selNumber === 0) {
-      $scope.itemsSelected = false;
-      $scope.showSelMenu = false;
-    }
-  });
+    this.selectAll = function () {
+        SelectService.selectAll();
+    };
 
-  this.toggleSelMenu = function () {
-    $scope.showSelMenu = !$scope.showSelMenu;
-  };
+    this.selectView = function () {
+        SelectService.selectView();
+    };
 
-  this.selectAll = function () {
-    SelectService.selectAll();
-  };
+    this.deselectAll = function () {
+        SelectService.resetSelection();
+    };
 
-  this.selectView = function () {
-    SelectService.selectView();
-  };
+    this.selectionInCart = function () {
+        SelectService.selectionInCart($scope.site);
+    };
 
-  this.deselectAll = function () {
-    SelectService.resetSelection();
-  };
+    this.selectionRemoveFromCart = function () {
+        SelectService.selectionRemoveFromCart($scope.site);
+    };
 
-  this.selectionInCart = function () {
-    SelectService.selectionInCart($scope.site);
-  };
+    this.selectionReject = function () {
+        SelectService.selectionReject($scope.site);
+    };
 
-  this.selectionRemoveFromCart = function () {
-    SelectService.selectionRemoveFromCart($scope.site);
-  };
+    this.selectionRemoveReject = function () {
+        SelectService.selectionRemoveReject($scope.site);
+    };
 
-  this.selectionReject = function () {
-    SelectService.selectionReject($scope.site);
-  };
+    this.selectionRemoveFromWatchlist = function (){
+        SelectService.selectionRemoveFromWatchlist();
+    };
 
-  this.selectionRemoveReject = function () {
-    SelectService.selectionRemoveReject($scope.site);
-  };
+    this.search = function () {
+        SearchService.setSearchterm($scope.searchterm, 'keyword');
+        $location.path('search');
+    };
 
-  this.search = function () {
-    SearchService.setSearchterm($scope.searchterm, 'keyword');
-    $location.path('search');
-  };
-
-  $scope.loggedIn = false;
-
-  LoginService.whenLoggedIn().then(function (data) {
-    $scope.loggedIn = true;
-  });
-
-  $rootScope.$on('userLogin', function (e) {
-    $scope.loggedIn = true;
-  });
-
-  $rootScope.$on('userLogout', function (e) {
     $scope.loggedIn = false;
-  });
 
-  $rootScope.$on('searchViewUnload', function () {
-    $scope.searchterm = '';
-  });
+    LoginService.whenLoggedIn().then(function (data) {
+        $scope.loggedIn = true;
+    });
 
-  $rootScope.$on('setSearchbox', function (e, data){
-    $scope.searchterm = data;
-  });
+    $rootScope.$on('userLogin', function (e) {
+        $scope.loggedIn = true;
+    });
 
-  $rootScope.$on('siteChanged', function (ev, site) {
-    $scope.site = site.watchlist ? 'watchlist' : site.site;
-    $scope.selection = PageConfigService.getSelectionOptions($scope.site);
-  });
+    $rootScope.$on('userLogout', function (e) {
+        $scope.loggedIn = false;
+    });
 
-  var backShown = false;
-  var initialRoute = true;
+    $rootScope.$on('searchViewUnload', function () {
+        $scope.searchterm = '';
+    });
 
-  if ($location.path() !== '/main') {
-    $('#back').css('font-size', '12px');
-    $('#back').css('opacity', '1');
-    $('#logo').css('line-height', '14px');
-    backShown = true;
-  } else {
-    $('#back').css('font-size', '0px');
-    $('#back').css('opacity', '0');
-    $('#logo').css('line-height', '20px');
-  }
+    $rootScope.$on('setSearchbox', function (e, data) {
+        $scope.searchterm = data;
+    });
 
-  $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
+    $rootScope.$on('siteChanged', function (ev, site) {
+        $scope.site = site.watchlist ? 'watchlist/' + site.id : site.site;
+        $scope.selection = PageConfigService.getSelectionOptions((site.watchlist ? 'watchlist' : site.site));
+    });
 
-    if (initialRoute) {
-      initialRoute = false;
-      return;
-    }
+    var backShown = false;
+    var initialRoute = true;
 
     if ($location.path() !== '/main') {
-      if (!backShown) {
-
-        $('#back').removeClass('back-out');
-        $('#back').addClass('back-in');
-
-        $('#logo').removeClass('logo-out');
-        $('#logo').addClass('logo-in');
-
+        $('#back').css('font-size', '12px');
+        $('#back').css('opacity', '1');
+        $('#logo').css('line-height', '14px');
         backShown = true;
-      }
     } else {
-      if (backShown) {
-
-        $('#back').removeClass('back-in');
-        $('#back').addClass('back-out');
-
-        $('#logo').removeClass('logo-in');
-        $('#logo').addClass('logo-out');
-
-        backShown = false;
-      }
+        $('#back').css('font-size', '0px');
+        $('#back').css('opacity', '0');
+        $('#logo').css('line-height', '20px');
     }
-  });
+
+    $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
+
+        if (initialRoute) {
+            initialRoute = false;
+            return;
+        }
+
+        if ($location.path() !== '/main') {
+            if (!backShown) {
+
+                $('#back').removeClass('back-out');
+                $('#back').addClass('back-in');
+
+                $('#logo').removeClass('logo-out');
+                $('#logo').addClass('logo-in');
+
+                backShown = true;
+            }
+        } else {
+            if (backShown) {
+
+                $('#back').removeClass('back-in');
+                $('#back').addClass('back-out');
+
+                $('#logo').removeClass('logo-in');
+                $('#logo').addClass('logo-out');
+
+                backShown = false;
+            }
+        }
+    });
+
+    this.selectionInWatchlist = function (){
+        SelectService.selectionAddToWatchlist();
+    };
 
 }]);

@@ -1,0 +1,39 @@
+/*
+|--------------------------------------------------------------------------
+| Styling for common elements used on every page
+|--------------------------------------------------------------------------
+*/
+
+.small-spacer {
+  padding-top: 80px;
+}
+
+.spacer {
+  padding-top: 140px;
+}
+
+.entry-follow {
+  text-align: center;
+}
+
+#loader {
+  display: none;
+  text-align: center;
+}
+
+.controls {
+  margin-bottom: 10px;
+}
+
+.help-btn {
+  margin-right: 10px;
+}
+
+.pd-sel a {
+  color: $text-col;
+}
+
+.pd-sel-caret {
+  color: $primary;
+  margin-right: 10px;
+}

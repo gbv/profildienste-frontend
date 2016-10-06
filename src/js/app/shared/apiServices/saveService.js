@@ -1,48 +1,38 @@
-pdApp.service('SaveService', ['$http', '$rootScope', '$q', function ($http, $rootScope, $q) {
+pdApp.service('SaveService', ['$http', function ($http) {
 
-  var save = function (id, type, content) {
+    var save = function (id, type, value) {
+        return $http({
+            method: 'POST',
+            url: '/api/titles/save',
+            data: $.param({
+                affected: [id],
+                save: [{
+                    type: type,
+                    value: value
+                }]
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+    };
 
-    var def = $q.defer();
+    this.saveComment = function (item) {
+        return save(item.id, 'comment', item.comment);
+    };
 
-    $http({
-      method: 'POST',
-      url: '/api/save',
-      data: $.param({
-        id: id,
-        type: type,
-        content: content
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
-      if (!json.success) {
-        def.reject(json.errormsg);
-      } else {
-        def.resolve();
-      }
-    }.bind(this));
+    this.saveSupplier = function (item) {
+        return save(item.id, 'supplier', item.supplier);
+    };
 
-    return def.promise;
+    this.saveSelcode = function (item) {
+        return save(item.id, 'selcode', item.selcode);
+    };
 
-  };
+    this.saveSSGNr = function (item) {
+        return save(item.id, 'ssgnr', item.ssgnr);
+    };
 
-  this.saveComment = function (item) {
-    return save(item.id, 'comment', item.comment);
-  };
-
-  this.saveLieft = function (item) {
-    return save(item.id, 'lieft', item.lft);
-  };
-
-  this.saveSelcode = function (item) {
-    return save(item.id, 'selcode', item.selcode);
-  };
-
-  this.saveSSGNr = function (item) {
-    return save(item.id, 'ssgnr', item.ssgnr);
-  };
-
-  this.saveBudget = function (item) {
-    return save(item.id, 'budget', item.budget);
-  };
+    this.saveBudget = function (item) {
+        return save(item.id, 'budget', item.budget);
+    };
 
 }]);

@@ -1,168 +1,184 @@
-pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'LoginService', function ($http, $rootScope, $q, LoginService) {
+pdApp.service('WatchlistService', ['$http', '$rootScope', '$q', 'PageConfigService', function ($http, $rootScope, $q, PageConfigService) {
 
-  var defWatchlists = $q.defer();
 
-  LoginService.whenLoggedIn().then(function (data) {
-    $http.get('/api/user/watchlists').success(function (json) {
-      if (!json.success) {
-        defWatchlists.reject(json.message);
-      } else {
+    var req;
 
-        this.data = json.data;
+    this.getWatchlists = function (update) {
 
-        defWatchlists.resolve({
-          watchlists: json.data.watchlists,
-          def_wl: json.data.def_wl
+        if (update || req === undefined) {
+            req = $http.get('/api/watchlist/list');
+        }
+
+        return req;
+    };
+
+    this.removeFromWatchlist = function (affected, watchlist) {
+
+        var req = $http({
+            method: 'POST',
+            url: '/api/watchlist/' + watchlist + '/remove',
+            data: $.param({
+                affected: affected
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
 
-      }
-    }.bind(this)).error(function (reason) {
-      defWatchlists.reject(reason);
-    });
-  }.bind(this));
+        req.then(function (resp) {
+            this.getWatchlists(true).then(function (resp) {
+                $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+            });
+        }.bind(this));
 
-  this.getWatchlists = function () {
-    if (this.data === undefined) {
-      return defWatchlists.promise;
-    } else {
-      var d = $q.defer();
-      d.resolve({
-        watchlists: this.data.watchlists,
-        def_wl: this.data.def_wl
-      });
+        return req;
+    };
 
-      return d.promise;
-    }
-  };
 
-  this.removeFromWatchlist = function (item) {
+    this.addToWatchlist = function (affected, watchlistId) {
 
-    var def = $q.defer();
-
-    $http({
-      method: 'POST',
-      url: '/api/watchlist/remove',
-      data: $.param({id: item.id, wl: item.status.watchlist.id}),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
-      if (!json.success) {
-        def.reject(json.errormsg);
-      } else {
-
-        for (var i = 0; i < this.data.watchlists.length; i++) {
-          if (this.data.watchlists[i].id == item.status.watchlist.id) {
-            this.data.watchlists[i].count = json.content;
-            $rootScope.$broadcast('watchlistChange', this.data.watchlists);
-            break;
-          }
+        // use and find default watchlist if no watchlist id is given
+        var defWatchlistId;
+        if (watchlistId === undefined) {
+            defWatchlistId = this.getWatchlists().then(function (resp) {
+                for (var i = 0; i < resp.data.data.watchlists.length; i++) {
+                    var watchlist = resp.data.data.watchlists[i];
+                    if (watchlist.default === true) {
+                        return watchlist.id;
+                    }
+                }
+            });
+        } else {
+            defWatchlistId = $q.when(watchlistId);
         }
 
-        def.resolve();
+        var req = defWatchlistId.then(function (watchlistId) {
 
-      }
-    }.bind(this));
+            if (watchlistId === undefined) {
+                return $q.reject('No watchlist id given.');
+            }
 
-    return def.promise;
-  };
-
-
-  this.addToWatchlist = function (item, wl) {
-
-    if (wl === undefined) {
-      wl = this.data.def_wl;
-    }
-
-    var def = $q.defer();
-
-    $http({
-      method: 'POST',
-      url: '/api/watchlist/add',
-      data: $.param({id: item.id, wl: wl}),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
-      if (!json.success) {
-        def.reject(json.errormsg);
-      } else {
-
-        var name;
-        for (var i = 0; i < this.data.watchlists.length; i++) {
-          if (this.data.watchlists[i].id == wl) {
-            this.data.watchlists[i].count = json.content;
-            name = this.data.watchlists[i].name;
-            $rootScope.$broadcast('watchlistChange', this.data.watchlists);
-            break;
-          }
-        }
-
-        def.resolve({
-          content: json.content,
-          id: wl,
-          name: name
+            return $http({
+                method: 'POST',
+                url: '/api/watchlist/' + watchlistId + '/add',
+                data: $.param({
+                    affected: affected
+                }),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            });
         });
 
-      }
-    }.bind(this));
+        // trigger watchlist update
+        req.then(function (resp) {
 
-    return def.promise;
-  };
+            this.getWatchlists(true).then(function (resp) {
+                $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+            });
 
-  this.manageWatchlist = function (wlId, type, content) {
-
-    var def = $q.defer();
-
-    $http({
-      method: 'POST',
-      url: '/api/watchlist/manage',
-      data: $.param({
-        id: wlId,
-        type: type,
-        content: content
-      }),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
-      if (!json.success) {
-        def.reject(json.errormsg);
-      } else {
-
-        if (type === 'upd-name') {
-          for (i = 0; i < this.data.watchlists.length; i++) {
-            if (this.data.watchlists[i].id == json.id) {
-              this.data.watchlists[i].name = content;
-              break;
+            // if titles in the cart are moved into a watchlist, update the cart info
+            if (PageConfigService.getCurrentView() === 'cart') {
+                $rootScope.$broadcast('cartNeedsUpdate');
             }
-          }
-        }
+        }.bind(this));
 
-        if (type === 'add-wl') {
-          var wl = {};
-          wl.name = content;
-          wl.id = json.id;
-          wl.count = 0;
-          this.data.watchlists.push(wl);
-        }
+        return req;
+    };
 
-        if (type === 'remove') {
-          for (i = 0; i < this.data.watchlists.length; i++) {
-            if (this.data.watchlists[i].id == json.id) {
-              this.data.watchlists.splice(i, 1);
-              break;
-            }
-          }
-        }
+    this.addNewWatchlist = function (name) {
+        var req = $http({
+            method: 'PUT',
+            url: '/api/watchlist/new',
+            data: $.param({
+                name: name
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
 
-        if (type === 'def') {
-          this.data.def_wl = json.id;
-          $rootScope.$broadcast('defaultWatchlistChange', json.id);
-        }
+        req.then(function (resp) {
+            this.getWatchlists(true).then(function (resp) {
+                $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+            });
+        }.bind(this));
 
+        return req;
+    };
 
-        $rootScope.$broadcast('watchlistChange', this.data.watchlists);
-        def.resolve();
+    this.deleteWatchlist = function (id) {
+        var req = $http({
+            method: 'DELETE',
+            url: '/api/watchlist/' + id
+        });
 
-      }
+        req.then(function (resp) {
+            this.getWatchlists(true).then(function (resp) {
+                $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+            });
+        }.bind(this));
+
+        return req;
+    };
+
+    this.changeWatchlistOrder = function (order) {
+        var req = $http({
+            method: 'PATCH',
+            url: '/api/watchlist/order',
+            data: $.param({
+                order: order
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+
+        req.then(function (resp) {
+            this.getWatchlists(true).then(function (resp) {
+                $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+            });
+        }.bind(this));
+
+        return req;
+    };
+
+    this.renameWatchlist = function (id, name) {
+
+        var req = $http({
+            method: 'POST',
+            url: '/api/watchlist/' + id + '/rename',
+            data: $.param({
+                name: name
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+
+        req.then(function () {
+            this.getWatchlists(true).then(function (resp) {
+                $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+            });
+        }.bind(this));
+
+        return req;
+    };
+
+    this.updateDefaultWatchlist = function (id) {
+
+        var req = $http({
+            method: 'POST',
+            url: '/api/watchlist/default',
+            data: $.param({
+                id: id
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+
+        req.then(function () {
+            this.getWatchlists(true).then(function (resp) {
+                $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+            });
+        }.bind(this));
+
+        return req;
+    };
+
+    $rootScope.$on('watchlistsNeedUpdate', function (){
+        this.getWatchlists(true).then(function (resp) {
+            $rootScope.$broadcast('watchlistChange', resp.data.data.watchlists);
+        });
     }.bind(this));
-
-    return def.promise;
-  };
 
 }]);

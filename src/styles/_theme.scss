@@ -1,3 +1,14 @@
+/*
+|--------------------------------------------------------------------------
+| Bootstrap variable assignment
+|--------------------------------------------------------------------------
+|
+| In this file the basic bootstrap theme gets tweaked to the custom style.
+| This is done by setting the SASS variables defined by bootstrap to the
+| desired value (i.e. a fixed value or variable from elsewhere).
+|
+*/
+
 $brand-primary: $primary;
 
 $navbar-default-link-color: $navbar-link-col;
@@ -43,7 +54,5 @@ hr {
   border-color: $primary;
 }
 
-.footer {
-  margin-right: 10px;
-}
+
 

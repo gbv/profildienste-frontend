@@ -1,91 +1,98 @@
 pdApp.controller('OptionController', ['$scope', 'SettingsService', 'ConfigService', '$q', 'SelectService', 'Notification', function ($scope, SettingsService, ConfigService, $q, SelectService, Notification) {
 
-  this.selectAll = function () {
-    SelectService.selectAll();
-  };
+    this.selectAll = function () {
+        SelectService.selectAll();
+    };
 
-  this.selectView = function () {
-    SelectService.selectView();
-  };
+    this.selectView = function () {
+        SelectService.selectView();
+    };
 
-  var p = $q.all([SettingsService.getSortby(), SettingsService.getOrder(), SettingsService.getSelOptions(), ConfigService.getConfig(), ConfigService.getEntries()]);
+    var p = $q.all([SettingsService.getSortby(), SettingsService.getOrder(), SettingsService.getSelOptions(), ConfigService.getConfig(), ConfigService.getEntries()]);
 
-  p.then(function (data) {
+    p.then(function (data) {
 
-    $scope.sortby = data[0].sortby;
-    $scope.order = data[1].order;
+        $scope.sortby = data[0];
+        $scope.order = data[1];
 
-    $scope.selected_sorter_key = data[2].sort;
-    for (i = 0; i < data[0].sortby.length; i++) {
-      if (data[0].sortby[i].key === data[2].sort) {
-        $scope.selected_sorter = data[0].sortby[i].value;
-        break;
-      }
-    }
-
-    $scope.selected_order_key = data[2].order;
-    for (i = 0; i < data[1].order.length; i++) {
-      if (data[1].order[i].key === data[2].order) {
-        $scope.selected_order = data[1].order[i].value;
-        break;
-      }
-    }
-
-    $scope.showSelectAll = data[3].selectionEnabled;
-
-    $scope.entries = data[4].entries;
-
-
-  }, function (reason) {
-    Notification.error(reason);
-  });
-
-  this.setSorter = function (sorter) {
-
-    if (sorter === $scope.selected_sorter_key) {
-      return;
-    }
-
-    SettingsService.changeSetting('sortby', sorter).then(function (data) {
-
-      $scope.selected_sorter_key = data.value;
-      for (var i = 0; i < $scope.sortby.length; i++) {
-        if ($scope.sortby[i].key === data.value) {
-          $scope.selected_sorter = $scope.sortby[i].value;
-          break;
+        $scope.selected_sorter_key = data[2].sort;
+        for (var i = 0; i < data[0].length; i++) {
+            if (data[0][i].value === data[2].sort) {
+                $scope.selected_sorter = data[0][i].name;
+                break;
+            }
         }
-      }
 
-      $scope.entries.reset();
+        $scope.selected_order_key = data[2].order;
+        for (i = 0; i < data[1].length; i++) {
+            if (data[1][i].value === data[2].order) {
+                $scope.selected_order = data[1][i].name;
+                break;
+            }
+        }
 
-    }, function (reason) {
-      Notification.error(reason);
+        $scope.showSelectAll = data[3].selectionEnabled;
+
+        $scope.entries = data[4].entries;
+
+
+    }, function (err) {
+        if (err) {
+            Notification.error(err);
+        }
     });
 
-  };
+    this.setSorter = function (sorter) {
 
-  this.setOrder = function (order) {
-
-    if (order === $scope.selected_order_key) {
-      return;
-    }
-
-    SettingsService.changeSetting('order', order).then(function (data) {
-
-      $scope.selected_order_key = data.value;
-      for (var i = 0; i < $scope.order.length; i++) {
-        if ($scope.order[i].key === data.value) {
-          $scope.selected_order = $scope.order[i].value;
-          break;
+        if (sorter === $scope.selected_sorter_key) {
+            return;
         }
-      }
 
-      $scope.entries.reset();
+        SettingsService.changeSetting('sortby', sorter).then(function (resp) {
 
-    }, function (reason) {
-      Notification.error(reason);
-    });
 
-  };
+            $scope.selected_sorter_key = resp.data.data.value;
+            for (var i = 0; i < $scope.sortby.length; i++) {
+                if ($scope.sortby[i].value === resp.data.data.value) {
+                    $scope.selected_sorter = $scope.sortby[i].name;
+                    break;
+                }
+            }
+
+            $scope.entries.reset();
+
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
+        });
+
+    };
+
+    this.setOrder = function (order) {
+
+        if (order === $scope.selected_order_key) {
+            return;
+        }
+
+        SettingsService.changeSetting('order', order).then(function (resp) {
+
+            $scope.selected_order_key = resp.data.data.value;
+            for (var i = 0; i < $scope.order.length; i++) {
+                if ($scope.order[i].value === resp.data.data.value) {
+                    $scope.selected_order = $scope.order[i].name;
+                    break;
+                }
+            }
+
+            $scope.entries.reset();
+
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
+        });
+
+    };
 
 }]);

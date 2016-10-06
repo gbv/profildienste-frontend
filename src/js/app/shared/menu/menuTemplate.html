@@ -33,10 +33,6 @@
             <ul class="nav navbar-nav shop-options"
                 ng-class="{'navbar-right': !showSelMenu, 'navbar-left': showSelMenu}">
 
-                <p class="navbar-text" ng-show="showSelMenu">
-                    <span class="badge">{{selNumber}}</span> Titel ausgewählt
-                </p>
-
                 <li ng-show="showSelMenu">
                     <a href="" ng-click="MenuCtrl.deselectAll()">
                         <i class="fa fa-bolt fa-lg"></i> Auswahl aufheben
@@ -44,40 +40,59 @@
                 </li>
                 <li ng-show="showSelMenu">
                     <a href="" ng-click="MenuCtrl.selectAll()">
-                        <i class="fa fa-eye fa-lg"></i> Angezeigte Titel ausw.
+                        <i class="fa fa-eye fa-lg"></i> Angezeigte Titel auswählen
                     </a>
                 </li>
                 <li ng-show="showSelMenu">
                     <a href="" ng-click="MenuCtrl.selectView()">
-                        <i class="fa fa-asterisk fa-lg"></i> Ansicht ausw.
+                        <i class="fa fa-asterisk fa-lg"></i> Ansicht auswählen
                     </a>
                 </li>
-                <li ng-show="showSelMenu" class="dropdown">
-                    <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                <li ng-show="showSelMenu" class="dropdown" uib-dropdown is-open="openSelectionActions">
+                    <a href="" class="dropdown-toggle" uib-dropdown-toggle>
                         <i class="fa fa-caret-square-o-down fa-lg"></i> Aktionen
                         <b class="caret"></b>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" uib-dropdown-menu role="menu">
                         <li class="dropdown-header">Ausgewählte Titel...</li>
-                        <li ng-show="selection.cart"><a href="" ng-click="MenuCtrl.selectionInCart()"><i
-                                class="fa fa-shopping-cart fa-fw"></i> In Warenkorb</a></li>
-                        <li ng-show="selection.removeCart"><a href="" ng-click="MenuCtrl.selectionRemoveFromCart()"><i
-                                class="fa fa-times fa-fw"></i> Aus Warenkorb entfernen</a></li>
-                        <li ng-show="selection.watchlist"><a><i class="fa fa-star fa-fw"></i> In Merkliste</a></li>
-                        <li ng-show="selection.removeWatchlist"><a><i class="fa fa-times fa-fw"></i> Aus Merkliste
-                            entfernen</a></li>
-                        <li ng-show="selection.reject"><a href="" ng-click="MenuCtrl.selectionReject()"><i
-                                class="fa fa-minus-circle fa-fw"></i> Ablehnen</a></li>
-                        <li ng-show="selection.removeReject"><a href="" ng-click="MenuCtrl.selectionRemoveReject()"><i
-                                class="fa fa-plus-circle fa-fw"></i> Wieder aufnehmen</a></li>
+                        <li ng-show="selection.cart">
+                            <a href="" ng-click="MenuCtrl.selectionInCart()">
+                                <i class="fa fa-shopping-cart fa-fw"></i> In Warenkorb
+                            </a>
+                        </li>
+                        <li ng-show="selection.removeCart">
+                            <a href="" ng-click="MenuCtrl.selectionRemoveFromCart()">
+                                <i class="fa fa-times fa-fw"></i> Aus Warenkorb entfernen
+                            </a>
+                        </li>
+                        <li ng-show="selection.watchlist">
+                            <a href="" ng-click="MenuCtrl.selectionInWatchlist()">
+                                <i class="fa fa-star fa-fw"></i> In Merkliste
+                            </a>
+                        </li>
+                        <li ng-show="selection.removeWatchlist">
+                            <a href="" ng-click="MenuCtrl.selectionRemoveFromWatchlist()">
+                                <i class="fa fa-times fa-fw"></i> Aus Merkliste entfernen
+                            </a>
+                        </li>
+                        <li ng-show="selection.reject">
+                            <a href="" ng-click="MenuCtrl.selectionReject()">
+                                <i class="fa fa-minus-circle fa-fw"></i> Ablehnen
+                            </a>
+                        </li>
+                        <li ng-show="selection.removeReject">
+                            <a href="" ng-click="MenuCtrl.selectionRemoveReject()">
+                                <i class="fa fa-plus-circle fa-fw"></i> Wieder aufnehmen
+                            </a>
+                        </li>
                     </ul>
                 </li>
-                <li>
+                <li ng-hide="showSelMenu">
                     <a href="/cart"
                        ng-hide="showSelMenu"
                        popover-placement="bottom"
                        uib-popover-template="pricePopover"
-                       popover-trigger="mouseenter"
+                       popover-trigger="'mouseenter'"
                        popover-title="Preisangaben"
                     >
                         <i class="fa fa-shopping-cart fa-lg"></i> Warenkorb <span class="badge">{{cart}}</span>
@@ -94,14 +109,14 @@
                         <li><a href="/manage">Merklisten verwalten</a></li>
                     </ul>
                 </li>
-                <li ng-show="itemsSelected">
+                <li ng-show="menuChangePossible">
                     <a href="" ng-click="MenuCtrl.toggleSelMenu()">
                         <i class="fa fa-shopping-cart fa-exchange"></i>
                         <span ng-hide="showSelMenu">Auswahlmenü</span>
                         <span ng-show="showSelMenu">Hauptmenü</span>
                     </a>
                 </li>
-                <li class="dropdown sep-right">
+                <li class="dropdown">
                     <a href="" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user fa-lg"></i> <b
                             class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -119,9 +134,9 @@
             <form class="navbar-form" ng-hide="showSelMenu" novalidate ng-submit="MenuCtrl.search()">
                 <div class="form-group search-form-group">
                     <div class="input-group search-inp-group">
-                        <input type="text" class="form-control" ng-model="searchterm"
+                        <input type="text" id="search-field" class="form-control" ng-model="searchterm"
                                placeholder="Gesamtübersicht durchsuchen" autofocus>
-                        <span class="input-group-addon search-lbl" ng-click="MenuCtrl.search()">
+                        <span class="input-group-addon search-lbl" ng-click="MenuCtrl.openHelp()">
                             <i class="fa fa-search"></i>
                         </span>
                     </div>

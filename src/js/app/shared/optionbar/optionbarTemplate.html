@@ -21,7 +21,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li ng-repeat="sorter in sortby">
-                            <a href="" class="chg-set" ng-click="OptCtrl.setSorter(sorter.key)">{{sorter.value}}</a>
+                            <a href="" class="chg-set" ng-click="OptCtrl.setSorter(sorter.value)">{{sorter.name}}</a>
                         </li>
                     </ul>
                 </li>
@@ -32,7 +32,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li ng-repeat="ord in order">
-                            <a href="" class="chg-set" ng-click="OptCtrl.setOrder(ord.key)">{{ord.value}}</a>
+                            <a href="" class="chg-set" ng-click="OptCtrl.setOrder(ord.value)">{{ord.name}}</a>
                         </li>
                     </ul>
                 </li>

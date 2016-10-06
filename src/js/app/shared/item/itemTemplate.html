@@ -12,7 +12,7 @@
                 </button>
             </div>
             <!-- Cover -->
-            <div class="col-md-8">
+            <div class="col-md-8 cover-section">
                 <img ng-show="item.hasCover" ng-src="{{item.cover_md}}" class="cover cover-lg"
                      ng-click="ItemCtrl.showCover()">
             </div>
@@ -29,10 +29,10 @@
             ng-show="item.ort | notEmpty">, {{item.ort}}</span><span class="text-muted">)</span>
         <br>
         <span class="text-muted">Umfang: </span> {{item.umfang}}
-    <span ng-show="item.ill_angabe | notEmpty">
+        <span ng-show="item.ill_angabe | notEmpty">
       <span class="text-muted">, </span>{{item.ill_angabe}}
     </span>
-    <span ng-show="item.format | notEmpty">
+        <span ng-show="item.format | notEmpty">
       <span class="text-muted">, </span>{{item.format}}
     </span>
         <br>
@@ -43,7 +43,7 @@
         <br>
 
         <span class="text-muted">GVK-Treffer: </span>{{item.mak}}
-    <span ng-show="item.ilns | notEmpty">
+        <span ng-show="item.ilns | notEmpty">
       <span class="text-muted">(ILNs: </span>{{item.ilns}}
       <span ng-show="item.ppn">
         <span class="text-muted">, PPN: </span> {{item.ppn}}
@@ -57,33 +57,35 @@
         <form class="form-inline">
             <!-- Lieferant -->
             <span class="text-muted">Lieferant: </span>
-            <input type="text" title="Maximal 7 Zeichen" class="form-control input-sm lft" size="7"
-                   ng-show="ItemCtrl.editOrderInformation()" ng-model="item.lft" ng-maxlength="7" ng-minlength="1"
-                   ng-focus="ItemCtrl.saveLieft()" ng-blur="ItemCtrl.closeLieft()" placeholder="{{defaults.lft}}"
-                   ng-disabled="loading.lieft" ng-class="{saved: saved.lieft}">
-            <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.lft}}</span>
+            <select ng-model="item.supplier" ng-options="supplier.value as supplier.name for supplier in suppliers"
+                    ng-show="ItemCtrl.editOrderInformation()" class="form-control order-input input-sm"
+                    ng-change="ItemCtrl.saveSupplier()" ng-disabled="loading.supplier"
+                    ng-class="{saved: saved.supplier}">
+            </select>
+            <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.supplier}}</span>
 
             <!-- Budget -->
-            <span class="text-muted">Budget:</span>
-            <select ng-model="item.budget" ng-options="budget.key as budget.value for budget in budgets"
-                    ng-show="ItemCtrl.editOrderInformation()" class="form-control lft input-sm"
+            <span class="text-muted">Budget: </span>
+            <select ng-model="item.budget" ng-options="budget.value as budget.name for budget in budgets"
+                    ng-show="ItemCtrl.editOrderInformation()" class="form-control order-input input-sm"
                     ng-change="ItemCtrl.saveBudget()" ng-disabled="loading.budget"
-                    ng-class="{saved: saved.budget}"></select>
+                    ng-class="{saved: saved.budget}">
+            </select>
             <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.budget}}</span>
 
             <!-- Selektionscode -->
             <span class="text-muted">Selektionscode: </span>
-            <input type="text" title="Maximal 20 Zeichen" class="form-control input-sm lft" size="20"
+            <input type="text" title="Maximal 20 Zeichen" class="form-control input-sm order-input" size="20"
                    ng-show="ItemCtrl.editOrderInformation()" ng-maxlength="20" ng-minlength="0" ng-model="item.selcode"
                    ng-focus="ItemCtrl.saveSelcode()" ng-blur="ItemCtrl.closeSelcode()"
-                   placeholder="{{defaults.selcode}}" ng-disabled="loading.selcode" ng-class="{saved: saved.selcode}">
+                   ng-disabled="loading.selcode" ng-class="{saved: saved.selcode}">
             <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.selcode}}</span>
 
             <!-- SSG Nummer -->
             <span class="text-muted">SSGs-Nr.: </span>
-            <input type="text" title="Maximal 3 Zeichen" class="form-control input-sm lft" size="3"
+            <input type="text" title="Maximal 3 Zeichen" class="form-control input-sm order-input" size="3"
                    ng-show="ItemCtrl.editOrderInformation()" ng-maxlength="3" ng-minlength="0" ng-model="item.ssgnr"
-                   placeholder="{{defaults.ssgnr}}" ng-focus="ItemCtrl.saveSSGNr()" ng-blur="ItemCtrl.closeSSGNr()"
+                   ng-focus="ItemCtrl.saveSSGNr()" ng-blur="ItemCtrl.closeSSGNr()"
                    ng-disabled="loading.ssgnr" ng-class="{saved: saved.ssgnr}">
             <span class="fixed-orderinfo" ng-hide="ItemCtrl.editOrderInformation()">{{item.ssgnr}}</span>
 
@@ -92,18 +94,18 @@
         <div uib-collapse="bibInfCollapsed">
             <br>
             <span class="text-muted">Erscheinungsjahr: </span> {{item.ersch_jahr}} <br><br>
-        <span ng-show="item.gehoert_zu | notEmpty">
+            <span ng-show="item.gehoert_zu | notEmpty">
           <span class="text-muted">Gehört zu: </span> {{item.gehoert_zu}}<br><br>
         </span>
             <span class="text-muted">Gattung: </span> {{item.gattung}} <br><br>
-        <span ng-show="item.dnb_link | notEmpty">
+            <span ng-show="item.dnb_link | notEmpty">
           <span class="text-muted">DNB-Link: </span> <a href="{{item.dnb_link}}" target="_blank"><i
-                class="fa fa-external-link"></i> {{item.dnb_link}}</a><br><br>
+                    class="fa fa-external-link"></i> {{item.dnb_link}}</a><br><br>
         </span>
             <span class="text-muted">WV: </span> {{item.wvdnb}} <br><br>
             <span class="text-muted">DNB Sachgruppe: </span> {{item.sachgruppe}} <br><br>
             <span class="text-muted">Zugeordnete Fachreferenten: </span>
-        <span ng-repeat="person in item.zugeordnet">
+            <span ng-repeat="person in item.zugeordnet">
           {{person}}{{$last ? '' : ', '}}
         </span>
             <br>
@@ -159,7 +161,8 @@
         <br>
         <br>
 
-        <div class="well well-lg" ng-bind-html="addInf" collapse="addInfCollapsed" ng-show="addInf | notEmpty"></div>
+        <div class="well well-lg" ng-bind-html="addInf" uib-collapse="addInfCollapsed"
+             ng-show="addInf | notEmpty"></div>
         <!-- End Mitte -->
     </div>
     <div class="col-md-3 title-content">
@@ -196,7 +199,7 @@
             <div class="col-md-12">
 
                 <span class="text-muted" ng-show="item.status.done">Die Bearbeitung dieses Titels wurde am {{item.status.lastChange | date:'dd.MM.yyyy'}} abgeschlossen.</span>
-                <span class="text-muted" ng-show="item.status.pending">Sie haben diesen Titel am {{item.status.lastChange | date:'dd.MM.yyyy'}} bestellt.</span>
+                <span class="text-muted" ng-show="item.status.pending">Sie haben diesen Titel am {{item.status.lastChange | date:'dd.MM.yyyy'}} bestellt.<br><br></span>
 
                 <div class="btn-group pull-right" ng-show="item.status.rejected">
                     <button type="button" class="btn btn-danger" ng-click="ItemCtrl.removeRejected()">

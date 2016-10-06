@@ -1,57 +1,57 @@
-pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$http', '$rootScope', 'Notification', 'UserService', '$sce', function ($scope, OrderService, $location, $http, $rootScope, Notification, UserService, $sce) {
+pdApp.controller('OrderController', ['$scope', 'OrderService', '$location', '$http', '$rootScope', 'Notification', '$sce', 'CartService', function ($scope, OrderService, $location, $http, $rootScope, Notification, $sce, CartService) {
 
-  $scope.orderComplete = false;
+    $scope.orderComplete = false;
 
-  $scope.defaultValueHelpText = $sce.trustAsHtml('Da keine Angabe<br> gemacht wurde, <br>wurde hier der <br>für Sie hinterlegte <br>Standardwert <br>eingetragen.');
+    $scope.defaultValueHelpText = $sce.trustAsHtml('Da keine Angabe<br> gemacht wurde, <br>wurde hier der <br>für Sie hinterlegte <br>Standardwert <br>eingetragen.');
 
-  OrderService.getOrderlist().then(function (data) {
-    $scope.orderlist = data.orderlist;
+    OrderService.getOrderlist().then(function (resp) {
 
-    $rootScope.$broadcast('siteChanged', {
-      site: 'order',
-      watchlist: false
-    });
+        $scope.orderlist = resp.data.data;
 
-    $rootScope.$broadcast('siteLoading');
-    $rootScope.$broadcast('siteLoadingFinished', 0);
-
-  }, function (reason) {
-    Notification.error(reason);
-    $location.path('cart');
-  });
-
-  UserService.getUserData().then(function (data) {
-    $scope.defaults = data.defaults;
-  }, function (reason) {
-    Notification.error(reason);
-    $location.path('cart');
-  });
-
-  this.order = function () {
-    $http({
-      method: 'POST',
-      url: '/api/order',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    }).success(function (json) {
-      if (!json.success) {
-        Notification.error(json.errormsg);
-      } else {
-        $scope.orderComplete = true;
-        $rootScope.$broadcast('cartChange', json.cart, json.price);
         $rootScope.$broadcast('siteChanged', {
-          site: 'ordered',
-          watchlist: false
+            site: 'order',
+            watchlist: false
         });
-      }
+
+        $rootScope.$broadcast('siteLoading');
+        $rootScope.$broadcast('siteLoadingFinished', 0);
+
+    }, function (reason) {
+        Notification.error(reason);
+        $location.path('cart');
     });
-  };
 
-  this.cancel = function () {
-    $location.path('cart');
-  };
+    this.order = function () {
+        var req = $http({
+            method: 'POST',
+            url: '/api/cart/order',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
 
-  this.finish = function () {
-    $location.path('main');
-  };
+        req.then(function (resp) {
+            $scope.orderComplete = true;
+
+            CartService.getCart().then(function (resp) {
+                $rootScope.$broadcast('cartChange', resp);
+            });
+
+            $rootScope.$broadcast('siteChanged', {
+                site: 'ordered',
+                watchlist: false
+            });
+        }, function (err) {
+            if (err) {
+                Notification.error(err);
+            }
+        });
+    };
+
+    this.cancel = function () {
+        $location.path('cart');
+    };
+
+    this.finish = function () {
+        $location.path('main');
+    };
 
 }]);

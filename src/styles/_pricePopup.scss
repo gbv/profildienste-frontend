@@ -1,0 +1,14 @@
+/*
+|--------------------------------------------------------------------------
+| Styling for the price popup
+|--------------------------------------------------------------------------
+*/
+
+#estprice, #price_known, #price_est {
+  font-weight: bold;
+  color: $primary;
+}
+
+#price-inf {
+  display: none;
+}

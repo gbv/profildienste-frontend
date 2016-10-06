@@ -1,105 +1,103 @@
 var pdApp = angular.module('Profildienst', ['infinite-scroll', 'ui.bootstrap', 'ngRoute', 'ui.sortable', 'ui-notification']);
 
 pdApp.config(['$compileProvider', function ($compileProvider) {
-  $compileProvider.debugInfoEnabled(false);
+    $compileProvider.debugInfoEnabled(false);
 }]);
 
 pdApp.config(['NotificationProvider', function (NotificationProvider) {
-  NotificationProvider.setOptions({
-    delay: 10000,
-    startTop: 20,
-    startRight: 10,
-    verticalSpacing: 20,
-    horizontalSpacing: 20,
-    positionX: 'right',
-    positionY: 'top'
-  });
+    NotificationProvider.setOptions({
+        delay: 10000,
+        startTop: 20,
+        startRight: 10,
+        verticalSpacing: 20,
+        horizontalSpacing: 20,
+        positionX: 'right',
+        positionY: 'top'
+    });
 }]);
 
 pdApp.filter('notEmpty', function () {
-  return function (val) {
-    return val !== undefined && val !== null && val !== '';
-  };
+    return function (val) {
+        return val !== undefined && val !== null && val !== '';
+    };
 });
 
-pdApp.constant('version', '1.1.1');
+pdApp.constant('version', '1.2.0');
 
-pdApp.controller('ErrorModalCtrl', ['$scope', '$uibModalInstance', '$location', '$rootScope', function ($scope, $uibModalInstance, $location, $rootScope) {
+pdApp.controller('ErrorModalCtrl', ['$scope', '$uibModalInstance', '$rootScope', '$window', function ($scope, $uibModalInstance, $rootScope, $window) {
 
-  $scope.redirect = function () {
-    $location.path('/');
-    $uibModalInstance.close();
-    $rootScope.token = undefined;
-  };
+    $scope.close = function () {
+        $rootScope.token = undefined;
+        $uibModalInstance.close();
+        $window.location.reload();
+    };
 
 }]);
 
+
 pdApp.factory('authInterceptor', ['$rootScope', '$q', '$window', 'LogoutService', function ($rootScope, $q, $window, LogoutService) {
-  return {
-    request: function (config) {
-      config.headers = config.headers || {};
-      if ($window.sessionStorage.token) {
-        config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
-      }
+    return {
+        request: function (config) {
+            config.headers = config.headers || {};
+            if ($window.sessionStorage.token) {
+                config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+            }
 
-      return config;
-    },
+            return config;
+        },
 
-    responseError: function (rejection) {
+        responseError: function (rejection) {
 
-      if (rejection.status === 401) {
-        LogoutService.destroySession('Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an um fortzufahren.');
-      }
-      return $q.reject(rejection);
-    }
-  };
+            if (rejection.status === 503) {
+                if (rejection.config.url !== '/api/status') {
+                    LogoutService.showMaintenance();
+                }
+                return $q.reject();
+            }
+
+            if (rejection.status === 401) {
+                LogoutService.forceLogout();
+                return $q.reject();
+            }
+
+            var err = rejection.data.error || rejection.statusText;
+            return $q.reject(err);
+        }
+    };
 }]);
 
 pdApp.config(['$httpProvider', function ($httpProvider) {
-  $httpProvider.interceptors.push('authInterceptor');
+    $httpProvider.interceptors.push('authInterceptor');
 }]);
 
 pdApp.controller('ContentController', ['$scope', '$rootScope', 'LoginService', function ($scope, $rootScope, LoginService) {
 
-  $scope.loggedIn = false;
-
-  $rootScope.$on('userLogin', function (e) {
-    $scope.loggedIn = true;
-  });
-
-  $rootScope.$on('userLogout', function (e) {
     $scope.loggedIn = false;
-  });
 
-  LoginService.whenLoggedIn().then(function (data) {
-    $scope.loggedIn = true;
-  });
+    $rootScope.$on('userLogin', function (e) {
+        $scope.loggedIn = true;
+    });
 
-  //workaround since the affix occasionally bugs and does not
-  //remove the affix class when scrolling to top
-  $rootScope.$on('siteChanged', function (e) {
-    $('#header-fixed').removeClass('affix');
-  });
+    $rootScope.$on('userLogout', function (e) {
+        $scope.loggedIn = false;
+    });
+
+    LoginService.whenLoggedIn().then(function (data) {
+        $scope.loggedIn = true;
+    });
+
+    //workaround since the affix occasionally bugs and does not
+    //remove the affix class when scrolling to top
+    $rootScope.$on('siteChanged', function (e) {
+        $('#header-fixed').removeClass('affix');
+    });
 
 }]);
 
 // Overwrite the Angular Bootstrap popover template to allow HTML
 // (see http://stackoverflow.com/a/21979258)
 pdApp.filter('unsafe', ['$sce', function ($sce) {
-  return function (val) {
-    return $sce.trustAsHtml(val);
-  };
-}]);
-
-angular.module('template/popover/popover.html', []).run(['$templateCache', function ($templateCache) {
-  $templateCache.put('template/popover/popover.html',
-    '<div class=\"popover {{placement}}\" ng-class=\"{ in: isOpen(), fade: animation() }\">\n' +
-    '  <div class=\"arrow\"></div>\n' +
-    '\n' +
-    '  <div class=\"popover-inner\">\n' +
-    '      <h3 class=\"popover-title\" ng-bind-html=\"title | unsafe\" ng-show=\"title\"></h3>\n' +
-    '      <div class=\"popover-content\"ng-bind-html=\"content | unsafe\"></div>\n' +
-    '  </div>\n' +
-    '</div>\n' +
-    '');
+    return function (val) {
+        return $sce.trustAsHtml(val);
+    };
 }]);

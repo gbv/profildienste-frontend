@@ -1,6 +1,18 @@
+/*
+|--------------------------------------------------------------------------
+| Entry point for the style sheet
+|--------------------------------------------------------------------------
+*/
 @import 'colors';
 @import 'theme';
-@import 'login';
-@import 'show';
+@import 'common';
+@import 'menu';
+@import 'footer';
+@import 'header';
+@import 'optionbar';
+@import 'order';
+@import 'pricePopup';
+@import 'search';
+@import 'titleItem';
 @import 'bootstrap-sprockets';
 @import 'bootstrap';
