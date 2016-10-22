@@ -12,10 +12,10 @@
     "jquery-ui": "latest",
     "fontawesome": "latest",
     "angular": "latest",
-    "ngInfiniteScroll": "~1.0.0",
+    "ngInfiniteScroll": "latest",
     "angular-bootstrap": "latest",
     "angular-route": "latest",
     "angular-ui-sortable": "latest",
-    "angular-ui-notification": "~0.0.11"
+    "angular-ui-notification": "latest"
   }
 }
