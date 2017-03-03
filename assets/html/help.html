@@ -3,18 +3,22 @@
 </div>
 <div class="modal-body">
     <h2>Hilfe zur Suchfunktion</h2>
-    <p> Die Suchfunktion befindet sich in dem Feld in der oberen Menuleiste. Um mit der Suche zu
-        beginnen, geben Sie eine Suchanfrage ein.</p>
+    <p> Die Eingabe für die Suchfunktion befindet sich in dem Feld in der oberen Menuleiste. Um mit der Suche zu
+        beginnen, geben Sie einen Suchbegriff oder eine Feld-Suchanfrage ein. Wenn Sie das Feld leer lassen und die
+        Enter-Taste drücken, öffnet sich automatisch die Maske für die erweiterte Suche.</p>
 
-    <h2>Aufbau einer Suchanfrage</h2>
-    <p>Eine Suchanfrage besitzt den folgenden Aufbau:</p>
-    <br>
+    <h2>Arten der Suche</h2>
+    <ul>
+        <li><b>Volltext</b>: Geben Sie einfach den Suchbegriff in das Feld ein. Bei der Suche werden alle durchsuchbaren Felder berücksichtigt.</li>
+        <li><b>Feldsuche</b>: Durch Eingabe einer Feld-Suchanfrage können Sie schnell und einfach in einzelnen Feldern suchen.</li>
+        <li><b>Erweiterte Suche</b>: Mit der erweiterten Suche können Sie beliebig viele Feld-Suchanfragen kombinieren.</li>
+    </ul>
+    <h2>Aufbau von Feld-Suchanfragen</h2>
+    Feld-Suchanfragen haben den folgenden Aufbau:
     <code>Schlüssel Suchbegriffe</code>
     <br>
-
-    <h2>Mögliche Suchschlüssel</h2>
     <p> Die Suchschlüssel orentieren sich an den im GVK und in der WinIBW verwendeten Suchschlüsseln.
-        Es stehen folgende Schlüssel zur Auswahl:</p>
+        Es stehen die folgenden Schlüssel zur Auswahl:</p>
     <table class="table table-striped">
         <thead>
         <tr>
@@ -35,9 +39,14 @@
             <td><code>per Wagner</code></td>
         </tr>
         <tr>
-            <td><code>dbn</code></td>
+            <td><code>ver</code></td>
+            <td>Suche nach Verlagen</td>
+            <td><code>ver Elsevier</code></td>
+        </tr>
+        <tr>
+            <td><code>dnb</code></td>
             <td>Suche nach der DNB-Nummer</td>
-            <td><code>per 1000476324</code></td>
+            <td><code>dnb 1000476324</code></td>
         </tr>
         <tr>
             <td><code>isb</code></td>
@@ -66,11 +75,10 @@
         </tr>
         </tbody>
     </table>
-    <br>
     <h2>Unschärfe</h2>
     <p> Alle Suchen werden unscharf ausgeführt. Dies bedeutet, dass Ihnen alle Treffer angezeigt werden, die Ihren
         Suchenbegriff zwar enthalten, aber nicht nur auschließlich. Beispielsweise könnte eine Suche nach <code>tit
-            Asien</code> sowohl zu den Treffern:
+            Asien</code> sowohl zu den Treffern
     <ul>
         <li>Das neue <b>Asien</b></li>
     </ul>
@@ -79,12 +87,6 @@
         <li>Schulordnung für die Gymn<b>asien</b></li>
     </ul>
     führen.</p>
-    <br>
-    <h2>Weiteres</h2>
-    <ul>
-        <li>Es ist nicht möglich, Suchanfragen zu kombinieren.</li>
-        <li> Eine All-Suche ist nicht möglich.</li>
-    </ul>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-primary" ng-click="cancel()">Schließen</button>
