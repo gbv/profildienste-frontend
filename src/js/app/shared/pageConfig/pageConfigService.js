@@ -39,7 +39,7 @@ pdApp.service('PageConfigService', ['$rootScope', function ($rootScope) {
                 removeCart: true,
                 watchlist: true,
                 removeWatchlist: false,
-                reject: false,
+                reject: true,
                 removeReject: false
             }
         },

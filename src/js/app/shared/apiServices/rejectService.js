@@ -23,6 +23,11 @@ pdApp.service('RejectService', ['$http', '$rootScope', 'PageConfigService', func
             if (PageConfigService.getCurrentView() === 'watchlist') {
                 $rootScope.$broadcast('watchlistsNeedUpdate');
             }
+
+            // if titles in the cart were rejected, update the cart info
+            if (PageConfigService.getCurrentView() === 'cart') {
+                $rootScope.$broadcast('cartNeedsUpdate');
+            }
         });
 
         return req;

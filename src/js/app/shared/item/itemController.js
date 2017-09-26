@@ -326,7 +326,7 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
     };
 
     this.isRejectable = function () {
-        return !$scope.item.status.rejected && !$scope.item.status.cart && !$scope.item.status.done && !$scope.item.status.pending;
+        return !$scope.item.status.rejected && !$scope.item.status.done && !$scope.item.status.pending;
     };
 
     this.showWatchlistBtn = function () {
