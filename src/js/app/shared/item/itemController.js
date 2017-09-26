@@ -1,4 +1,5 @@
-pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartService', '$uibModal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', 'Notification', 'SaveService', function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout, Notification, SaveService) {
+pdApp.controller('ItemController',['$scope', '$sce', 'WatchlistService', 'CartService', '$uibModal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', 'Notification', 'SaveService',
+function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout, Notification, SaveService) {
 
     $scope.bibInfCollapsed = true;
     $scope.addInfCollapsed = true;
@@ -111,6 +112,22 @@ pdApp.controller('ItemController', ['$scope', '$sce', 'WatchlistService', 'CartS
 
     this.openOPAC = function () {
         InfoService.openOPAC($scope.item);
+    };
+
+    this.openPICA = function() {
+        InfoService.getPICA($scope.item).then(function (resp) {
+            $uibModal.open({
+                templateUrl: 'picaModal.html',
+                controller: 'PICAModalCtrl',
+                resolve: {
+                    picaData: function () {
+                        return resp.data.data.pica;
+                    }
+                }
+            });
+        }, function (reason) {
+            Notification.error(reason);
+        });
     };
 
     /*

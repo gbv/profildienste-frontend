@@ -23,4 +23,16 @@ pdApp.service('InfoService', ['$http', 'Notification', function ($http, Notifica
         });
     };
 
+    /**
+     * Fetches a titles PICA data using the server API
+     *
+     * @param item Item which PICA data should be fetched
+     * @returns Promise
+     */
+    this.getPICA = function (item) {
+        return $http({
+            method: 'GET',
+            url: '/api/titles/' + item.id + '/pica'
+        });
+    };
 }]);

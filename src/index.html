@@ -20,6 +20,37 @@
 </div>
 <ng-footer></ng-footer>
 
+<script type="text/ng-template" id="picaModal.html">
+    <div class="modal-header">
+        <h4 class="modal-title">Rohdaten-Ansicht</h4>
+    </div>
+    <div class="modal-body">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Feldbezeichner</th>
+                    <th>Unterfeld</th>
+                    <th>Wert</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat-start="(field, subfields) in picaData">
+                <td rowspan="{{subfields.length}}">{{field}}</td>
+                <td>{{subfields[0].subfield}}</td>
+                <td>{{subfields[0].value}}</td>
+            </tr>
+            <tr ng-repeat-end ng-repeat="subfield in subfields.slice(1)">
+                <td>{{subfield.subfield}}</td>
+                <td>{{subfield.value}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="close()">Schließen</button>
+    </div>
+</script>
+
 <script type="text/ng-template" id="coverModal.html">
     <div class="modal-header">
         <h4 class="modal-title">Cover-Ansicht</h4>

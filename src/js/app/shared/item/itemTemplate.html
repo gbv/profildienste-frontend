@@ -10,6 +10,9 @@
                     <i class="fa fa-square-o fa-2x" ng-hide="item.status.selected"></i>
                     <i class="fa fa-check-square-o fa-2x" ng-show="item.status.selected"></i>
                 </button>
+                <button type="button" class="btn btn-link pull-left item-pica-btn xt-list" ng-click="ItemCtrl.openPICA()">
+                    <i class="fa fa-database"></i>
+                </button>
             </div>
             <!-- Cover -->
             <div class="col-md-8 cover-section">
@@ -28,28 +31,30 @@
         <span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span> {{item.verlag}}<span
             ng-show="item.ort | notEmpty">, {{item.ort}}</span><span class="text-muted">)</span>
         <br>
+        <span ng-show="item.gehoert_zu | notEmpty">
+            <span class="text-muted">Gehört zu: </span> {{item.gehoert_zu}}<br><br>
+        </span>
         <span class="text-muted">Umfang: </span> {{item.umfang}}
         <span ng-show="item.ill_angabe | notEmpty">
-      <span class="text-muted">, </span>{{item.ill_angabe}}
-    </span>
+            <span class="text-muted">, </span>{{item.ill_angabe}}
+        </span>
         <span ng-show="item.format | notEmpty">
-      <span class="text-muted">, </span>{{item.format}}
-    </span>
+            <span class="text-muted">, </span>{{item.format}}
+        </span>
         <br>
         <br>
         <span class="text-muted">ISBN: </span> {{item.isbn}} <br>
         <br>
         <span class="text-muted">erscheint: </span> {{item.ersch_termin}} <br>
         <br>
-
-        <span class="text-muted">GVK-Treffer: </span>{{item.mak}}
+        <span ng-show="item.mak | notEmpty">
+            <span class="text-muted">GVK-Treffer: </span>{{item.mak}}
+        </span>
         <span ng-show="item.ilns | notEmpty">
-      <span class="text-muted">(ILNs: </span>{{item.ilns}}
-      <span ng-show="item.ppn">
-        <span class="text-muted">, PPN: </span> {{item.ppn}}
-      </span>
-      <span class="text-muted">)</span>
-    </span>
+            <span class="text-muted">(ILNs: </span>{{item.ilns}}
+            <span ng-show="item.ppn" class="text-muted">, PPN: </span> {{item.ppn}}
+            <span class="text-muted">)</span>
+        </span>
 
         <br>
         <br>
@@ -94,20 +99,21 @@
         <div uib-collapse="bibInfCollapsed">
             <br>
             <span class="text-muted">Erscheinungsjahr: </span> {{item.ersch_jahr}} <br><br>
-            <span ng-show="item.gehoert_zu | notEmpty">
-          <span class="text-muted">Gehört zu: </span> {{item.gehoert_zu}}<br><br>
-        </span>
             <span class="text-muted">Gattung: </span> {{item.gattung}} <br><br>
             <span ng-show="item.dnb_link | notEmpty">
-          <span class="text-muted">DNB-Link: </span> <a href="{{item.dnb_link}}" target="_blank"><i
-                    class="fa fa-external-link"></i> {{item.dnb_link}}</a><br><br>
-        </span>
+                <span class="text-muted">DNB-Link: </span>
+                <a href="{{item.dnb_link}}" target="_blank">
+                    <i class="fa fa-external-link"></i> {{item.dnb_link}}
+                </a>
+                <br>
+                <br>
+            </span>
             <span class="text-muted">WV: </span> {{item.wvdnb}} <br><br>
             <span class="text-muted">DNB Sachgruppe: </span> {{item.sachgruppe}} <br><br>
             <span class="text-muted">Zugeordnete Fachreferenten: </span>
             <span ng-repeat="person in item.zugeordnet">
-          {{person}}{{$last ? '' : ', '}}
-        </span>
+                {{person}}{{$last ? '' : ', '}}
+            </span>
             <br>
             <br>
         </div>
