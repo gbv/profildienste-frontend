@@ -16,8 +16,12 @@
             </div>
             <!-- Cover -->
             <div class="col-md-8 cover-section">
-                <img ng-show="item.hasCover" ng-src="{{item.cover_md}}" class="cover cover-lg"
-                     ng-click="ItemCtrl.showCover()">
+                <div ng-show="item.hasCover">
+                    <i ng-show="loadingCover" class="fa fa-spinner fa-spin"></i>
+                    <span ng-show="!loadingCover && !cover"><i  class="fa fa-times"></i> Cover konnte nicht geladen werden.</span>
+                    <img ng-hide="loadingCover" data-ng-src="data:image/jpeg;base64,{{cover}}" class="cover cover-lg"
+                         ng-click="ItemCtrl.showCover()">
+                </div>
             </div>
         </div>
     </div>

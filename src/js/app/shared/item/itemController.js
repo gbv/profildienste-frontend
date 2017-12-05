@@ -1,9 +1,11 @@
-pdApp.controller('ItemController',['$scope', '$sce', 'WatchlistService', 'CartService', '$uibModal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', 'Notification', 'SaveService',
-function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout, Notification, SaveService) {
+pdApp.controller('ItemController',['$scope', '$sce', 'WatchlistService', 'CartService', '$uibModal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', 'Notification', 'SaveService', 'CoverService',
+function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout, Notification, SaveService, CoverService) {
 
     $scope.bibInfCollapsed = true;
     $scope.addInfCollapsed = true;
     $scope.CommentCollapsed = ($scope.item.comment === null || $scope.item.comment === '');
+
+    $scope.loadingCover = $scope.item.hasCover;
 
     $scope.loading = {
         comment: false,
@@ -21,6 +23,15 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
         ssgnr: false,
         budget: false
     };
+
+    if ($scope.item.hasCover) {
+        CoverService.getCover($scope.item.cover_md).then(function (img){
+            $scope.cover = img;
+            $scope.loadingCover = false;
+        }, function (err) {
+            $scope.loadingCover = false;
+        });
+    }
 
     $scope.item.preis = $sce.trustAsHtml($scope.item.preis);
 

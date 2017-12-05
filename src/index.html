@@ -56,7 +56,11 @@
         <h4 class="modal-title">Cover-Ansicht</h4>
     </div>
     <div class="modal-body">
-        <img ng-src="{{cover}}">
+        <i ng-show="loading" class="fa fa-spinner fa-2x fa-spin"></i>
+        <img ng-hide="loading" data-ng-src="data:image/jpeg;base64,{{cover}}">
+        <div ng-show="!loading && !cover" class="alert alert-danger">
+            Leider ist ein Fehler aufgetreten, die Coverabbildung konnte nicht geladen werden.
+        </div>
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" ng-click="close()">Schließen</button>
