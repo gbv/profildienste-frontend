@@ -28,7 +28,13 @@
         <h3>{{item.untertitel}}</h3>
         <br>
         <br>
-        <span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span> {{item.verlag}}<span
+	<span ng-show="item.einheitssachtitel_1 | notEmpty">
+		<span class="text-muted">Sachtitel: </span> {{item.einheitssachtitel_1}}<br><br>
+	</span>
+	<span ng-show="item.einheitssachtitel_2 | notEmpty">
+		<span class="text-muted">Sachtitel: </span> {{item.einheitssachtitel_2}}<br><br>
+	</span>
+	<span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span> {{item.verlag}}<span
             ng-show="item.ort | notEmpty">, {{item.ort}}</span><span class="text-muted">)</span>
         <br>
         <span ng-show="item.gehoert_zu | notEmpty">
