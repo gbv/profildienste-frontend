@@ -27,12 +27,13 @@
     </div>
     <div class="col-md-7 title-content">
         <!-- Start Mitte -->
-        <h2>{{item.titel}}</h2>
+        <h2 ng-show="item.titel | notEmpty">{{item.titel}}</h2>
+        <h2 ng-show="!item.titel && (item.uebergeordnete_gesamtheit | notEmpty)"><span class="text-muted">MBW:</span>&nbsp;{{item.uebergeordnete_gesamtheit}}</h2>
         <br>
         <h3>{{item.untertitel}}</h3>
         <br>
         <br>
-        <span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span> {{item.verlag}}<span
+        <span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span>{{item.verlag}}<span
             ng-show="item.ort | notEmpty">, {{item.ort}}</span><span class="text-muted">)</span>
         <br>
         <span ng-show="item.gehoert_zu | notEmpty">
