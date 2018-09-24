@@ -17,7 +17,7 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="order in orderlist">
-                            <td>{{order.title}}</td>
+                            <td><span class="text-muted" ng-show="!order.title && (order.uebergeordnete_gesamtheit | notEmpty)">MBW:&nbsp;</span>{{order.title || order.uebergeordnete_gesamtheit}}</td>
 
                             <!-- Lieferant -->
                             <td ng-show="order.supplier.setByUser">{{order.supplier.value}}</td>
