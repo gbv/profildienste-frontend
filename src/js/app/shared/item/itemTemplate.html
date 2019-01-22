@@ -16,25 +16,30 @@
             </div>
             <!-- Cover -->
             <div class="col-md-8 cover-section">
-                <img ng-show="item.hasCover" ng-src="{{item.cover_md}}" class="cover cover-lg"
-                     ng-click="ItemCtrl.showCover()">
+                <div ng-show="item.hasCover">
+                    <i ng-show="loadingCover" class="fa fa-spinner fa-spin"></i>
+                    <span ng-show="!loadingCover && !cover"><i  class="fa fa-times"></i> Cover konnte nicht geladen werden.</span>
+                    <img ng-hide="loadingCover" data-ng-src="data:image/jpeg;base64,{{cover}}" class="cover cover-lg"
+                         ng-click="ItemCtrl.showCover()">
+                </div>
             </div>
         </div>
     </div>
     <div class="col-md-7 title-content">
         <!-- Start Mitte -->
-        <h2>{{item.titel}}</h2>
+        <h2 ng-show="item.titel | notEmpty">{{item.titel}}</h2>
+        <h2 ng-show="!item.titel && (item.uebergeordnete_gesamtheit | notEmpty)"><span class="text-muted">MBW:</span>&nbsp;{{item.uebergeordnete_gesamtheit}}</h2>
         <br>
         <h3>{{item.untertitel}}</h3>
         <br>
         <br>
-	<span ng-show="item.einheitssachtitel_1 | notEmpty">
-		<span class="text-muted">Einheitssachtitel: </span> {{item.einheitssachtitel_1}}<br><br>
-	</span>
-	<span ng-show="item.einheitssachtitel_2 | notEmpty">
-		<span class="text-muted">Einheitssachtitel: </span> {{item.einheitssachtitel_2}}<br><br>
-	</span>
-	<span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span> {{item.verlag}}<span
+        <span ng-show="item.einheitssachtitel_1 | notEmpty">
+                <span class="text-muted">Einheitssachtitel: </span> {{item.einheitssachtitel_1}}<br><br>
+        </span>
+        <span ng-show="item.einheitssachtitel_2 | notEmpty">
+                <span class="text-muted">Einheitssachtitel: </span> {{item.einheitssachtitel_2}}<br><br>
+        </span>
+        <span class="text-muted">von</span> {{item.verfasser}} <span class="text-muted">(</span>{{item.verlag}}<span
             ng-show="item.ort | notEmpty">, {{item.ort}}</span><span class="text-muted">)</span>
         <br>
         <span ng-show="item.gehoert_zu | notEmpty">
@@ -68,7 +73,7 @@
         <form class="form-inline">
             <!-- Lieferant -->
             <span class="text-muted">Lieferant: </span>
-            <select ng-model="item.supplier" ng-options="supplier.value as supplier.name for supplier in suppliers"
+            <select ng-model="item.supplierValue" ng-options="supplier.value as supplier.name for supplier in suppliers"
                     ng-show="ItemCtrl.editOrderInformation()" class="form-control order-input input-sm"
                     ng-change="ItemCtrl.saveSupplier()" ng-disabled="loading.supplier"
                     ng-class="{saved: saved.supplier}">
@@ -77,7 +82,7 @@
 
             <!-- Budget -->
             <span class="text-muted">Budget: </span>
-            <select ng-model="item.budget" ng-options="budget.value as budget.name for budget in budgets"
+            <select ng-model="item.budgetValue" ng-options="budget.value as budget.name for budget in budgets"
                     ng-show="ItemCtrl.editOrderInformation()" class="form-control order-input input-sm"
                     ng-change="ItemCtrl.saveBudget()" ng-disabled="loading.budget"
                     ng-class="{saved: saved.budget}">

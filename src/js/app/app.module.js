@@ -22,7 +22,7 @@ pdApp.filter('notEmpty', function () {
     };
 });
 
-pdApp.constant('version', '1.2.1');
+pdApp.constant('version', '2.0.0');
 
 pdApp.controller('ErrorModalCtrl', ['$scope', '$uibModalInstance', '$rootScope', '$window', function ($scope, $uibModalInstance, $rootScope, $window) {
 
@@ -36,11 +36,16 @@ pdApp.controller('ErrorModalCtrl', ['$scope', '$uibModalInstance', '$rootScope',
 
 
 pdApp.factory('authInterceptor', ['$rootScope', '$q', '$window', 'LogoutService', function ($rootScope, $q, $window, LogoutService) {
+
+    var isAbsolute = new RegExp('^([a-z]+://|//)', 'i');
     return {
         request: function (config) {
-            config.headers = config.headers || {};
-            if ($window.sessionStorage.token) {
-                config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+
+            if (!isAbsolute.test(config.url)) {
+                config.headers = config.headers || {};
+                if ($window.sessionStorage.token) {
+                    config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+                }
             }
 
             return config;
