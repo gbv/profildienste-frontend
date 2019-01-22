@@ -22,7 +22,7 @@ pdApp.filter('notEmpty', function () {
     };
 });
 
-pdApp.constant('version', '1.2.1');
+pdApp.constant('version', '2.0.0');
 
 pdApp.controller('ErrorModalCtrl', ['$scope', '$uibModalInstance', '$rootScope', '$window', function ($scope, $uibModalInstance, $rootScope, $window) {
 

@@ -5,7 +5,7 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
 
     $scope.loading = true;
     $scope.total = 0;
-
+    
     $scope.selection = false;
     $scope.selected = 0;
 
@@ -31,7 +31,7 @@ pdApp.controller('HeaderController', ['$scope', '$rootScope', 'LoginService', '$
     $rootScope.$on('totalChanged', function (ev, total) {
         $scope.total = total;
     });
-
+    
     $rootScope.$on('watchlistChange', function (ev, data) {
         if ($scope.site === 'manage') {
             $scope.total = data.length;

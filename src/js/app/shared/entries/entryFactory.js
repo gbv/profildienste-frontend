@@ -11,6 +11,7 @@ pdApp.factory('Entries', ['$http', '$rootScope', 'SelectService', '$q', 'Notific
         this.more = true;
         this.id = id;
         this.total = 0;
+        this.offset = 0;
         this.error = false;
         this.additional = $q.defer();
 
@@ -24,19 +25,17 @@ pdApp.factory('Entries', ['$http', '$rootScope', 'SelectService', '$q', 'Notific
 
     // loads more entries from the server
     Entries.prototype.loadMore = function (forceLoad) {
-
         if ((!forceLoad && !this.more) || this.loading) {
             return;
         }
-
         this.loading = true;
         $rootScope.$broadcast('siteLoading');
 
         var url;
         if (this.id === undefined) {
-            url = '/api/' + this.site + '/page/' + this.page;
+            url = '/api/' + this.site + '/page/' + this.page + '/offset/' + this.offset;
         } else {
-            url = '/api/' + this.site + '/' + this.id + '/page/' + this.page;
+            url = '/api/' + this.site + '/' + this.id + '/page/' + this.page + '/offset/' + this.offset;
         }
 
         $http.get(url).then(function (resp) {
@@ -81,10 +80,11 @@ pdApp.factory('Entries', ['$http', '$rootScope', 'SelectService', '$q', 'Notific
         }
 
         this.total--;
+        this.offset--;
+        
         $rootScope.$broadcast('totalChanged', this.total);
-
+        
         if (this.items.length === 0) {
-            this.page--;
             this.loadMore();
         }
     };
