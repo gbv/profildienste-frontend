@@ -20,7 +20,7 @@ pdApp.service('SaveService', ['$http', function ($http) {
     };
 
     this.saveSupplier = function (item) {
-        return save(item.id, 'supplier', item.supplier);
+        return save(item.id, 'supplier', item.supplierValue);
     };
 
     this.saveSelcode = function (item) {
@@ -32,7 +32,7 @@ pdApp.service('SaveService', ['$http', function ($http) {
     };
 
     this.saveBudget = function (item) {
-        return save(item.id, 'budget', item.budget);
+        return save(item.id, 'budget', item.budgetValue);
     };
 
 }]);
