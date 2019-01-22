@@ -281,6 +281,7 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
     };
 
     this.addRejected = function () {
+
         RejectService.addRejected($scope.item).then(function (data) {
             $scope.item.status.rejected = true;
 
@@ -289,6 +290,7 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
             if ($scope.config.hideRejected) {
                 $scope.entries.removeItem($scope.item);
             }
+
         }, function (err) {
             if (err) {
                 Notification.error(err);
