@@ -3,10 +3,12 @@ pdApp.controller('MOTDController', ['$scope', 'UserService', '$q', function ($sc
     UserService.getUserData().then(function (data) {
         $scope.motd = data.motd;
     });
-
-    this.showMOTD = function () {
-        return ($scope.motd !== '' && !UserService.getMOTDSeen());
-    };
+    
+    if(UserService.motdSeen){
+        $scope.motdSeen = true;
+    }else{
+        $scope.motdSeen = false;
+    }
 
     this.closeMOTD = function () {
         UserService.setMOTDSeen();

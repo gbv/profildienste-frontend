@@ -1,7 +1,7 @@
 <div ng-controller="MainController">
 
     <div ng-controller="MOTDController as MOTDCtrl">
-        <div ng-show="MOTDCtrl.showMOTD()" class="alert alert-info alert-dismissible" role="alert">
+        <div ng-show="motd && (!motdSeen)" class="alert alert-info alert-dismissible" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="MOTDCtrl.closeMOTD()">
                 <span aria-hidden="true">&times;</span>
             </button>
