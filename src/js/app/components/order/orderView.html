@@ -83,7 +83,7 @@
         <div class="row">
             <div class="col-md-12">
                 <ul class="nav nav-pills nav-stacked orders">
-                    <li ng-repeat="order in orderlist"><a href=""><i class="fa fa-caret-right orders-caret"></i>{{order.title}}</a>
+                    <li ng-repeat="order in orderlist"><a href=""><i class="fa fa-caret-right orders-caret"></i><span class="text-muted" ng-show="!order.title && (order.uebergeordnete_gesamtheit | notEmpty)">MBW:&nbsp;</span>{{order.title || order.uebergeordnete_gesamtheit}}</a>
                     </li>
                 </ul>
             </div>
