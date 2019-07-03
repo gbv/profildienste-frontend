@@ -27,6 +27,15 @@
   background-color: $selected;
 }
 
+.colleague-list li {
+    cursor: default;
+    padding: 6px;
+}
+
+.colleague-list li:hover {
+    background-color: $option-menu-border;
+}
+
 .title-price {
   height: 100px;
   overflow: auto;

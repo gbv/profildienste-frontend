@@ -1,11 +1,13 @@
-pdApp.controller('ItemController',['$scope', '$sce', 'WatchlistService', 'CartService', '$uibModal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', 'Notification', 'SaveService', 'CoverService',
-function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout, Notification, SaveService, CoverService) {
+pdApp.controller('ItemController',['$scope', '$sce', 'WatchlistService', 'CartService', '$uibModal', 'ConfigService', '$rootScope', 'SelectService', 'InfoService', 'RejectService', 'UserService', '$timeout', 'Notification', 'SaveService', 'CoverService', 'TitleOwnerService',
+function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService, $rootScope, SelectService, InfoService, RejectService, UserService, $timeout, Notification, SaveService, CoverService, TitleOwnerService) {
 
     $scope.bibInfCollapsed = true;
     $scope.addInfCollapsed = true;
     $scope.CommentCollapsed = ($scope.item.comment === null || $scope.item.comment === '');
 
     $scope.loadingCover = $scope.item.hasCover;
+    
+    $scope.showColleagues = false;
 
     $scope.loading = {
         comment: false,
@@ -42,6 +44,7 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
     UserService.getUserData().then(function (data) {
         $scope.budgets = data.budgets;
         $scope.suppliers = data.suppliers;
+        $scope.colleagues = data.colleagues;
     });
 
     ConfigService.getConfig().then(function (data) {
@@ -111,6 +114,10 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
             function (reason) {
                 Notification.error(reason);
             });
+    };
+    
+    this.toggleColleagues = function () {
+        $scope.showColleagues = !$scope.showColleagues;
     };
 
     this.toggleSelect = function () {
@@ -279,6 +286,23 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
                 }
             });
     };
+    
+    this.forward = function (colleague) {
+        
+        TitleOwnerService.changeOwner($scope.item, colleague).then(function (data) {
+            
+            SelectService.deselect($scope.item);
+            
+            $scope.entries.removeItem($scope.item);
+            
+            Notification.primary('Der Titel wurde erfolgreich weitergeleitet.');
+            
+        }, function (err) {
+            if(err) {
+                Notification.error(err);
+            }
+        });
+    };
 
     this.addRejected = function () {
 
@@ -332,6 +356,10 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
 
     this.showCartBtn = function () {
         return !$scope.item.status.done && !$scope.item.status.pending && !$scope.item.status.rejected && !$scope.item.status.cart;
+    };
+    
+    this.showForwardBtn = function () {
+        return !$scope.item.status.done && !$scope.item.status.pending;
     };
 
     this.showCartBtnRem = function () {

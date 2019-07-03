@@ -6,11 +6,9 @@ pdApp.config(['$routeProvider', '$locationProvider',
 
             var deferred = $q.defer();
             $http.get('/api/status').then(function () {
-                console.log('successful status resp');
                 deferred.reject();
                 $location.path('/');
             }, function () {
-                console.log('errornous status resp');
                 deferred.resolve();
             });
 

@@ -249,6 +249,21 @@
 
             </div>
         </div>
+        <!-- Weiterleiten Button -->
+        <div class="row" class="forward-button">
+            <div class="col-md-12">
+                <div class="btn-group pull-right" ng-show="ItemCtrl.showForwardBtn()">
+                    <button type="button" class="btn btn-info" ng-click="ItemCtrl.toggleColleagues()">
+                        <i class="fa fa-share"></i> Weiterleiten
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row colleague-list" ng-show="showColleagues">
+            <ul>
+                <li ng-repeat="(key,value) in colleagues" ng-click="ItemCtrl.forward(value)">{{value._id}}</li>
+            </ul>
+        </div>
         <!-- Ablehnen Button -->
         <div class="row" class="title-button">
             <div class="col-md-12">

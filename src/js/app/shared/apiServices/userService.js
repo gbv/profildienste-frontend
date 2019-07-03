@@ -11,6 +11,7 @@ pdApp.service('UserService', ['$http', '$q', 'LoginService', function ($http, $q
 
             defUser.resolve({
                 name: resp.data.name,
+                colleagues: resp.data.colleagues,
                 motd: resp.data.motd,
                 defaults: resp.data.defaults,
                 budgets: resp.data.budgets,
