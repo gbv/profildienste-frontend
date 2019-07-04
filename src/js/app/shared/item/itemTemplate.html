@@ -66,6 +66,11 @@
             <span ng-show="item.ppn" class="text-muted">, PPN: </span> {{item.ppn}}
             <span class="text-muted">)</span>
         </span>
+        <br>
+        <br>
+        <span ng-show="item.forwardedBy | notEmpty">
+            <span class="erhalten-von-tag">Erhalten von:</span>&nbsp;{{ItemCtrl.formatColleagueName(item.forwardedBy)}}
+        </span>
 
         <br>
         <br>
@@ -260,8 +265,9 @@
             </div>
         </div>
         <div class="row colleague-list" ng-show="showColleagues">
+            <p class="colleague-hint" ng-show="item.comment"><b>Achtung:</b> Kommentar für den Kollegen einsehbar.</p>
             <ul>
-                <li ng-repeat="(key,value) in colleagues" ng-click="ItemCtrl.forward(value)">{{value._id}}</li>
+                <li ng-repeat="(key,value) in colleagues" ng-click="ItemCtrl.forward(value)">{{ItemCtrl.formatColleagueName(value)}}</li>
             </ul>
         </div>
         <!-- Ablehnen Button -->

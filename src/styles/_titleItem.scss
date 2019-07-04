@@ -27,6 +27,13 @@
   background-color: $selected;
 }
 
+.erhalten-von-tag {
+    padding: 3px 4px 3px 4px;
+    border-radius: 5px;
+    color: white;
+    background-color: #346ecd;
+}
+
 .colleague-list li {
     cursor: default;
     padding: 6px;
@@ -34,6 +41,10 @@
 
 .colleague-list li:hover {
     background-color: $option-menu-border;
+}
+
+.colleague-list .colleague-hint {
+    margin-top: 9px;
 }
 
 .title-price {

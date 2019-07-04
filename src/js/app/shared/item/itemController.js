@@ -116,6 +116,16 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
             });
     };
     
+    this.formatColleagueName = function (colleague) {
+        
+        if(colleague.name){
+            return colleague.name + ' / ' + colleague._id;
+        }else{
+            return colleague._id;
+        }
+        
+    };
+    
     this.toggleColleagues = function () {
         $scope.showColleagues = !$scope.showColleagues;
     };
@@ -295,7 +305,15 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
             
             $scope.entries.removeItem($scope.item);
             
-            Notification.primary('Der Titel wurde erfolgreich weitergeleitet.');
+            var cn_form;
+            
+            if(colleague.name){
+                cn_form = colleague.name + ' / ' + colleague._id;
+            }else{
+                cn_form = colleague._id;
+            }
+            
+            Notification.primary('Der Titel wurde erfolgreich an '+ cn_form +' weitergeleitet.');
             
         }, function (err) {
             if(err) {
