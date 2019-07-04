@@ -265,7 +265,8 @@
             </div>
         </div>
         <div class="row colleague-list" ng-show="showColleagues">
-            <p class="colleague-hint" ng-show="item.comment"><b>Achtung:</b> Kommentar für den Kollegen einsehbar.</p>
+            <p ng-hide="colleagues.length">Keine Kollegen gefunden.</p>
+            <p class="colleague-hint" ng-show="item.comment && colleagues.length"><b>Achtung:</b> Kommentar für den Kollegen einsehbar.</p>
             <ul>
                 <li ng-repeat="(key,value) in colleagues" ng-click="ItemCtrl.forward(value)">{{ItemCtrl.formatColleagueName(value)}}</li>
             </ul>
