@@ -118,6 +118,10 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
     
     this.formatColleagueName = function (colleague) {
         
+        if(!colleague){
+            return '';
+        }
+        
         if(colleague.name){
             return colleague.name + ' / ' + colleague._id;
         }else{
