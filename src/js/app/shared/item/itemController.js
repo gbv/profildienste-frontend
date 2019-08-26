@@ -317,7 +317,7 @@ function ($scope, $sce, WatchlistService, CartService, $uibModal, ConfigService,
                 cn_form = colleague._id;
             }
             
-            Notification.primary('Der Titel wurde erfolgreich an '+ cn_form +' weitergeleitet.');
+            Notification.primary('Der Titel wurde an '+ cn_form +' weitergeleitet.');
             
         }, function (err) {
             if(err) {
